@@ -464,7 +464,7 @@ module.exports = {
     }
     
     // Ask for auto-nickname setting
-    const autoNickMsg = await message.channel.send('🔟 Yeni üyelerin isimlerini otomatik olarak "Kayıtsız" yapmak istiyor musunuz? (evet/hayır)');
+    const autoNickMsg = await message.channel.send('1️⃣3️⃣ Yeni üyelerin isimlerini otomatik olarak "Kayıtsız" yapmak istiyor musunuz? (evet/hayır)');
     let autoNickname;
     
     try {
@@ -488,12 +488,20 @@ module.exports = {
       kayitsizRole: kayitsizRole.id,
       yetkiliRole: yetkiliRole.id,
       futbolcuRole: futbolcuRole.id,
+      taraftarRole: taraftarRole ? taraftarRole.id : null,
+      bayanUyeRole: bayanRole ? bayanRole.id : null,
       teknikDirektorRole: tdRole.id,
       baskanRole: baskanRole.id,
       partnerRole: partnerRole.id,
       welcomeChannel: welcomeChannel.id,
-      autoNickname: autoNickname
+      autoNickname: autoNickname,
+      autoAssignUyeRole: autoAssignUyeRole
     };
+    
+    // Add üye role if set
+    if (uyeRole) {
+      settings.uyeRole = uyeRole.id;
+    }
     
     // Add log channels if set
     if (joinLogChannel) {
@@ -515,14 +523,17 @@ module.exports = {
       .addField('👤 Kayıtsız Rolü', `<@&${kayitsizRole.id}>`, true)
       .addField('🛡️ Yetkili Rolü', `<@&${yetkiliRole.id}>`, true)
       .addField('⚽ Futbolcu Rolü', `<@&${futbolcuRole.id}>`, true)
+      .addField('🏟️ Taraftar Rolü', taraftarRole ? `<@&${taraftarRole.id}>` : '`Ayarlanmadı`', true)
+      .addField('👩 Bayan Üye Rolü', bayanRole ? `<@&${bayanRole.id}>` : '`Ayarlanmadı`', true)
       .addField('📋 Teknik Direktör Rolü', `<@&${tdRole.id}>`, true)
       .addField('👑 Başkan Rolü', `<@&${baskanRole.id}>`, true)
       .addField('🤝 Partner Rolü', `<@&${partnerRole.id}>`, true)
+      .addField('👥 Üye Rolü', uyeRole ? `<@&${uyeRole.id}>` : '`Ayarlanmadı`', true)
       .addField('🎉 Hoş Geldin Kanalı', `<#${welcomeChannel.id}>`, true)
       .addField('📥 Giriş Log Kanalı', joinLogChannel ? `<#${joinLogChannel.id}>` : '`Ayarlanmadı`', true)
       .addField('📊 Genel Log Kanalı', logChannel ? `<#${logChannel.id}>` : '`Ayarlanmadı`', true)
       .addField('🔄 Otomatik İsim Değiştirme', autoNickname ? '`Aktif`' : '`Pasif`', true)
-      .addField('\u200B', '\u200B', true) // Empty field for alignment
+      .addField('👥 Otomatik Üye Rolü', autoAssignUyeRole ? '`Aktif`' : '`Pasif`', true)
       .addField('\u200B', '\u200B', true) // Empty field for alignment
       .addField('📝 Kullanım', 'Yeni gelen üyeler otomatik olarak kayıtsız rolü alacak.\nKayıt için `.k @kullanıcı isim` komutunu kullanabilirsiniz.')
       .addField('📋 Kanal Bilgileri', 

@@ -39,6 +39,11 @@ module.exports = {
       embed.addField('📋 Sunucu Ayarları', 
         `**Kayıtsız Rolü**: ${settings.kayitsizRole ? `<@&${settings.kayitsizRole}>` : 'Ayarlanmamış'}\n` +
         `**Yetkili Rolü**: ${settings.yetkiliRole ? `<@&${settings.yetkiliRole}>` : 'Ayarlanmamış'}\n` +
+        `**Futbolcu Rolü**: ${settings.futbolcuRole ? `<@&${settings.futbolcuRole}>` : 'Ayarlanmamış'}\n` +
+        `**Taraftar Rolü**: ${settings.taraftarRole ? `<@&${settings.taraftarRole}>` : 'Ayarlanmamış'}\n` +
+        `**Bayan Üye Rolü**: ${settings.bayanUyeRole ? `<@&${settings.bayanUyeRole}>` : 'Ayarlanmamış'}\n` +
+        `**Üye Rolü**: ${settings.uyeRole ? `<@&${settings.uyeRole}>` : 'Ayarlanmamış'}\n` +
+        `**Otomatik Üye Rolü**: ${settings.autoAssignUyeRole ? '`Aktif`' : '`Pasif`'}\n` +
         `**Hoş Geldin Kanalı**: ${settings.welcomeChannel ? `<#${settings.welcomeChannel}>` : 'Ayarlanmamış'}\n` +
         `**Giriş Log Kanalı**: ${settings.joinLogChannel ? `<#${settings.joinLogChannel}>` : 'Ayarlanmamış'}\n` +
         `**Genel Log Kanalı**: ${settings.logChannel ? `<#${settings.logChannel}>` : 'Ayarlanmamış'}`, false);

@@ -41,6 +41,20 @@ module.exports = {
         await target.roles.remove(settings.kayitsizRole);
       }
       
+      // Automatically add the member role if configured
+      if (settings.uyeRole && settings.autoAssignUyeRole) {
+        const uyeRole = message.guild.roles.cache.get(settings.uyeRole);
+        if (uyeRole) {
+          await target.roles.add(uyeRole);
+          if (settings.logChannel) {
+            const logChannel = message.guild.channels.cache.get(settings.logChannel);
+            if (logChannel) {
+              logChannel.send(`👥 <@${target.id}> kullanıcısına otomatik olarak <@&${uyeRole.id}> rolü verildi.`);
+            }
+          }
+        }
+      }
+      
       // Create role selection buttons with emojis (Row 1)
       const row1 = new MessageActionRow()
         .addComponents(
