@@ -57,13 +57,16 @@ module.exports = {
       `1️⃣ Kayıtsız Rolü
       2️⃣ Yetkili Rolü
       3️⃣ Futbolcu Rolü
-      4️⃣ Teknik Direktör Rolü
-      5️⃣ Başkan Rolü
-      6️⃣ Partner Rolü
-      7️⃣ Hoş Geldin Kanalı
-      8️⃣ Giriş Log Kanalı
-      9️⃣ Genel Log Kanalı
-      🔟 Otomatik İsim Ayarı`)
+      4️⃣ Taraftar Rolü
+      5️⃣ Bayan Üye Rolü
+      6️⃣ Teknik Direktör Rolü
+      7️⃣ Başkan Rolü
+      8️⃣ Partner Rolü
+      9️⃣ Üye Rolü (Otomatik Atama)
+      🔟 Hoş Geldin Kanalı
+      1️⃣1️⃣ Giriş Log Kanalı
+      1️⃣2️⃣ Genel Log Kanalı
+      1️⃣3️⃣ Otomatik İsim Ayarı`)
       .setFooter({ text: 'Futbol Kayıt Sistemi • Kurulum' })
       .setTimestamp();
     
@@ -169,8 +172,74 @@ module.exports = {
       return message.channel.send('⏱️ Zaman aşımı! Kurulum iptal edildi.');
     }
     
+    // Taraftar role
+    const taraftarMsg = await message.channel.send('4️⃣ Lütfen "Taraftar" rolünü etiketleyin veya "oluştur" yazın:');
+    let taraftarRole;
+    
+    try {
+      const collected = await message.channel.awaitMessages({
+        filter: m => m.author.id === message.author.id,
+        max: 1,
+        time: 30000,
+        errors: ['time']
+      });
+      
+      const response = collected.first();
+      
+      if (response.content.toLowerCase() === 'oluştur') {
+        taraftarRole = await message.guild.roles.create({
+          name: '🏟️ Taraftar',
+          color: 'PURPLE',
+          reason: 'Kayıt sistemi kurulumu'
+        });
+        await message.channel.send(`✅ '🏟️ Taraftar' rolü oluşturuldu!`);
+      } else {
+        const mentionedRole = response.mentions.roles.first();
+        if (!mentionedRole) {
+          return message.channel.send('❌ Geçerli bir rol etiketlemediniz. Kurulum iptal edildi.');
+        }
+        taraftarRole = mentionedRole;
+        await message.channel.send(`✅ ${taraftarRole} rolü seçildi!`);
+      }
+    } catch (error) {
+      return message.channel.send('⏱️ Zaman aşımı! Kurulum iptal edildi.');
+    }
+    
+    // Bayan Üye role
+    const bayanMsg = await message.channel.send('5️⃣ Lütfen "Bayan Üye" rolünü etiketleyin veya "oluştur" yazın:');
+    let bayanRole;
+    
+    try {
+      const collected = await message.channel.awaitMessages({
+        filter: m => m.author.id === message.author.id,
+        max: 1,
+        time: 30000,
+        errors: ['time']
+      });
+      
+      const response = collected.first();
+      
+      if (response.content.toLowerCase() === 'oluştur') {
+        bayanRole = await message.guild.roles.create({
+          name: '👩 Bayan Üye',
+          color: '#e91e63',
+          reason: 'Kayıt sistemi kurulumu'
+        });
+        await message.channel.send(`✅ '👩 Bayan Üye' rolü oluşturuldu!`);
+      } else {
+        const mentionedRole = response.mentions.roles.first();
+        if (!mentionedRole) {
+          return message.channel.send('❌ Geçerli bir rol etiketlemediniz. Kurulum iptal edildi.');
+        }
+        bayanRole = mentionedRole;
+        await message.channel.send(`✅ ${bayanRole} rolü seçildi!`);
+      }
+    } catch (error) {
+      return message.channel.send('⏱️ Zaman aşımı! Kurulum iptal edildi.');
+    }
+    
     // Similar process for other roles
-    const tdMsg = await message.channel.send('4️⃣ Lütfen "Teknik Direktör" rolünü etiketleyin veya "oluştur" yazın:');
+    const tdMsg = await message.channel.send('6️⃣ Lütfen "Teknik Direktör" rolünü etiketleyin veya "oluştur" yazın:');
     let tdRole;
     
     try {
@@ -203,7 +272,7 @@ module.exports = {
     }
     
     // Başkan role
-    const baskanMsg = await message.channel.send('5️⃣ Lütfen "Başkan" rolünü etiketleyin veya "oluştur" yazın:');
+    const baskanMsg = await message.channel.send('7️⃣ Lütfen "Başkan" rolünü etiketleyin veya "oluştur" yazın:');
     let baskanRole;
     
     try {
@@ -236,7 +305,7 @@ module.exports = {
     }
     
     // Partner role
-    const partnerMsg = await message.channel.send('6️⃣ Lütfen "Partner" rolünü etiketleyin veya "oluştur" yazın:');
+    const partnerMsg = await message.channel.send('8️⃣ Lütfen "Partner" rolünü etiketleyin veya "oluştur" yazın:');
     let partnerRole;
     
     try {
@@ -268,8 +337,53 @@ module.exports = {
       return message.channel.send('⏱️ Zaman aşımı! Kurulum iptal edildi.');
     }
     
+    // Ask for üye role
+    const uyeRoleMsg = await message.channel.send('9️⃣ Lütfen kayıt edilen kullanıcılara otomatik olarak atanacak "Üye" rolünü etiketleyin (veya "geç" yazın):');
+    let uyeRole = null;
+    let autoAssignUyeRole = false;
+    
+    try {
+      const collected = await message.channel.awaitMessages({
+        filter: m => m.author.id === message.author.id,
+        max: 1,
+        time: 30000,
+        errors: ['time']
+      });
+      
+      const response = collected.first();
+      
+      if (response.content.toLowerCase() === 'geç') {
+        await message.channel.send('✅ Üye rolü ayarlanmadı, bu adım atlandı.');
+      } else {
+        uyeRole = response.mentions.roles.first();
+        
+        if (!uyeRole) {
+          await message.channel.send('⚠️ Geçerli bir rol etiketlenmedi, üye rolü ayarlanmadan devam ediliyor.');
+        } else {
+          const autoAssignMsg = await message.channel.send(`✅ ${uyeRole} rolü üye rolü olarak ayarlandı! Bu rolü kayıt sırasında otomatik olarak atamak istiyor musunuz? (evet/hayır)`);
+          
+          try {
+            const autoAssignCollected = await message.channel.awaitMessages({
+              filter: m => m.author.id === message.author.id && ['evet', 'hayır'].includes(m.content.toLowerCase()),
+              max: 1,
+              time: 30000,
+              errors: ['time']
+            });
+            
+            const autoAssignResponse = autoAssignCollected.first();
+            autoAssignUyeRole = autoAssignResponse.content.toLowerCase() === 'evet';
+            await message.channel.send(`✅ Otomatik üye rolü atama: ${autoAssignUyeRole ? '`Aktif`' : '`Pasif`'}`);
+          } catch (autoAssignError) {
+            await message.channel.send('⏱️ Zaman aşımı! Otomatik üye rolü atama pasif olarak ayarlandı.');
+          }
+        }
+      }
+    } catch (error) {
+      await message.channel.send('⏱️ Zaman aşımı! Üye rolü ayarlanmadan devam ediliyor.');
+    }
+    
     // Ask for welcome channel
-    const welcomeMsg = await message.channel.send('7️⃣ Lütfen hoş geldin mesajlarının gönderileceği kanalı etiketleyin:\n*Bu kanal, kullanıcı kayıt olduktan sonra karşılama mesajlarının gönderileceği kanaldır.*');
+    const welcomeMsg = await message.channel.send('🔟 Lütfen hoş geldin mesajlarının gönderileceği kanalı etiketleyin:\n*Bu kanal, kullanıcı kayıt olduktan sonra karşılama mesajlarının gönderileceği kanaldır.*');
     let welcomeChannel;
     
     try {
@@ -292,7 +406,7 @@ module.exports = {
     }
     
     // Ask for join log channel (optional)
-    const joinLogMsg = await message.channel.send('8️⃣ Lütfen yeni üye giriş loglarının gönderileceği kanalı etiketleyin (opsiyonel, geçmek için "geç" yazın):\n*Bu kanal, sunucuya yeni bir üye katıldığında yetkilileri etiketleyerek bildirim yapılan kanaldır.*');
+    const joinLogMsg = await message.channel.send('1️⃣1️⃣ Lütfen yeni üye giriş loglarının gönderileceği kanalı etiketleyin (opsiyonel, geçmek için "geç" yazın):\n*Bu kanal, sunucuya yeni bir üye katıldığında yetkilileri etiketleyerek bildirim yapılan kanaldır.*');
     let joinLogChannel = null;
     
     try {
@@ -321,7 +435,7 @@ module.exports = {
     }
     
     // Ask for general log channel (optional)
-    const logMsg = await message.channel.send('9️⃣ Lütfen genel logların gönderileceği kanalı etiketleyin (opsiyonel, geçmek için "geç" yazın):\n*Bu kanal, tüm kayıt işlemlerinin ve rol atamalarının kayıtlarının tutulduğu kanaldır.*');
+    const logMsg = await message.channel.send('1️⃣2️⃣ Lütfen genel logların gönderileceği kanalı etiketleyin (opsiyonel, geçmek için "geç" yazın):\n*Bu kanal, tüm kayıt işlemlerinin ve rol atamalarının kayıtlarının tutulduğu kanaldır.*');
     let logChannel = null;
     
     try {
