@@ -6,7 +6,7 @@ require('dotenv').config();
 // Add express server to keep the bot alive on Glitch
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 app.get('/', (req, res) => {
   res.send('Futbol Kayıt Botu çalışıyor!');
