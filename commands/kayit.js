@@ -188,7 +188,7 @@ module.exports = {
             .addField('👤 Kullanıcı', `<@${target.id}>`, true)
             .addField('📝 Kayıt Eden', `<@${message.author.id}>`, true)
             .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
-            .setImage('https://media.istockphoto.com/id/1158144110/tr/vekt%C3%B6r/futbol-sahasi-veya-futbol-sahasi-arka-plan-ye%C5%9Fil-mahkeme-arka-plan-vekt%C3%B6r-ill%C3%BCstrasyon.jpg?s=612x612&w=0&k=20&c=LuH7IEVnzlX9k3y0bPFZ-jYFdMkRCjwqvGPNgKTIJQg=')
+            .setImage('https://i.imgur.com/3Umh6l4.jpg')
             .setFooter({ text: '⚽ Futbol Kayıt Sistemi • Hoş Geldin!' })
             .setTimestamp();
             
