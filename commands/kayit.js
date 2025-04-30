@@ -157,7 +157,26 @@ module.exports = {
         // Don't worry if DM can't be sent, it's optional
       }
       
-      // Hoşgeldin kanalına mesaj gönder
+      // Log kanalına kayıt mesajı gönder
+      if (settings.logChannel) {
+        const logChannel = message.guild.channels.cache.get(settings.logChannel);
+        if (logChannel) {
+          const logEmbed = new MessageEmbed()
+            .setTitle('📝 Kullanıcı Kaydı Tamamlandı')
+            .setColor('#2ecc71') 
+            .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
+            .addField('👤 Kullanıcı', `<@${target.id}> (\`${target.user.tag}\`)`, false)
+            .addField('✏️ Yeni İsim', `\`${name}\``, false)
+            .addField('👮 Kaydeden Yetkili', `<@${message.author.id}>`, true)
+            .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
+            .setFooter({ text: `ID: ${target.id} • Kayıt İşlemi` })
+            .setTimestamp();
+          
+          await logChannel.send({ embeds: [logEmbed] });
+        }
+      }
+      
+      // Hoş geldin kanalına kayıt sonrası mesajı gönder
       if (settings.welcomeChannel) {
         const welcomeChannel = message.guild.channels.cache.get(settings.welcomeChannel);
         if (welcomeChannel) {

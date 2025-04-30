@@ -145,32 +145,29 @@ module.exports = {
           // Don't worry if DM fails
         }
         
-        // Hoşgeldin kanalına mesaj gönder
+        // Sadece log kanalına rol atama bilgisi gönder, hoş geldin mesajı göndermiyoruz
         try {
           const guildSettings = await db.getGuildSettings(guildId);
-          if (guildSettings && guildSettings.welcomeChannel) {
-            const welcomeChannel = interaction.guild.channels.cache.get(guildSettings.welcomeChannel);
-            if (welcomeChannel) {
-              const welcomeEmbed = new MessageEmbed()
-                .setTitle(`${roleEmoji} Yeni ${roleName} Aramıza Katıldı!`)
+          if (guildSettings && guildSettings.logChannel) {
+            const logChannel = interaction.guild.channels.cache.get(guildSettings.logChannel);
+            if (logChannel) {
+              const logEmbed = new MessageEmbed()
+                .setTitle(`${roleEmoji} Rol Ataması Yapıldı`)
                 .setColor(roleColor)
                 .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
-                .setDescription(`**${targetMember.displayName}** adlı üye artık bir **${roleEmoji} ${roleName}**! Futbol ailemize katıldığın için çok mutluyuz! ⚽`)
+                .setDescription(`**${targetMember.displayName}** kullanıcısına **${roleEmoji} ${roleName}** rolü verildi.`)
                 .addField('👤 Kullanıcı', `<@${targetMember.id}>`, true)
                 .addField('🛡️ Verilen Rol', `<@&${role.id}>`, true)
                 .addField('👮 İşlemi Yapan', `<@${interaction.user.id}>`, true)
-                .setFooter({ text: `⚽ Futbol Kayıt Sistemi • ${roleName} Hoş Geldin!` })
+                .setFooter({ text: `⚽ Futbol Kayıt Sistemi • Rol Atama` })
                 .setTimestamp();
                 
-              await welcomeChannel.send({ 
-                content: `🎉 Aramıza hoş geldin <@${targetMember.id}>!`,
-                embeds: [welcomeEmbed] 
-              });
+              await logChannel.send({ embeds: [logEmbed] });
             }
           }
-        } catch (welcomeError) {
-          console.error('Hoşgeldin mesajı gönderilemedi:', welcomeError);
-          // Don't worry if welcome message fails
+        } catch (logError) {
+          console.error('Log mesajı gönderilemedi:', logError);
+          // Don't worry if log message fails
         }
         
       } catch (error) {

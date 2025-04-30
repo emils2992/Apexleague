@@ -35,6 +35,45 @@
       "assignedRole": "Partner",
       "assignedRoleId": "1366843224425107506",
       "roleAssignedAt": "2025-04-30T17:23:46.048Z"
+    },
+    {
+      "guildId": "1352647377395122208",
+      "memberId": "1173735298329493675",
+      "memberName": "frozydebate",
+      "staffId": "794205713533894696",
+      "staffName": "emilswd",
+      "timestamp": "2025-04-30T17:39:36.997Z",
+      "assignedName": "Kayıtsız",
+      "assignedRole": "Kayıtsız",
+      "assignedRoleId": "1366843224907583548",
+      "unregistered": true,
+      "id": "1746034776998588"
+    },
+    {
+      "guildId": "1352647377395122208",
+      "memberId": "1173735298329493675",
+      "memberName": "frozydebate",
+      "staffId": "794205713533894696",
+      "staffName": "emilswd",
+      "timestamp": "2025-04-30T17:43:22.856Z",
+      "assignedName": "emislha",
+      "id": "1746035002857694",
+      "assignedRole": "Futbolcu",
+      "assignedRoleId": "1366843221971435604",
+      "roleAssignedAt": "2025-04-30T17:43:27.747Z"
+    },
+    {
+      "guildId": "1352647377395122208",
+      "memberId": "1173735298329493675",
+      "memberName": "frozydebate",
+      "staffId": "794205713533894696",
+      "staffName": "emilswd",
+      "timestamp": "2025-04-30T17:52:45.644Z",
+      "assignedName": "shjsjsoai",
+      "id": "1746035565646604",
+      "assignedRole": "Partner",
+      "assignedRoleId": "1366843224425107506",
+      "roleAssignedAt": "2025-04-30T17:52:48.418Z"
     }
   ]
 }

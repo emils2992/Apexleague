@@ -3,11 +3,15 @@
     "kayitsizRole": "1366843224907583548",
     "yetkiliRole": "1352647377496051810",
     "futbolcuRole": "1366843221971435604",
+    "taraftarRole": "1352647377433137216",
+    "bayanUyeRole": "1352647377496051807",
     "teknikDirektorRole": "1352647377433137223",
     "baskanRole": "1366843223900950559",
     "partnerRole": "1366843224425107506",
     "welcomeChannel": "1352647377940512857",
     "autoNickname": true,
+    "autoAssignUyeRole": true,
+    "uyeRole": "1352647377395122213",
     "joinLogChannel": "1352647377940512858",
     "logChannel": "1352651375787507762"
   }
