@@ -1,4 +1,4 @@
-const { Client, Collection } = require('discord.js'); // v12 doesn't use Intents this way
+const { Client, Intents, Collection } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
@@ -22,18 +22,15 @@ if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir);
 }
 
-// Create a new client instance with Discord.js v12 format
-const client = new Client({
-  partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
-  // Discord.js v12 uses different intent format, more like strings
-  ws: {
-    intents: [
-      'GUILDS',
-      'GUILD_MESSAGES',
-      'GUILD_MEMBERS',
-      'GUILD_MESSAGE_REACTIONS'
-    ]
-  }
+// Create a new client instance
+const client = new Client({ 
+  intents: [
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_MEMBERS,
+    Intents.FLAGS.GUILD_MESSAGE_REACTIONS
+  ],
+  partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 });
 
 // Create collections for commands

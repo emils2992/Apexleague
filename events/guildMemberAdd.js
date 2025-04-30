@@ -60,7 +60,6 @@ module.exports = {
             .addField('📊 Sunucu Bilgisi', 
             `**Toplam Üye**: \`${totalMembers}\`
             **Katılma Zamanı**: \`${new Date().toLocaleString('tr-TR')}\``, false)
-            .setImage('https://i.imgur.com/3Umh6l4.jpg')
             .setFooter({ text: `ID: ${member.id} • Giriş Logu` })
             .setTimestamp();
             
@@ -85,7 +84,6 @@ module.exports = {
             **Oluşturulma**: \`${createdAt.toLocaleDateString('tr-TR')}\`
             **Güvenilirlik**: ${isTrusted ? '`✅ Güvenilir`' : '`⚠️ Şüpheli`'}`, false)
             .addField('⏰ Zaman', `\`${new Date().toLocaleString('tr-TR')}\``, false)
-            .setImage('https://i.imgur.com/3Umh6l4.jpg')
             .setFooter({ text: `ID: ${member.id} • Genel Log` })
             .setTimestamp();
             
