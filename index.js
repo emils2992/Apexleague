@@ -62,10 +62,33 @@ for (const file of eventFiles) {
 }
 
 // Login to Discord with the token
-client.login(process.env.TOKEN).catch(err => {
-  console.error('Discord login error:', err);
-  console.log('Please make sure you have set the TOKEN in .env file');
-});
+const TOKEN = process.env.TOKEN;
+console.log("Token length:", TOKEN ? TOKEN.length : "TOKEN not found");
+console.log("First few characters:", TOKEN ? TOKEN.substring(0, 5) + "..." : "N/A");
+
+// Explicitly handle process.env
+console.log("All env variables:", Object.keys(process.env).join(", "));
+
+// Try to login with detailed error handling
+client.login(TOKEN)
+  .then(() => {
+    console.log("Login successful!");
+  })
+  .catch(err => {
+    console.error('Discord login error type:', err.constructor.name);
+    console.error('Error code:', err.code);
+    console.error('Error message:', err.message);
+    console.error('Error stack:', err.stack);
+    console.log('Please make sure TOKEN is correct and bot is properly configured in Discord Developer Portal');
+    
+    // Try alternative login method
+    console.log("Attempting alternative login method...");
+    setTimeout(() => {
+      client.login(TOKEN.trim())
+        .then(() => console.log("Alternative login successful!"))
+        .catch(altErr => console.error("Alternative login also failed:", altErr.message));
+    }, 3000);
+  });
 
 // Error handling
 client.on('error', error => {
