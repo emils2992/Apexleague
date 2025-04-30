@@ -19,21 +19,29 @@ module.exports = {
     // Find command in the collection
     let command = client.commands.get(commandName);
     
+    // Debug komut yükleme 
+    if (commandName === 'debugkomutlar') {
+      const loadedCommands = Array.from(client.commands.keys()).join(', ');
+      return message.reply(`Yüklü komutlar: ${loadedCommands}`);
+    }
+    
     // Handle command aliases
     if (!command) {
+      console.log(`Aranan komut: ${commandName} - Yüklü komutlar: ${Array.from(client.commands.keys()).join(', ')}`);
+      
       // Check for common aliases
       if (commandName === 'topsıra' || commandName === 'topkayıt' || commandName === 'kayıttop') {
         command = client.commands.get('top');
-      } else if (commandName === 'kayıt' || commandName === 'kayit') {
-        command = client.commands.get('k');
-      } else if (commandName === 'kayitkur' || commandName === 'kurulum') {
-        command = client.commands.get('kayıtkur');
-      } else if (commandName === 'help' || commandName === 'yardim' || commandName === 'komutlar') {
-        command = client.commands.get('yardım');
-      } else if (commandName === 'geçmiş' || commandName === 'gecmis' || commandName === 'bilgi' || commandName === 'info') {
-        command = client.commands.get('g');
-      } else if (commandName === 'ukayıt' || commandName === 'ukayit' || commandName === 'ksil' || commandName === 'kayıtsil') {
-        command = client.commands.get('uk');
+      } else if (commandName === 'kayıt' || commandName === 'kayit' || commandName === 'k') {
+        command = client.commands.get('kayit');
+      } else if (commandName === 'kayıtkur' || commandName === 'kayitkur' || commandName === 'kurulum') {
+        command = client.commands.get('kayitkur');
+      } else if (commandName === 'help' || commandName === 'yardim' || commandName === 'komutlar' || commandName === 'yardım') {
+        command = client.commands.get('yardim');
+      } else if (commandName === 'geçmiş' || commandName === 'gecmis' || commandName === 'bilgi' || commandName === 'info' || commandName === 'g') {
+        command = client.commands.get('gecmis');
+      } else if (commandName === 'ukayıt' || commandName === 'ukayit' || commandName === 'ksil' || commandName === 'kayıtsil' || commandName === 'uk') {
+        command = client.commands.get('ukayit');
       }
     }
     
