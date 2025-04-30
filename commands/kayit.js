@@ -29,6 +29,11 @@ module.exports = {
       return message.reply('⚠️ Lütfen bir kullanıcı etiketleyin!');
     }
 
+    // Kullanıcının zaten kayıtlı olup olmadığını kontrol et
+    if (settings.uyeRole && target.roles.cache.has(settings.uyeRole)) {
+      return message.reply(`❌ **${target.user.tag}** zaten kayıtlı! Kaydını sıfırlamak için önce \`.uk @kullanıcı\` komutunu kullanın.`);
+    }
+
     // Extract name from args (everything after the mention)
     const name = args.slice(1).join(' ');
     
