@@ -3,14 +3,25 @@ const db = require('../utils/database');
 module.exports = {
   name: 'messageCreate',
   async execute(message, client) {
+    // Debug: Log all messages
+    console.log(`Message received: ${message.content}`);
+    
     // Ignore messages from bots and non-text channels
-    if (message.author.bot || !message.guild) return;
+    if (message.author.bot || !message.guild) {
+      console.log('Message ignored: from bot or not in guild');
+      return;
+    }
     
     // Get prefix (hardcoded as '.' for now)
     const prefix = '.';
     
     // Check if message starts with prefix
-    if (!message.content.startsWith(prefix)) return;
+    if (!message.content.startsWith(prefix)) {
+      console.log('Message ignored: does not start with prefix');
+      return;
+    }
+    
+    console.log('Command detected: ' + message.content);
     
     // Parse command and arguments
     const args = message.content.slice(prefix.length).trim().split(/ +/);
