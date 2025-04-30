@@ -5,9 +5,17 @@ module.exports = {
   name: 'k',
   description: 'Register a user with a name and select a role',
   async execute(message, args, client) {
+    // Get server settings from database
+    const guildId = message.guild.id;
+    const settings = await db.getGuildSettings(guildId);
+    
+    if (!settings) {
+      return message.reply('❓ Kayıt sistemi kurulmamış! Lütfen önce `.kayıtkur` komutunu kullanın.');
+    }
+    
     // Check if user has permission to use this command
-    if (!message.member.permissions.has('MANAGE_ROLES')) {
-      return message.reply('🚫 Bu komutu kullanmak için yetkiniz bulunmuyor!');
+    if (settings.yetkiliRole && !message.member.roles.cache.has(settings.yetkiliRole) && !message.member.permissions.has('ADMINISTRATOR')) {
+      return message.reply('🚫 Bu komutu kullanmak için yetkili olmalısınız!');
     }
 
     // Check if the command has the correct format
@@ -19,14 +27,6 @@ module.exports = {
     const target = message.mentions.members.first();
     if (!target) {
       return message.reply('⚠️ Lütfen bir kullanıcı etiketleyin!');
-    }
-
-    // Get server settings from database
-    const guildId = message.guild.id;
-    const settings = await db.getGuildSettings(guildId);
-    
-    if (!settings) {
-      return message.reply('❓ Kayıt sistemi kurulmamış! Lütfen önce `.kayıtkur` komutunu kullanın.');
     }
 
     // Extract name from args (everything after the mention)
@@ -79,6 +79,39 @@ module.exports = {
         embeds: [registerEmbed],
         components: [row]
       });
+      
+      // Kayıt verilerini veritabanına ekle
+      const registrationData = {
+        guildId: guildId,
+        memberId: target.id,
+        memberName: target.user.tag,
+        staffId: message.author.id,
+        staffName: message.author.tag,
+        timestamp: new Date().toISOString(),
+        assignedName: name
+      };
+      
+      // Veritabanına kaydet
+      await db.addRegistration(registrationData);
+      
+      // Genel log kanalına mesaj gönder
+      if (settings.logChannel) {
+        const logChannel = message.guild.channels.cache.get(settings.logChannel);
+        if (logChannel) {
+          const logEmbed = new MessageEmbed()
+            .setTitle('📝 Kullanıcı Kaydı Yapıldı')
+            .setColor('#2ecc71')
+            .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
+            .addField('👤 Kullanıcı', `<@${target.id}> (\`${target.user.tag}\`)`, false)
+            .addField('✏️ Yeni İsim', `\`${name}\``, false)
+            .addField('👮 Kaydeden Yetkili', `<@${message.author.id}> (\`${message.author.tag}\`)`, false)
+            .addField('⏰ Zaman', `\`${new Date().toLocaleString('tr-TR')}\``, false)
+            .setFooter({ text: `ID: ${target.id} • Kayıt Logu` })
+            .setTimestamp();
+            
+          await logChannel.send({ embeds: [logEmbed] });
+        }
+      }
       
       // Send a welcome message to the user
       try {

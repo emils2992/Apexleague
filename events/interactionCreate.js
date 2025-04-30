@@ -9,15 +9,17 @@ module.exports = {
     // Handle role assignment buttons
     if (interaction.customId.startsWith('role_')) {
       // Check if user has permission to assign roles
-      if (!interaction.member.permissions.has('MANAGE_ROLES')) {
+      const guildId = interaction.guild.id;
+      const settings = await db.getGuildSettings(guildId);
+      
+      if (settings && settings.yetkiliRole && 
+          !interaction.member.roles.cache.has(settings.yetkiliRole) && 
+          !interaction.member.permissions.has('ADMINISTRATOR')) {
         return interaction.reply({ 
-          content: '🚫 Bu butonu kullanmak için yetkiniz bulunmuyor!', 
+          content: '🚫 Bu butonu kullanmak için yetkili olmalısınız!', 
           ephemeral: true 
         });
       }
-      
-      const guildId = interaction.guild.id;
-      const settings = await db.getGuildSettings(guildId);
       
       if (!settings) {
         return interaction.reply({ 
