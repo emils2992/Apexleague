@@ -188,7 +188,7 @@ module.exports = {
             .addField('👤 Kullanıcı', `<@${target.id}>`, true)
             .addField('📝 Kayıt Eden', `<@${message.author.id}>`, true)
             .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
-            .setImage('https://i.imgur.com/7HXgvjM.png')
+            .setImage('https://i.imgur.com/3Umh6l4.jpg')
             .setFooter({ text: '⚽ Futbol Kayıt Sistemi • Hoş Geldin!' })
             .setTimestamp();
             
