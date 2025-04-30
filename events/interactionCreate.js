@@ -14,7 +14,7 @@ module.exports = {
       
       if (settings && settings.yetkiliRole && 
           !interaction.member.roles.cache.has(settings.yetkiliRole) && 
-          !interaction.member.permissions.has('ADMINISTRATOR')) {
+          !interaction.member.permissions.has(8n)) { // 8n = ADMINISTRATOR in Discord.js v13
         return interaction.reply({ 
           content: '🚫 Bu butonu kullanmak için yetkili olmalısınız!', 
           ephemeral: true 

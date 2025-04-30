@@ -3,7 +3,7 @@ const db = require('../utils/database');
 module.exports = {
   name: 'messageCreate',
   async execute(message, client) {
-    // Debug: Log all messages
+    // Debug: Log all messages for troubleshooting
     console.log(`Message received: ${message.content}`);
     
     // Ignore messages from bots and non-text channels
@@ -27,18 +27,24 @@ module.exports = {
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
     
+    console.log(`Attempting to find command: ${commandName}`);
+    
     // Find command in the collection
     let command = client.commands.get(commandName);
     
-    // Debug komut yükleme 
+    // List all commands for debugging
+    console.log(`Available commands: ${Array.from(client.commands.keys()).join(', ')}`);
+    
+    // Debug komut yükleme - Special debug command
     if (commandName === 'debugkomutlar') {
+      console.log('Debug command executed');
       const loadedCommands = Array.from(client.commands.keys()).join(', ');
       return message.reply(`Yüklü komutlar: ${loadedCommands}`);
     }
     
     // Handle command aliases
     if (!command) {
-      console.log(`Aranan komut: ${commandName} - Yüklü komutlar: ${Array.from(client.commands.keys()).join(', ')}`);
+      console.log(`Command not found directly. Checking aliases for: ${commandName}`);
       
       // Check for common aliases
       if (commandName === 'topsıra' || commandName === 'topkayıt' || commandName === 'kayıttop') {
@@ -54,14 +60,26 @@ module.exports = {
       } else if (commandName === 'ukayıt' || commandName === 'ukayit' || commandName === 'ksil' || commandName === 'kayıtsil' || commandName === 'uk') {
         command = client.commands.get('ukayit');
       }
+      
+      if (command) {
+        console.log(`Found command through alias: ${command.name}`);
+      } else {
+        console.log('No command found even after checking aliases');
+      }
     }
     
     // If command doesn't exist, return
-    if (!command) return;
+    if (!command) {
+      console.log(`Command not found: ${commandName}`);
+      return;
+    }
+    
+    console.log(`Executing command: ${command.name}`);
     
     try {
       // Execute the command
       await command.execute(message, args, client);
+      console.log(`Command executed successfully: ${command.name}`);
     } catch (error) {
       console.error(`Error executing ${commandName} command:`, error);
       message.reply('❌ Bu komutu çalıştırırken bir hata oluştu!').catch(console.error);
