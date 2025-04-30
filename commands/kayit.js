@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const db = require('../utils/database');
 
 module.exports = {
@@ -55,57 +55,27 @@ module.exports = {
         }
       }
       
-      // Create role selection buttons with emojis (Row 1)
-      const row1 = new MessageActionRow()
-        .addComponents(
-          new MessageButton()
-            .setCustomId(`role_futbolcu_${target.id}`)
-            .setLabel('⚽ Futbolcu')
-            .setStyle('PRIMARY'),
-          new MessageButton()
-            .setCustomId(`role_teknikdirektor_${target.id}`)
-            .setLabel('📋 Teknik Direktör')
-            .setStyle('SUCCESS'),
-          new MessageButton()
-            .setCustomId(`role_baskan_${target.id}`)
-            .setLabel('👑 Başkan')
-            .setStyle('DANGER')
-        );
-        
-      // Create second row of buttons (Row 2)
-      const row2 = new MessageActionRow()
-        .addComponents(
-          new MessageButton()
-            .setCustomId(`role_taraftar_${target.id}`)
-            .setLabel('🏟️ Taraftar')
-            .setStyle('PRIMARY'),
-          new MessageButton()
-            .setCustomId(`role_bayan_${target.id}`)
-            .setLabel('👩 Bayan Üye')
-            .setStyle('DANGER'),
-          new MessageButton()
-            .setCustomId(`role_partner_${target.id}`)
-            .setLabel('🤝 Partner')
-            .setStyle('SECONDARY')
-        );
-
-      // Create embed for registration
+      // Create embed for registration (Discord.js v12 style)
       const registerEmbed = new MessageEmbed()
         .setColor('#0099ff')
         .setTitle('👤 Kullanıcı Kaydı')
-        .setDescription(`**${name}** kullanıcısı için bir rol seçin!`)
+        .setDescription(`**${name}** kullanıcısı için rol seçimi için aşağıdaki komutları kullanın:
+        
+        ⚽ \`.rol ${target.id} futbolcu\` - Futbolcu rolü vermek için
+        📋 \`.rol ${target.id} teknikdirektor\` - Teknik Direktör rolü vermek için
+        👑 \`.rol ${target.id} baskan\` - Başkan rolü vermek için
+        🏟️ \`.rol ${target.id} taraftar\` - Taraftar rolü vermek için
+        👩 \`.rol ${target.id} bayan\` - Bayan Üye rolü vermek için
+        🤝 \`.rol ${target.id} partner\` - Partner rolü vermek için`)
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
         .addField('🆔 Kullanıcı', `<@${target.id}>`, true)
         .addField('📝 Kayıt Eden', `<@${message.author.id}>`, true)
         .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
-        .setFooter({ text: 'Futbol Kayıt Sistemi' })
+        .setFooter('Futbol Kayıt Sistemi')
         .setTimestamp();
 
-      // Send message with buttons and embed
-      await message.reply({ 
-        embeds: [registerEmbed],
-        components: [row1, row2]
-      });
+      // Send message with embed - Discord.js v12 doesn't support buttons, so we'll use commands instead
+      await message.channel.send(registerEmbed);
       
       // Kayıt verilerini veritabanına ekle
       const registrationData = {
@@ -133,25 +103,23 @@ module.exports = {
             .addField('✏️ Yeni İsim', `\`${name}\``, false)
             .addField('👮 Kaydeden Yetkili', `<@${message.author.id}> (\`${message.author.tag}\`)`, false)
             .addField('⏰ Zaman', `\`${new Date().toLocaleString('tr-TR')}\``, false)
-            .setFooter({ text: `ID: ${target.id} • Kayıt Logu` })
+            .setFooter(`ID: ${target.id} • Kayıt Logu`)
             .setTimestamp();
             
-          await logChannel.send({ embeds: [logEmbed] });
+          await logChannel.send(logEmbed);
         }
       }
       
       // Send a welcome message to the user
       try {
-        await target.send({
-          embeds: [
-            new MessageEmbed()
-              .setColor('#00ff00')
-              .setTitle('🎉 Hoş Geldin!')
-              .setDescription(`**${message.guild.name}** sunucusuna hoş geldin! Kaydın yapıldı ve yeni ismin **${name}** olarak ayarlandı.`)
-              .addField('💬 Bilgi', 'Yetkili ekibimiz yakında sana bir rol atayacak.')
-              .setFooter({ text: 'İyi eğlenceler! ⚽' })
-          ]
-        });
+        const dmEmbed = new MessageEmbed()
+          .setColor('#00ff00')
+          .setTitle('🎉 Hoş Geldin!')
+          .setDescription(`**${message.guild.name}** sunucusuna hoş geldin! Kaydın yapıldı ve yeni ismin **${name}** olarak ayarlandı.`)
+          .addField('💬 Bilgi', 'Yetkili ekibimiz yakında sana bir rol atayacak.')
+          .setFooter('İyi eğlenceler! ⚽');
+          
+        await target.send(dmEmbed);
       } catch (dmError) {
         console.log(`DM gönderilemedi: ${dmError}`);
         // Don't worry if DM can't be sent, it's optional
@@ -169,10 +137,10 @@ module.exports = {
             .addField('✏️ Yeni İsim', `\`${name}\``, false)
             .addField('👮 Kaydeden Yetkili', `<@${message.author.id}>`, true)
             .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
-            .setFooter({ text: `ID: ${target.id} • Kayıt İşlemi` })
+            .setFooter(`ID: ${target.id} • Kayıt İşlemi`)
             .setTimestamp();
           
-          await logChannel.send({ embeds: [logEmbed] });
+          await logChannel.send(logEmbed);
         }
       }
       
@@ -189,13 +157,11 @@ module.exports = {
             .addField('📝 Kayıt Eden', `<@${message.author.id}>`, true)
             .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
             .setImage('https://i.imgur.com/3Umh6l4.jpg')
-            .setFooter({ text: '⚽ Futbol Kayıt Sistemi • Hoş Geldin!' })
+            .setFooter('⚽ Futbol Kayıt Sistemi • Hoş Geldin!')
             .setTimestamp();
-            
-          await welcomeChannel.send({ 
-            content: `🎉 Aramıza hoş geldin <@${target.id}>!`,
-            embeds: [welcomeEmbed] 
-          });
+          
+          await welcomeChannel.send(`🎉 Aramıza hoş geldin <@${target.id}>!`);
+          await welcomeChannel.send(welcomeEmbed);
         }
       }
       
