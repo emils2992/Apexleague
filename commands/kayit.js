@@ -41,8 +41,8 @@ module.exports = {
         await target.roles.remove(settings.kayitsizRole);
       }
       
-      // Create role selection buttons with emojis
-      const row = new MessageActionRow()
+      // Create role selection buttons with emojis (Row 1)
+      const row1 = new MessageActionRow()
         .addComponents(
           new MessageButton()
             .setCustomId(`role_futbolcu_${target.id}`)
@@ -55,6 +55,19 @@ module.exports = {
           new MessageButton()
             .setCustomId(`role_baskan_${target.id}`)
             .setLabel('👑 Başkan')
+            .setStyle('DANGER')
+        );
+        
+      // Create second row of buttons (Row 2)
+      const row2 = new MessageActionRow()
+        .addComponents(
+          new MessageButton()
+            .setCustomId(`role_taraftar_${target.id}`)
+            .setLabel('🏟️ Taraftar')
+            .setStyle('PRIMARY'),
+          new MessageButton()
+            .setCustomId(`role_bayan_${target.id}`)
+            .setLabel('👩 Bayan Üye')
             .setStyle('DANGER'),
           new MessageButton()
             .setCustomId(`role_partner_${target.id}`)
@@ -77,7 +90,7 @@ module.exports = {
       // Send message with buttons and embed
       await message.reply({ 
         embeds: [registerEmbed],
-        components: [row]
+        components: [row1, row2]
       });
       
       // Kayıt verilerini veritabanına ekle
@@ -128,6 +141,28 @@ module.exports = {
       } catch (dmError) {
         console.log(`DM gönderilemedi: ${dmError}`);
         // Don't worry if DM can't be sent, it's optional
+      }
+      
+      // Hoşgeldin kanalına mesaj gönder
+      if (settings.welcomeChannel) {
+        const welcomeChannel = message.guild.channels.cache.get(settings.welcomeChannel);
+        if (welcomeChannel) {
+          const welcomeEmbed = new MessageEmbed()
+            .setTitle('🎊 Yeni Üye Aramıza Katıldı!')
+            .setColor('#f1c40f')
+            .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
+            .setDescription(`**${name}** adlı üye aramıza hoş geldin! Futbol ailemize katıldığın için çok mutluyuz! ⚽`)
+            .addField('👤 Kullanıcı', `<@${target.id}>`, true)
+            .addField('📝 Kayıt Eden', `<@${message.author.id}>`, true)
+            .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
+            .setFooter({ text: '⚽ Futbol Kayıt Sistemi • Hoş Geldin!' })
+            .setTimestamp();
+            
+          await welcomeChannel.send({ 
+            content: `🎉 Aramıza hoş geldin <@${target.id}>!`,
+            embeds: [welcomeEmbed] 
+          });
+        }
       }
       
     } catch (error) {

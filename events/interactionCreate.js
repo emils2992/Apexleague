@@ -65,6 +65,18 @@ module.exports = {
             roleEmoji = '👑';
             roleColor = '#e74c3c'; // Red
             break;
+          case 'taraftar':
+            roleId = settings.taraftarRole;
+            roleName = 'Taraftar';
+            roleEmoji = '🏟️';
+            roleColor = '#9b59b6'; // Purple
+            break;
+          case 'bayan':
+            roleId = settings.bayanRole;
+            roleName = 'Bayan Üye';
+            roleEmoji = '👩';
+            roleColor = '#e91e63'; // Pink
+            break;
           case 'partner':
             roleId = settings.partnerRole;
             roleName = 'Partner';
@@ -95,6 +107,9 @@ module.exports = {
         
         // Assign the role
         await targetMember.roles.add(role);
+        
+        // Update registration database with role assignment
+        await db.updateRegistrationRole(guildId, targetId, role.id, roleName);
         
         // Create a fancy embed for completion
         const successEmbed = new MessageEmbed()
@@ -128,6 +143,34 @@ module.exports = {
         } catch (dmError) {
           console.log(`DM gönderilemedi: ${dmError}`);
           // Don't worry if DM fails
+        }
+        
+        // Hoşgeldin kanalına mesaj gönder
+        try {
+          const guildSettings = await db.getGuildSettings(guildId);
+          if (guildSettings && guildSettings.welcomeChannel) {
+            const welcomeChannel = interaction.guild.channels.cache.get(guildSettings.welcomeChannel);
+            if (welcomeChannel) {
+              const welcomeEmbed = new MessageEmbed()
+                .setTitle(`${roleEmoji} Yeni ${roleName} Aramıza Katıldı!`)
+                .setColor(roleColor)
+                .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
+                .setDescription(`**${targetMember.displayName}** adlı üye artık bir **${roleEmoji} ${roleName}**! Futbol ailemize katıldığın için çok mutluyuz! ⚽`)
+                .addField('👤 Kullanıcı', `<@${targetMember.id}>`, true)
+                .addField('🛡️ Verilen Rol', `<@&${role.id}>`, true)
+                .addField('👮 İşlemi Yapan', `<@${interaction.user.id}>`, true)
+                .setFooter({ text: `⚽ Futbol Kayıt Sistemi • ${roleName} Hoş Geldin!` })
+                .setTimestamp();
+                
+              await welcomeChannel.send({ 
+                content: `🎉 Aramıza hoş geldin <@${targetMember.id}>!`,
+                embeds: [welcomeEmbed] 
+              });
+            }
+          }
+        } catch (welcomeError) {
+          console.error('Hoşgeldin mesajı gönderilemedi:', welcomeError);
+          // Don't worry if welcome message fails
         }
         
       } catch (error) {

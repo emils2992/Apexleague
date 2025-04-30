@@ -269,7 +269,7 @@ module.exports = {
     }
     
     // Ask for welcome channel
-    const welcomeMsg = await message.channel.send('7️⃣ Lütfen hoş geldin mesajlarının gönderileceği kanalı etiketleyin:');
+    const welcomeMsg = await message.channel.send('7️⃣ Lütfen hoş geldin mesajlarının gönderileceği kanalı etiketleyin:\n*Bu kanal, kullanıcı kayıt olduktan sonra karşılama mesajlarının gönderileceği kanaldır.*');
     let welcomeChannel;
     
     try {
@@ -292,7 +292,7 @@ module.exports = {
     }
     
     // Ask for join log channel (optional)
-    const joinLogMsg = await message.channel.send('8️⃣ Lütfen yeni üye giriş loglarının gönderileceği kanalı etiketleyin (opsiyonel, geçmek için "geç" yazın):');
+    const joinLogMsg = await message.channel.send('8️⃣ Lütfen yeni üye giriş loglarının gönderileceği kanalı etiketleyin (opsiyonel, geçmek için "geç" yazın):\n*Bu kanal, sunucuya yeni bir üye katıldığında yetkilileri etiketleyerek bildirim yapılan kanaldır.*');
     let joinLogChannel = null;
     
     try {
@@ -321,7 +321,7 @@ module.exports = {
     }
     
     // Ask for general log channel (optional)
-    const logMsg = await message.channel.send('9️⃣ Lütfen genel logların gönderileceği kanalı etiketleyin (opsiyonel, geçmek için "geç" yazın):');
+    const logMsg = await message.channel.send('9️⃣ Lütfen genel logların gönderileceği kanalı etiketleyin (opsiyonel, geçmek için "geç" yazın):\n*Bu kanal, tüm kayıt işlemlerinin ve rol atamalarının kayıtlarının tutulduğu kanaldır.*');
     let logChannel = null;
     
     try {
@@ -399,15 +399,22 @@ module.exports = {
       .setColor('#2ecc71')
       .setThumbnail('https://i.imgur.com/7HXgvjM.png')
       .addField('👤 Kayıtsız Rolü', `<@&${kayitsizRole.id}>`, true)
+      .addField('🛡️ Yetkili Rolü', `<@&${yetkiliRole.id}>`, true)
       .addField('⚽ Futbolcu Rolü', `<@&${futbolcuRole.id}>`, true)
       .addField('📋 Teknik Direktör Rolü', `<@&${tdRole.id}>`, true)
       .addField('👑 Başkan Rolü', `<@&${baskanRole.id}>`, true)
       .addField('🤝 Partner Rolü', `<@&${partnerRole.id}>`, true)
       .addField('🎉 Hoş Geldin Kanalı', `<#${welcomeChannel.id}>`, true)
-      .addField('📢 Log Kanalı', logChannel ? `<#${logChannel.id}>` : '`Ayarlanmadı`', true)
+      .addField('📥 Giriş Log Kanalı', joinLogChannel ? `<#${joinLogChannel.id}>` : '`Ayarlanmadı`', true)
+      .addField('📊 Genel Log Kanalı', logChannel ? `<#${logChannel.id}>` : '`Ayarlanmadı`', true)
       .addField('🔄 Otomatik İsim Değiştirme', autoNickname ? '`Aktif`' : '`Pasif`', true)
       .addField('\u200B', '\u200B', true) // Empty field for alignment
+      .addField('\u200B', '\u200B', true) // Empty field for alignment
       .addField('📝 Kullanım', 'Yeni gelen üyeler otomatik olarak kayıtsız rolü alacak.\nKayıt için `.k @kullanıcı isim` komutunu kullanabilirsiniz.')
+      .addField('📋 Kanal Bilgileri', 
+      `**Hoş Geldin Kanalı**: Kayıt olduktan sonra karşılama mesajları.
+      **Giriş Log Kanalı**: Yeni üye geldiğinde yetkililere bildirim.
+      **Genel Log Kanalı**: Tüm kayıt ve rol işlemlerinin kayıtları.`)
       .setFooter({ text: '⚽ Futbol Kayıt Sistemi • Kurulum Tamamlandı' })
       .setTimestamp();
       
