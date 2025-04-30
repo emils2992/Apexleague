@@ -6,7 +6,7 @@ module.exports = {
   description: 'Set up registration system',
   async execute(message, args, client) {
     // Check if user has admin permission
-    if (!message.member.permissions.has('ADMINISTRATOR')) {
+    if (!message.member.permissions.has(8n)) {
       return message.reply('🚫 Bu komutu kullanmak için yönetici yetkisine sahip olmalısınız!');
     }
 

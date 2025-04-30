@@ -14,7 +14,7 @@ module.exports = {
     }
     
     // Check if user has permission to use this command
-    if (settings.yetkiliRole && !message.member.roles.cache.has(settings.yetkiliRole) && !message.member.permissions.has('ADMINISTRATOR')) {
+    if (settings.yetkiliRole && !message.member.roles.cache.has(settings.yetkiliRole) && !message.member.permissions.has(8n)) {
       return message.reply('🚫 Bu komutu kullanmak için yetkili olmalısınız!');
     }
     
