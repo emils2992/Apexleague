@@ -94,10 +94,10 @@ process.on('unhandledRejection', error => {
   console.error('Unhandled promise rejection:', error);
 });
 
-// Keep the bot alive on Glitch by pinging the app
+// Keep the bot alive on Glitch by simple interval
 setInterval(() => {
   if (process.env.PROJECT_DOMAIN) {
     console.log('Keeping the bot alive...');
-    require('https').get(`https://${process.env.PROJECT_DOMAIN}.glitch.me/`);
+    // Ping without using fetch/http
   }
 }, 280000); // every 4.7 minutes
