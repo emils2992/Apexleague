@@ -2,7 +2,7 @@ const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const db = require('../utils/database');
 
 module.exports = {
-  name: 'kayıtkur',
+  name: 'kayitkur',
   description: 'Set up registration system',
   async execute(message, args, client) {
     // Check if user has admin permission

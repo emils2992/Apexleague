@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const db = require('../utils/database');
 
 module.exports = {
-  name: 'uk',
+  name: 'ukayit',
   description: 'Kullanıcının üyelik kaydını sıfırla ve kayıtsız rolü ver',
   async execute(message, args, client) {
     // Get guild settings

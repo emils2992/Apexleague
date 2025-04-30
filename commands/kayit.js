@@ -2,7 +2,7 @@ const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const db = require('../utils/database');
 
 module.exports = {
-  name: 'k',
+  name: 'kayit',
   description: 'Register a user with a name and select a role',
   async execute(message, args, client) {
     // Get server settings from database
