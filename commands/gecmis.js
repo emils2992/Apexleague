@@ -1,6 +1,13 @@
 const { MessageEmbed } = require('discord.js');
 const db = require('../utils/database');
 
+// Metni belirli uzunlukta kısaltma fonksiyonu
+function truncateText(text, maxLength = 1000) {
+  if (!text) return 'Bilgi yok';
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength - 3) + '...';
+}
+
 module.exports = {
   name: 'g',
   description: 'Kullanıcının geçmiş kayıtlarını ve sunucu giriş-çıkış bilgilerini gösterir',
@@ -54,7 +61,7 @@ module.exports = {
         .map(role => `<@&${role.id}>`)
         .join(', ');
       
-      embed.addField('🛡️ Mevcut Roller', roles || 'Rol yok', false);
+      embed.addField('🛡️ Mevcut Roller', truncateText(roles, 1000) || 'Rol yok', false);
       
       // Add previous registrations if any
       if (userRegistrations.length > 0) {
@@ -63,22 +70,33 @@ module.exports = {
         
         let registrationHistory = '';
         
-        userRegistrations.forEach((reg, index) => {
+        // Kayıt geçmişini parçalara ayır
+        for (let i = 0; i < Math.min(userRegistrations.length, 10); i++) { // En fazla 10 kayıt göster
+          const reg = userRegistrations[i];
           const date = new Date(reg.timestamp);
           const formattedDate = `<t:${Math.floor(date.getTime() / 1000)}:F>`;
           
-          registrationHistory += `**${index + 1}.** İsim: \`${reg.assignedName}\` `;
-          registrationHistory += `| Kaydeden: <@${reg.staffId}> `;
-          registrationHistory += `| Tarih: ${formattedDate}`;
+          let entryText = `**${i + 1}.** İsim: \`${reg.assignedName}\` `;
+          entryText += `| Kaydeden: <@${reg.staffId}> `;
+          entryText += `| Tarih: ${formattedDate}`;
           
           if (reg.assignedRole) {
-            registrationHistory += ` | Rol: <@&${reg.assignedRoleId}>`;
+            entryText += ` | Rol: <@&${reg.assignedRoleId}>`;
           }
           
-          registrationHistory += '\n';
-        });
+          entryText += '\n';
+          
+          // Karakter sınırını aşmamak için kontrol et
+          if ((registrationHistory + entryText).length > 1000) {
+            // Sınıra yaklaşıldıysa, bu kayıdı atla ve kalan kayıt sayısını belirt
+            registrationHistory += `...ve ${userRegistrations.length - i} kayıt daha.`;
+            break;
+          }
+          
+          registrationHistory += entryText;
+        }
         
-        embed.addField(`📋 Kayıt Geçmişi (${userRegistrations.length})`, registrationHistory || 'Kayıt geçmişi bulunamadı.', false);
+        embed.addField(`📋 Kayıt Geçmişi (${userRegistrations.length})`, truncateText(registrationHistory, 1000) || 'Kayıt geçmişi bulunamadı.', false);
       } else {
         embed.addField('📋 Kayıt Geçmişi', 'Bu kullanıcı için kayıt geçmişi bulunamadı.', false);
       }
