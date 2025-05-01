@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const db = require('../utils/database');
 
 module.exports = {
-  name: 'topsıra',
+  name: 'topsira',
   description: 'En çok kayıt yapan yetkililerin sıralamasını gösterir',
   async execute(message, args, client) {
     // Yetkili rolü kontrolü

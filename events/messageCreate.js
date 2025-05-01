@@ -62,9 +62,19 @@ module.exports = {
       } else if (commandName === 'id' || commandName === 'isim' || commandName === 'isimdeğiştir' || commandName === 'isimdegistir') {
         command = client.commands.get('id');
       } else if (commandName === 'sescek' || commandName === 'sesçek' || commandName === 'sesgel' || commandName === 'seseçek') {
-        command = client.commands.get('sescek');
+        try {
+          const sescekCommand = require('../commands/sescek.js');
+          command = sescekCommand;
+        } catch (error) {
+          console.error('Sesçek komutu yüklenirken hata oluştu:', error);
+        }
       } else if (commandName === 'sesayril' || commandName === 'sesayrıl' || commandName === 'sesgit' || commandName === 'sesçık') {
-        command = client.commands.get('sesayril');
+        try {
+          const sesayrilCommand = require('../commands/sesayril.js');
+          command = sesayrilCommand;
+        } catch (error) {
+          console.error('Sesayril komutu yüklenirken hata oluştu:', error);
+        }
       }
       
       if (command) {
