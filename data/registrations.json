@@ -113,6 +113,19 @@
       "assignedRole": "Teknik Direktör",
       "assignedRoleId": "1352647377433137223",
       "roleAssignedAt": "2025-04-30T18:38:07.861Z"
+    },
+    {
+      "guildId": "1352647377395122208",
+      "memberId": "1173735298329493675",
+      "memberName": "frozydebate",
+      "staffId": "794205713533894696",
+      "staffName": "emilswd",
+      "timestamp": "2025-04-30T20:49:44.809Z",
+      "assignedName": "ab",
+      "id": "1746046184810183",
+      "assignedRole": "Taraftar",
+      "assignedRoleId": "1352647377433137216",
+      "roleAssignedAt": "2025-04-30T20:49:50.573Z"
     }
   ]
 }
