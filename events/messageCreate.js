@@ -59,6 +59,8 @@ module.exports = {
         command = client.commands.get('gecmis');
       } else if (commandName === 'ukayıt' || commandName === 'ukayit' || commandName === 'ksil' || commandName === 'kayıtsil' || commandName === 'uk') {
         command = client.commands.get('ukayit');
+      } else if (commandName === 'id' || commandName === 'isim' || commandName === 'isimdeğiştir' || commandName === 'isimdegistir') {
+        command = client.commands.get('id');
       }
       
       if (command) {
