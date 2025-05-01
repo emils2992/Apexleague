@@ -20,7 +20,37 @@ module.exports = {
       if (settings.kayitsizRole) {
         const kayitsizRole = member.guild.roles.cache.get(settings.kayitsizRole);
         if (kayitsizRole) {
-          await member.roles.add(kayitsizRole);
+          try {
+            // Botun rolü ile kullanıcıya verilecek rolün hiyerarşisini kontrol et
+            const botMember = member.guild.me;
+            const botRole = botMember.roles.highest;
+            
+            if (botRole.position <= kayitsizRole.position) {
+              // Bot rolü, Kayıtsız rolünden daha aşağıda veya aynı seviyede
+              if (settings.logChannel) {
+                const logChannel = member.guild.channels.cache.get(settings.logChannel);
+                if (logChannel) {
+                  await logChannel.send({
+                    content: `\u26a0️ **Uyarı:** Botun rolü, Kayıtsız rolünden daha aşağıda! <@${member.id}> kişisine rol atayabilmem için lütfen bot rolünü daha üste taşıyın.`
+                  });
+                }
+              }
+              console.log(`[HATA] Rol hiyerarşisi sorunu: Botun rolü (${botRole.name}) Kayıtsız rolünden (${kayitsizRole.name}) daha aşağıda!`);
+            } else {
+              await member.roles.add(kayitsizRole);
+            }
+          } catch (roleError) {
+            console.error(`Kayıtsız rolü verme hatası: ${roleError}`);
+            // Log kanalına hata mesajı gönder
+            if (settings.logChannel) {
+              const logChannel = member.guild.channels.cache.get(settings.logChannel);
+              if (logChannel) {
+                await logChannel.send({
+                  content: `\u26a0️ **Uyarı:** <@${member.id}> kişisine Kayıtsız rolü verilemedi. Lütfen botun rolünü sunucudaki diğer rollerden daha üste taşıyın.`
+                });
+              }
+            }
+          }
         }
       }
       

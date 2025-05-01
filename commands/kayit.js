@@ -38,19 +38,58 @@ module.exports = {
     const name = args.slice(1).join(' ');
     
     try {
+      // Botun rolü ile kullanıcıya atanacak rollerin hiyerarşisini kontrol et
+      const botMember = message.guild.me;
+      const botRole = botMember.roles.highest;
+      let hierarchyError = false;
+      
+      // Kayıtsız rolü için kontrol
+      if (settings.kayitsizRole) {
+        const kayitsizRole = message.guild.roles.cache.get(settings.kayitsizRole);
+        if (kayitsizRole && botRole.position <= kayitsizRole.position) {
+          hierarchyError = true;
+          message.channel.send(`\u26a0️ **Uyarı:** Botun rolü, Kayıtsız rolünden daha aşağıda! Kayıt yapabilmem için lütfen bot rolünü daha üste taşıyın.`);
+          console.log(`[HATA] Rol hiyerarşisi sorunu: Botun rolü (${botRole.name}) Kayıtsız rolünden (${kayitsizRole.name}) daha aşağıda!`);
+        }
+      }
+      
+      // Üye rolü için kontrol
+      if (settings.uyeRole && settings.autoAssignUyeRole) {
+        const uyeRole = message.guild.roles.cache.get(settings.uyeRole);
+        if (uyeRole && botRole.position <= uyeRole.position) {
+          hierarchyError = true;
+          message.channel.send(`\u26a0️ **Uyarı:** Botun rolü, Üye rolünden daha aşağıda! Kayıt yapabilmem için lütfen bot rolünü daha üste taşıyın.`);
+          console.log(`[HATA] Rol hiyerarşisi sorunu: Botun rolü (${botRole.name}) Üye rolünden (${uyeRole.name}) daha aşağıda!`);
+        }
+      }
+      
+      // Eğer rol hiyerarşisi sorunu varsa işlemi durdur
+      if (hierarchyError) {
+        return message.reply('\u26a0️ Kayıt işlemi durduruldu: Bot rolü, sunucudaki diğer rollerden daha alt sırada. Lütfen bot rolünü yönetici panelinden daha üst sıraya taşıyın!');
+      }
+      
       // Set nickname (without emoji)
-      await target.setNickname(name);
+      await target.setNickname(name).catch(nicknameError => {
+        console.error(`İsim değiştirme hatası: ${nicknameError}`);
+        message.channel.send(`\u26a0️ **Not:** Kullanıcının ismini değiştiremedim. Bu, kullanıcının yetkisi sizden veya bottan yüksek olabilir.`);
+      });
       
       // Remove "Kayıtsız" role if exists
       if (settings.kayitsizRole && target.roles.cache.has(settings.kayitsizRole)) {
-        await target.roles.remove(settings.kayitsizRole);
+        await target.roles.remove(settings.kayitsizRole).catch(roleError => {
+          console.error(`Kayıtsız rolü kaldırma hatası: ${roleError}`);
+          message.channel.send(`\u26a0️ **Not:** Kayıtsız rolünü kaldıramadım. Bot rolünün, rol hiyerarşisinde daha üst sırada olduğundan emin olun.`);
+        });
       }
       
       // Automatically add the member role if configured
       if (settings.uyeRole && settings.autoAssignUyeRole) {
         const uyeRole = message.guild.roles.cache.get(settings.uyeRole);
         if (uyeRole) {
-          await target.roles.add(uyeRole);
+          await target.roles.add(uyeRole).catch(roleError => {
+            console.error(`Üye rolü ekleme hatası: ${roleError}`);
+            message.channel.send(`\u26a0️ **Not:** Üye rolünü ekleyemedim. Bot rolünün, rol hiyerarşisinde daha üst sırada olduğundan emin olun.`);
+          });
           // Üye rolü verme mesajı loglara gönderilmeyecek, sadece log embed'ine ekleyeceğiz
         }
       }

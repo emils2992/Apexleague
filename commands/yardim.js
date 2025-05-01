@@ -33,6 +33,11 @@ module.exports = {
       '`.g @kullanıcı` - Kullanıcının geçmiş kayıtlarını ve bilgilerini gösterir\n' +
       '`.id @kullanıcı yeni_isim` - Kullanıcının ismini değiştirir\n' +
       '`.top` - En çok kayıt yapan yetkililerin sıralamasını gösterir', false);
+      
+    // Ses komutları
+    embed.addField('🎤 Ses Komutları', 
+      '`.sescek` - Botu bulunduğunuz ses kanalına çeker\n' + 
+      '`.sesayril` - Botu ses kanalından çıkarır', false);
     
     // Additional help based on setup status
     if (setupDone) {

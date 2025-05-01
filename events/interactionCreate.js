@@ -105,8 +105,39 @@ module.exports = {
           });
         }
         
+        // Botun rolü ile atanacak rolün hiyerarşisini kontrol et
+        const botMember = interaction.guild.me;
+        const botRole = botMember.roles.highest;
+        
+        if (botRole.position <= role.position) {
+          // Bot rolü daha aşağıda, uyarı ver
+          await interaction.reply({ 
+            content: `\u26a0️ **Uyarı:** <@&${role.id}> rolünü veremiyorum, çünkü botun rolü daha alt sırada! Lütfen Discord rol ayarlarından bot rolünü daha üste taşıyın.`, 
+            ephemeral: true 
+          });
+          
+          // Log kanalına da uyarı gönder
+          if (guildSettings.logChannel) {
+            const logChannel = interaction.guild.channels.cache.get(guildSettings.logChannel);
+            if (logChannel) {
+              await logChannel.send(
+                `\u26a0️ **Uyarı:** <@${interaction.user.id}>, <@${targetId}> kişisine <@&${role.id}> rolünü vermeye çalıştı fakat bot rolü daha alt sırada olduğu için başarısız oldu. Lütfen bot rolünü daha üste taşıyın.`
+              );
+            }
+          }
+          
+          return;
+        }
+        
         // Assign the role
-        await targetMember.roles.add(role);
+        await targetMember.roles.add(role).catch(async (error) => {
+          console.error(`Rol verme hatası: ${error}`);
+          await interaction.reply({ 
+            content: `\u26a0️ **Hata:** <@&${role.id}> rolünü vermeye çalışırken bir hata oluştu. Bot rolünün daha üst sırada olduğundan emin olun.`, 
+            ephemeral: true 
+          });
+          return;
+        });
         
         // Update registration database with role assignment
         await db.updateRegistrationRole(guildId, targetId, role.id, roleName);
