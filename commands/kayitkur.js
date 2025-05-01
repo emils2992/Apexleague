@@ -73,7 +73,7 @@ module.exports = {
     const setupMsg = await message.channel.send({ embeds: [setupEmbed] });
     
     // Ask for "Kayıtsız" role
-    const kayitsizMsg = await message.channel.send('1️⃣ Lütfen "Kayıtsız" rolünü etiketleyin veya "oluştur" yazın:');
+    const kayitsizMsg = await message.channel.send('1️⃣ Lütfen "Kayıtsız" rolünü etiketleyin, "oluştur" yazın veya "geç" yazarak bu adımı atlayabilirsiniz:');
     let kayitsizRole;
     
     try {
@@ -86,7 +86,10 @@ module.exports = {
       
       const response = collected.first();
       
-      if (response.content.toLowerCase() === 'oluştur') {
+      if (response.content.toLowerCase() === 'geç') {
+        await message.channel.send('✅ Kayıtsız rolü ayarlanmadı, bu adım atlandı.');
+        kayitsizRole = null;
+      } else if (response.content.toLowerCase() === 'oluştur') {
         // Create role if it doesn't exist
         kayitsizRole = await message.guild.roles.create({
           name: '👤 Kayıtsız',
