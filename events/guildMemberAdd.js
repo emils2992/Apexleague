@@ -10,7 +10,13 @@ module.exports = {
     if (!settings) return; // If settings don't exist, do nothing
     
     try {
-      // Assign "Kayıtsız" role
+      // Bot kontrolü - eğer bot ise hiçbir kayıt işlemi yapma
+      if (member.user.bot) {
+        console.log(`[BOT] ${member.user.tag} sunucuya katıldı. Bot olduğu için kayıt işlemi yapılmadı.`);
+        return;
+      }
+      
+      // Assign "Kayıtsız" role to humans only
       if (settings.kayitsizRole) {
         const kayitsizRole = member.guild.roles.cache.get(settings.kayitsizRole);
         if (kayitsizRole) {
@@ -18,7 +24,7 @@ module.exports = {
         }
       }
       
-      // Change nickname to "Kayıtsız" if enabled
+      // Change nickname to "Kayıtsız" if enabled (for humans only)
       if (settings.autoNickname) {
         await member.setNickname('Kayıtsız').catch(error => {
           console.error(`Could not set nickname for ${member.user.tag}: ${error}`);
