@@ -51,12 +51,7 @@ module.exports = {
         const uyeRole = message.guild.roles.cache.get(settings.uyeRole);
         if (uyeRole) {
           await target.roles.add(uyeRole);
-          if (settings.logChannel) {
-            const logChannel = message.guild.channels.cache.get(settings.logChannel);
-            if (logChannel) {
-              logChannel.send(`👥 <@${target.id}> kullanıcısına otomatik olarak <@&${uyeRole.id}> rolü verildi.`);
-            }
-          }
+          // Üye rolü verme mesajı loglara gönderilmeyecek, sadece log embed'ine ekleyeceğiz
         }
       }
       
@@ -126,24 +121,7 @@ module.exports = {
       // Veritabanına kaydet
       await db.addRegistration(registrationData);
       
-      // Genel log kanalına mesaj gönder
-      if (settings.logChannel) {
-        const logChannel = message.guild.channels.cache.get(settings.logChannel);
-        if (logChannel) {
-          const logEmbed = new MessageEmbed()
-            .setTitle('📝 Kullanıcı Kaydı Yapıldı')
-            .setColor('#2ecc71')
-            .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
-            .addField('👤 Kullanıcı', `<@${target.id}> (\`${target.user.tag}\`)`, false)
-            .addField('✏️ Yeni İsim', `\`${name}\``, false)
-            .addField('👮 Kaydeden Yetkili', `<@${message.author.id}> (\`${message.author.tag}\`)`, false)
-            .addField('⏰ Zaman', `\`${new Date().toLocaleString('tr-TR')}\``, false)
-            .setFooter({ text: `ID: ${target.id} • Kayıt Logu` })
-            .setTimestamp();
-            
-          await logChannel.send({ embeds: [logEmbed] });
-        }
-      }
+      // (Log mesajı burada gönderilmeyecek - çift gönderim önlemek için)
       
       // Send a welcome message to the user
       try {
