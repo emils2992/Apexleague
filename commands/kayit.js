@@ -94,39 +94,106 @@ module.exports = {
         }
       }
       
-      // Create role selection buttons with emojis (Row 1)
-      const row1 = new MessageActionRow()
-        .addComponents(
+      // Sadece mevcut rolleri butonlara ekle
+      const row1Components = [];
+      const row2Components = [];
+      
+      // İlk satır butonları (maksimum 3 tane)
+      if (settings.futbolcuRole) {
+        row1Components.push(
           new MessageButton()
             .setCustomId(`role_futbolcu_${target.id}`)
             .setLabel('⚽ Futbolcu')
-            .setStyle('PRIMARY'),
+            .setStyle('PRIMARY')
+        );
+      }
+      
+      if (settings.teknikDirektorRole) {
+        row1Components.push(
           new MessageButton()
             .setCustomId(`role_teknikdirektor_${target.id}`)
             .setLabel('📋 Teknik Direktör')
-            .setStyle('SUCCESS'),
+            .setStyle('SUCCESS')
+        );
+      }
+      
+      if (settings.baskanRole) {
+        row1Components.push(
           new MessageButton()
             .setCustomId(`role_baskan_${target.id}`)
             .setLabel('👑 Başkan')
             .setStyle('DANGER')
         );
+      }
+      
+      // Eğer ilk satırda hala yer varsa, ikinci satırdaki butonları buraya taşı
+      if (row1Components.length < 3) {
+        if (settings.taraftarRole && row1Components.length < 3) {
+          row1Components.push(
+            new MessageButton()
+              .setCustomId(`role_taraftar_${target.id}`)
+              .setLabel('🏟️ Taraftar')
+              .setStyle('PRIMARY')
+          );
+        }
         
-      // Create second row of buttons (Row 2)
-      const row2 = new MessageActionRow()
-        .addComponents(
-          new MessageButton()
-            .setCustomId(`role_taraftar_${target.id}`)
-            .setLabel('🏟️ Taraftar')
-            .setStyle('PRIMARY'),
-          new MessageButton()
-            .setCustomId(`role_bayan_${target.id}`)
-            .setLabel('👩 Bayan Üye')
-            .setStyle('DANGER'),
-          new MessageButton()
-            .setCustomId(`role_partner_${target.id}`)
-            .setLabel('🤝 Partner')
-            .setStyle('SECONDARY')
-        );
+        if (settings.bayanUyeRole && row1Components.length < 3) {
+          row1Components.push(
+            new MessageButton()
+              .setCustomId(`role_bayan_${target.id}`)
+              .setLabel('👩 Bayan Üye')
+              .setStyle('DANGER')
+          );
+        }
+        
+        if (settings.partnerRole && row1Components.length < 3) {
+          row1Components.push(
+            new MessageButton()
+              .setCustomId(`role_partner_${target.id}`)
+              .setLabel('🤝 Partner')
+              .setStyle('SECONDARY')
+          );
+        }
+      }
+      
+      // İkinci satıra kalan butonları ekle
+      if (row1Components.length >= 3) {
+        if (settings.taraftarRole) {
+          row2Components.push(
+            new MessageButton()
+              .setCustomId(`role_taraftar_${target.id}`)
+              .setLabel('🏟️ Taraftar')
+              .setStyle('PRIMARY')
+          );
+        }
+        
+        if (settings.bayanUyeRole) {
+          row2Components.push(
+            new MessageButton()
+              .setCustomId(`role_bayan_${target.id}`)
+              .setLabel('👩 Bayan Üye')
+              .setStyle('DANGER')
+          );
+        }
+        
+        if (settings.partnerRole) {
+          row2Components.push(
+            new MessageButton()
+              .setCustomId(`role_partner_${target.id}`)
+              .setLabel('🤝 Partner')
+              .setStyle('SECONDARY')
+          );
+        }
+      }
+      
+      // ActionRow oluştur
+      const row1 = new MessageActionRow().addComponents(...row1Components);
+      
+      // İkinci satır için yeterli buton varsa, ikinci satırı da oluştur
+      let row2 = null;
+      if (row2Components.length > 0) {
+        row2 = new MessageActionRow().addComponents(...row2Components);
+      }
 
       // Create embed for registration
       const registerEmbed = new MessageEmbed()
@@ -140,10 +207,28 @@ module.exports = {
         .setFooter({ text: 'Futbol Kayıt Sistemi' })
         .setTimestamp();
 
-      // Send message with buttons and embed
+      // Butonları kontrol et ve message reply'ı düzenle
+      const components = [];
+      if (row1 && row1.components.length > 0) {
+        components.push(row1);
+      }
+      if (row2 && row2.components.length > 0) {
+        components.push(row2);
+      }
+      
+      // Hiç buton yoksa, kullanıcıya bilgi ver
+      if (components.length === 0) {
+        await message.reply({
+          content: "❌ Kayıt için hiç rol bulunamadı! Lütfen `.kayitkur` komutunu kullanarak en az bir rol ayarlayın.",
+          embeds: [registerEmbed]
+        });
+        return;
+      }
+      
+      // Butonları ve embed'i gönder
       await message.reply({ 
         embeds: [registerEmbed],
-        components: [row1, row2]
+        components: components
       });
       
       // Kayıt verilerini veritabanına ekle
@@ -162,62 +247,25 @@ module.exports = {
       
       // (Log mesajı burada gönderilmeyecek - çift gönderim önlemek için)
       
-      // Send a welcome message to the user
-      try {
-        await target.send({
-          embeds: [
-            new MessageEmbed()
-              .setColor('#00ff00')
-              .setTitle('🎉 Hoş Geldin!')
-              .setDescription(`**${message.guild.name}** sunucusuna hoş geldin! Kaydın yapıldı ve yeni ismin **${name}** olarak ayarlandı.`)
-              .addField('💬 Bilgi', 'Yetkili ekibimiz yakında sana bir rol atayacak.')
-              .setFooter({ text: 'İyi eğlenceler! ⚽' })
-          ]
-        });
-      } catch (dmError) {
-        console.log(`DM gönderilemedi: ${dmError}`);
-        // Don't worry if DM can't be sent, it's optional
-      }
+      // Hoş geldin mesajları artık burada gönderilmeyecek, bunun yerine rol seçildikten sonra interactionCreate event'inde gönderilecek
       
-      // Log kanalına kayıt mesajı gönder
+      // Sadece log kanalına ilk kayıt bilgisi gönderilecek
       if (settings.logChannel) {
         const logChannel = message.guild.channels.cache.get(settings.logChannel);
         if (logChannel) {
           const logEmbed = new MessageEmbed()
-            .setTitle('📝 Kullanıcı Kaydı Tamamlandı')
-            .setColor('#2ecc71') 
+            .setTitle('📝 Kullanıcı Kaydı Başlatıldı')
+            .setColor('#3498db') 
             .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
             .addField('👤 Kullanıcı', `<@${target.id}> (\`${target.user.tag}\`)`, false)
             .addField('✏️ Yeni İsim', `\`${name}\``, false)
             .addField('👮 Kaydeden Yetkili', `<@${message.author.id}>`, true)
             .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
-            .setFooter({ text: `ID: ${target.id} • Kayıt İşlemi` })
+            .addField('ℹ️ Durum', 'Rol seçimi bekleniyor...', false)
+            .setFooter({ text: `ID: ${target.id} • Kayıt Başlatıldı` })
             .setTimestamp();
           
           await logChannel.send({ embeds: [logEmbed] });
-        }
-      }
-      
-      // Hoş geldin kanalına kayıt sonrası mesajı gönder
-      if (settings.welcomeChannel) {
-        const welcomeChannel = message.guild.channels.cache.get(settings.welcomeChannel);
-        if (welcomeChannel) {
-          const welcomeEmbed = new MessageEmbed()
-            .setTitle('🎊 Yeni Üye Aramıza Katıldı!')
-            .setColor('#f1c40f')
-            .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
-            .setDescription(`**${name}** adlı üye aramıza hoş geldin! Futbol ailemize katıldığın için çok mutluyuz! ⚽`)
-            .addField('👤 Kullanıcı', `<@${target.id}>`, true)
-            .addField('📝 Kayıt Eden', `<@${message.author.id}>`, true)
-            .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
-            .setImage('https://i.imgur.com/3Umh6l4.jpg')
-            .setFooter({ text: '⚽ Futbol Kayıt Sistemi • Hoş Geldin!' })
-            .setTimestamp();
-            
-          await welcomeChannel.send({ 
-            content: `🎉 Aramıza hoş geldin <@${target.id}>!`,
-            embeds: [welcomeEmbed] 
-          });
         }
       }
       

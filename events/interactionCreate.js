@@ -139,6 +139,21 @@ module.exports = {
           return;
         });
         
+        // Ayrıca üye rolü varsa ve otomatik atama ayarlanmışsa, üye rolünü ver
+        const guildSettings = await db.getGuildSettings(guildId);
+        if (guildSettings && guildSettings.uyeRole && guildSettings.autoAssignUyeRole) {
+          const uyeRole = interaction.guild.roles.cache.get(guildSettings.uyeRole);
+          if (uyeRole && !targetMember.roles.cache.has(uyeRole.id)) {
+            try {
+              await targetMember.roles.add(uyeRole);
+              console.log(`${targetMember.user.tag} kullanıcısına üye rolü verildi: ${uyeRole.name}`);
+            } catch (uyeRoleError) {
+              console.error(`Üye rolü verme hatası: ${uyeRoleError}`);
+              // Hata logla ama işlemi durdurma
+            }
+          }
+        }
+        
         // Update registration database with role assignment
         await db.updateRegistrationRole(guildId, targetId, role.id, roleName);
         
@@ -176,9 +191,11 @@ module.exports = {
           // Don't worry if DM fails
         }
         
-        // Sadece log kanalına rol atama bilgisi gönder, hoş geldin mesajı göndermiyoruz
+        // Rol atandıktan sonra hoş geldin mesajlarını gönder
         try {
           const guildSettings = await db.getGuildSettings(guildId);
+          
+          // Log kanalına rol atama bilgisi gönder
           if (guildSettings && guildSettings.logChannel) {
             const logChannel = interaction.guild.channels.cache.get(guildSettings.logChannel);
             if (logChannel) {
@@ -194,6 +211,30 @@ module.exports = {
                 .setTimestamp();
                 
               await logChannel.send({ embeds: [logEmbed] });
+            }
+          }
+          
+          // Hoş geldin kanalına rol atama sonrası hoş geldin mesajı gönder
+          if (guildSettings && guildSettings.welcomeChannel) {
+            const welcomeChannel = interaction.guild.channels.cache.get(guildSettings.welcomeChannel);
+            if (welcomeChannel) {
+              const welcomeEmbed = new MessageEmbed()
+                .setTitle('🎊 Yeni Üye Aramıza Katıldı!')
+                .setColor(roleColor)
+                .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
+                .setDescription(`**${targetMember.displayName}** adlı üye aramıza hoş geldin! **${roleEmoji} ${roleName}** olarak futbol ailemize katıldığın için çok mutluyuz! ⚽`)
+                .addField('👤 Kullanıcı', `<@${targetMember.id}>`, true)
+                .addField('🛡️ Verilen Rol', `<@&${role.id}>`, true)
+                .addField('👮 Kaydeden Yetkili', `<@${interaction.user.id}>`, true)
+                .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
+                .setImage('https://i.imgur.com/3Umh6l4.jpg')
+                .setFooter({ text: '⚽ Futbol Kayıt Sistemi • Hoş Geldin!' })
+                .setTimestamp();
+                
+              await welcomeChannel.send({ 
+                content: `🎉 Aramıza **${roleEmoji} ${roleName}** olarak hoş geldin <@${targetMember.id}>!`,
+                embeds: [welcomeEmbed] 
+              });
             }
           }
         } catch (logError) {

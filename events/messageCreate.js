@@ -57,7 +57,7 @@ module.exports = {
         command = client.commands.get('yardim');
       } else if (commandName === 'geçmiş' || commandName === 'gecmis' || commandName === 'bilgi' || commandName === 'info' || commandName === 'g') {
         command = client.commands.get('gecmis');
-      } else if (commandName === 'ukayıt' || commandName === 'ukayit' || commandName === 'ksil' || commandName === 'kayıtsil' || commandName === 'uk') {
+      } else if (commandName === 'ukayıt' || commandName === 'ukayit' || commandName === 'ksil' || commandName === 'kayıtsil' || commandName === 'uk' || commandName === 'kayitsifirla' || commandName === 'kayıtsıfırla') {
         command = client.commands.get('ukayit');
       } else if (commandName === 'id' || commandName === 'isim' || commandName === 'isimdeğiştir' || commandName === 'isimdegistir') {
         command = client.commands.get('id');
