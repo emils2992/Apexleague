@@ -97,7 +97,7 @@ module.exports = {
       // Tüm mevcut rolleri listele ve ardından en fazla 5 buton olacak şekilde dağıt
       const allRoleButtons = [];
       
-      // Tüm mevcut rol seçeneklerini bir diziye ekle
+      // Tüm mevcut rol seçeneklerini bir diziye ekle, her biri farklı renkte
       if (settings.futbolcuRole) {
         allRoleButtons.push({
           id: `role_futbolcu_${target.id}`,
@@ -134,13 +134,17 @@ module.exports = {
         });
       }
       
+      // Bayan Üye için özel stil - tdRole anahtarı da kontrol edilir
       if (settings.bayanUyeRole) {
+        console.log('Bayan üye rolü bulundu:', settings.bayanUyeRole); // Debug log
         allRoleButtons.push({
           id: `role_bayan_${target.id}`,
           label: '👩 Bayan Üye',
           style: 'DANGER', // Kırmızı
           roleId: settings.bayanUyeRole
         });
+      } else {
+        console.log('Bayan üye rolü bulunamadı!', settings); // Debug log
       }
       
       if (settings.partnerRole) {
@@ -156,12 +160,19 @@ module.exports = {
       const row1Components = [];
       const row2Components = [];
       
-      // Butonları yan yana farklı renklerle düzenleyelim
-      // Şu anki butonları karıştıralım böylece yan yana aynı renkler gelmez
-      for (let i = allRoleButtons.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [allRoleButtons[i], allRoleButtons[j]] = [allRoleButtons[j], allRoleButtons[i]];
-      }
+      // Butonları daha belirgin renklerle sırala ve yan yana benzer renklerin gelmemesini sağla
+      // Kırmızı, yeşil, mavi, gri şeklinde sırala
+      allRoleButtons.sort((a, b) => {
+        // Renklere öncelik değeri veriyoruz
+        const styleValues = {
+          'DANGER': 1,   // Kırmızı butonlar en başta
+          'SUCCESS': 2,  // Yeşil butonlar ikinci
+          'PRIMARY': 3,  // Mavi butonlar üçüncü
+          'SECONDARY': 4 // Gri butonlar en sonda
+        };
+        
+        return styleValues[a.style] - styleValues[b.style];
+      });
       
       // İlk satıra en fazla 3 buton ekle
       for (let i = 0; i < Math.min(allRoleButtons.length, 3); i++) {
