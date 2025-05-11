@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } = require('discord.js');
 const db = require('../utils/database');
 
 module.exports = {
@@ -101,28 +101,28 @@ module.exports = {
       // İlk satır butonları (maksimum 3 tane)
       if (settings.futbolcuRole) {
         row1Components.push(
-          new MessageButton()
+          new ButtonBuilder()
             .setCustomId(`role_futbolcu_${target.id}`)
             .setLabel('⚽ Futbolcu')
-            .setStyle('PRIMARY')
+            .setStyle(ButtonStyle.Primary)
         );
       }
       
       if (settings.teknikDirektorRole) {
         row1Components.push(
-          new MessageButton()
+          new ButtonBuilder()
             .setCustomId(`role_teknikdirektor_${target.id}`)
             .setLabel('📋 Teknik Direktör')
-            .setStyle('SUCCESS')
+            .setStyle(ButtonStyle.Success)
         );
       }
       
       if (settings.baskanRole) {
         row1Components.push(
-          new MessageButton()
+          new ButtonBuilder()
             .setCustomId(`role_baskan_${target.id}`)
             .setLabel('👑 Başkan')
-            .setStyle('DANGER')
+            .setStyle(ButtonStyle.Danger)
         );
       }
       
@@ -130,28 +130,28 @@ module.exports = {
       if (row1Components.length < 3) {
         if (settings.taraftarRole && row1Components.length < 3) {
           row1Components.push(
-            new MessageButton()
+            new ButtonBuilder()
               .setCustomId(`role_taraftar_${target.id}`)
               .setLabel('🏟️ Taraftar')
-              .setStyle('PRIMARY')
+              .setStyle(ButtonStyle.Primary)
           );
         }
         
         if (settings.bayanUyeRole && row1Components.length < 3) {
           row1Components.push(
-            new MessageButton()
+            new ButtonBuilder()
               .setCustomId(`role_bayan_${target.id}`)
               .setLabel('👩 Bayan Üye')
-              .setStyle('DANGER')
+              .setStyle(ButtonStyle.Danger)
           );
         }
         
         if (settings.partnerRole && row1Components.length < 3) {
           row1Components.push(
-            new MessageButton()
+            new ButtonBuilder()
               .setCustomId(`role_partner_${target.id}`)
               .setLabel('🤝 Partner')
-              .setStyle('SECONDARY')
+              .setStyle(ButtonStyle.Secondary)
           );
         }
       }
@@ -160,50 +160,52 @@ module.exports = {
       if (row1Components.length >= 3) {
         if (settings.taraftarRole) {
           row2Components.push(
-            new MessageButton()
+            new ButtonBuilder()
               .setCustomId(`role_taraftar_${target.id}`)
               .setLabel('🏟️ Taraftar')
-              .setStyle('PRIMARY')
+              .setStyle(ButtonStyle.Primary)
           );
         }
         
         if (settings.bayanUyeRole) {
           row2Components.push(
-            new MessageButton()
+            new ButtonBuilder()
               .setCustomId(`role_bayan_${target.id}`)
               .setLabel('👩 Bayan Üye')
-              .setStyle('DANGER')
+              .setStyle(ButtonStyle.Danger)
           );
         }
         
         if (settings.partnerRole) {
           row2Components.push(
-            new MessageButton()
+            new ButtonBuilder()
               .setCustomId(`role_partner_${target.id}`)
               .setLabel('🤝 Partner')
-              .setStyle('SECONDARY')
+              .setStyle(ButtonStyle.Secondary)
           );
         }
       }
       
       // ActionRow oluştur
-      const row1 = new MessageActionRow().addComponents(...row1Components);
+      const row1 = new ActionRowBuilder().addComponents(...row1Components);
       
       // İkinci satır için yeterli buton varsa, ikinci satırı da oluştur
       let row2 = null;
       if (row2Components.length > 0) {
-        row2 = new MessageActionRow().addComponents(...row2Components);
+        row2 = new ActionRowBuilder().addComponents(...row2Components);
       }
 
       // Create embed for registration
-      const registerEmbed = new MessageEmbed()
+      const registerEmbed = new EmbedBuilder()
         .setColor('#0099ff')
         .setTitle('👤 Kullanıcı Kaydı')
         .setDescription(`**${name}** kullanıcısı için bir rol seçin!`)
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
-        .addField('🆔 Kullanıcı', `<@${target.id}>`, true)
-        .addField('📝 Kayıt Eden', `<@${message.author.id}>`, true)
-        .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
+        .addFields(
+          { name: '🆔 Kullanıcı', value: `<@${target.id}>`, inline: true },
+          { name: '📝 Kayıt Eden', value: `<@${message.author.id}>`, inline: true },
+          { name: '⏰ Kayıt Zamanı', value: new Date().toLocaleString('tr-TR'), inline: true }
+        )
         .setFooter({ text: 'Futbol Kayıt Sistemi' })
         .setTimestamp();
 
@@ -253,15 +255,17 @@ module.exports = {
       if (settings.logChannel) {
         const logChannel = message.guild.channels.cache.get(settings.logChannel);
         if (logChannel) {
-          const logEmbed = new MessageEmbed()
+          const logEmbed = new EmbedBuilder()
             .setTitle('📝 Kullanıcı Kaydı Başlatıldı')
             .setColor('#3498db') 
             .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
-            .addField('👤 Kullanıcı', `<@${target.id}> (\`${target.user.tag}\`)`, false)
-            .addField('✏️ Yeni İsim', `\`${name}\``, false)
-            .addField('👮 Kaydeden Yetkili', `<@${message.author.id}>`, true)
-            .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
-            .addField('ℹ️ Durum', 'Rol seçimi bekleniyor...', false)
+            .addFields(
+              { name: '👤 Kullanıcı', value: `<@${target.id}> (\`${target.user.tag}\`)`, inline: false },
+              { name: '✏️ Yeni İsim', value: `\`${name}\``, inline: false },
+              { name: '👮 Kaydeden Yetkili', value: `<@${message.author.id}>`, inline: true },
+              { name: '⏰ Kayıt Zamanı', value: new Date().toLocaleString('tr-TR'), inline: true },
+              { name: 'ℹ️ Durum', value: 'Rol seçimi bekleniyor...', inline: false }
+            )
             .setFooter({ text: `ID: ${target.id} • Kayıt Başlatıldı` })
             .setTimestamp();
           
@@ -270,8 +274,10 @@ module.exports = {
       }
       
     } catch (error) {
-      console.error(error);
-      message.reply('❌ Kayıt işlemi sırasında bir hata oluştu!');
+      console.error('Kayıt İşlemi Hatası:', error);
+      console.error('Hata Detayları:', error.message);
+      console.error('Hata Yeri:', error.stack);
+      message.reply(`❌ Kayıt işlemi sırasında bir hata oluştu: ${error.message}`);
     }
   }
 };

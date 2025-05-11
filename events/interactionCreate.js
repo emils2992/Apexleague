@@ -1,5 +1,5 @@
 const db = require('../utils/database');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
   name: 'interactionCreate',
@@ -158,14 +158,16 @@ module.exports = {
         await db.updateRegistrationRole(guildId, targetId, role.id, roleName);
         
         // Create a fancy embed for completion
-        const successEmbed = new MessageEmbed()
+        const successEmbed = new EmbedBuilder()
           .setColor(roleColor)
           .setTitle(`${roleEmoji} Rol Ataması Başarılı!`)
           .setDescription(`**${targetMember.displayName}** kullanıcısına **${roleEmoji} ${roleName}** rolü verildi!`)
           .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
-          .addField('🆔 Kullanıcı', `<@${targetMember.id}>`, true)
-          .addField('🛡️ Verilen Rol', `<@&${role.id}>`, true)
-          .addField('👮 İşlemi Yapan', `<@${interaction.user.id}>`, true)
+          .addFields(
+            { name: '🆔 Kullanıcı', value: `<@${targetMember.id}>`, inline: true },
+            { name: '🛡️ Verilen Rol', value: `<@&${role.id}>`, inline: true },
+            { name: '👮 İşlemi Yapan', value: `<@${interaction.user.id}>`, inline: true }
+          )
           .setFooter({ text: 'Futbol Kayıt Sistemi • Rol Başarıyla Verildi' })
           .setTimestamp();
         
