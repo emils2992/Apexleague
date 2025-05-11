@@ -82,12 +82,51 @@ function writeRegistrations(data) {
 // Get settings for a specific guild
 async function getGuildSettings(guildId) {
   const db = readSettings();
-  return db[guildId] || null;
+  const settings = db[guildId] || null;
+  
+  if (settings) {
+    // Eski format kontrolü ve düzeltme
+    if (settings.bayanRole && !settings.bayanUyeRole) {
+      console.log(`[DÜZELTME] ${guildId} için bayanRole -> bayanUyeRole olarak düzeltildi`);
+      settings.bayanUyeRole = settings.bayanRole;
+      delete settings.bayanRole;
+      
+      // Değişiklikleri kaydet
+      db[guildId] = settings;
+      writeSettings(db);
+    }
+    
+    if (settings.tdRole && !settings.teknikDirektorRole) {
+      console.log(`[DÜZELTME] ${guildId} için tdRole -> teknikDirektorRole olarak düzeltildi`);
+      settings.teknikDirektorRole = settings.tdRole;
+      delete settings.tdRole;
+      
+      // Değişiklikleri kaydet
+      db[guildId] = settings;
+      writeSettings(db);
+    }
+  }
+  
+  return settings;
 }
 
 // Save settings for a specific guild
 async function saveGuildSettings(guildId, settings) {
   const db = readSettings();
+  
+  // Alan adı tutarlılığı için eski format kontrolü
+  if (settings.bayanRole && !settings.bayanUyeRole) {
+    console.log(`[DÜZELTME] ${guildId} için bayanRole -> bayanUyeRole olarak güncellendi`);
+    settings.bayanUyeRole = settings.bayanRole;
+    delete settings.bayanRole;
+  }
+  
+  if (settings.tdRole && !settings.teknikDirektorRole) {
+    console.log(`[DÜZELTME] ${guildId} için tdRole -> teknikDirektorRole olarak güncellendi`);
+    settings.teknikDirektorRole = settings.tdRole;
+    delete settings.tdRole;
+  }
+  
   db[guildId] = settings;
   writeSettings(db);
   return settings;

@@ -56,7 +56,7 @@ module.exports = {
       const embed = new MessageEmbed()
         .setColor('#e74c3c')
         .setTitle('🔄 Kayıt Sıfırlandı')
-        .setDescription(`**${target.user.tag}** üyesinin kaydı sıfırlandı.`)
+        .setDescription(`**${target.user.tag}** üyesinin kaydı başarıyla sıfırlandı.`)
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
         .addField('👤 Kullanıcı', `<@${target.id}>`, true)
         .addField('🛡️ Verilen Rol', `<@&${kayitsizRole.id}>`, true)

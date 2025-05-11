@@ -527,8 +527,8 @@ module.exports = {
       yetkiliRole: yetkiliRole ? yetkiliRole.id : null,
       futbolcuRole: futbolcuRole ? futbolcuRole.id : null,
       taraftarRole: taraftarRole ? taraftarRole.id : null,
-      bayanUyeRole: bayanRole ? bayanRole.id : null,
-      teknikDirektorRole: tdRole ? tdRole.id : null,
+      bayanUyeRole: bayanRole ? bayanRole.id : null, // Veritabanında bayanUyeRole olarak kaydediyoruz
+      teknikDirektorRole: tdRole ? tdRole.id : null, // Veritabanında teknikDirektorRole olarak kaydediyoruz
       baskanRole: baskanRole ? baskanRole.id : null,
       partnerRole: partnerRole ? partnerRole.id : null,
       uyeRole: uyeRole ? uyeRole.id : null,
