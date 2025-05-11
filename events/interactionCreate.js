@@ -75,7 +75,7 @@ module.exports = {
             roleColor = '#9b59b6'; // Purple
             break;
           case 'bayan':
-            roleId = settings.bayanRole;
+            roleId = settings.bayanUyeRole;
             roleName = 'Bayan Üye';
             roleEmoji = '👩';
             roleColor = '#e91e63'; // Pink
@@ -161,16 +161,14 @@ module.exports = {
         await db.updateRegistrationRole(guildId, targetId, role.id, roleName);
         
         // Create a fancy embed for completion
-        const successEmbed = new EmbedBuilder()
+        const successEmbed = new MessageEmbed()
           .setColor(roleColor)
           .setTitle(`${roleEmoji} Rol Ataması Başarılı!`)
           .setDescription(`**${targetMember.displayName}** kullanıcısına **${roleEmoji} ${roleName}** rolü verildi!`)
           .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
-          .addFields(
-            { name: '🆔 Kullanıcı', value: `<@${targetMember.id}>`, inline: true },
-            { name: '🛡️ Verilen Rol', value: `<@&${role.id}>`, inline: true },
-            { name: '👮 İşlemi Yapan', value: `<@${interaction.user.id}>`, inline: true }
-          )
+          .addField('🆔 Kullanıcı', `<@${targetMember.id}>`, true)
+          .addField('🛡️ Verilen Rol', `<@&${role.id}>`, true)
+          .addField('👮 İşlemi Yapan', `<@${interaction.user.id}>`, true)
           .setFooter({ text: 'Futbol Kayıt Sistemi • Rol Başarıyla Verildi' })
           .setTimestamp();
         

@@ -102,7 +102,7 @@ module.exports = {
         allRoleButtons.push({
           id: `role_futbolcu_${target.id}`,
           label: '⚽ Futbolcu',
-          style: 'PRIMARY',
+          style: 'PRIMARY', // Mavi
           roleId: settings.futbolcuRole
         });
       }
@@ -111,7 +111,7 @@ module.exports = {
         allRoleButtons.push({
           id: `role_tekdir_${target.id}`,
           label: '📋 Teknik Direktör',
-          style: 'SUCCESS',
+          style: 'SUCCESS', // Yeşil
           roleId: settings.teknikDirektorRole
         });
       }
@@ -120,7 +120,7 @@ module.exports = {
         allRoleButtons.push({
           id: `role_baskan_${target.id}`,
           label: '👑 Başkan',
-          style: 'DANGER',
+          style: 'DANGER', // Kırmızı
           roleId: settings.baskanRole
         });
       }
@@ -129,7 +129,7 @@ module.exports = {
         allRoleButtons.push({
           id: `role_taraftar_${target.id}`,
           label: '🏟️ Taraftar',
-          style: 'PRIMARY',
+          style: 'SECONDARY', // Gri
           roleId: settings.taraftarRole
         });
       }
@@ -138,7 +138,7 @@ module.exports = {
         allRoleButtons.push({
           id: `role_bayan_${target.id}`,
           label: '👩 Bayan Üye',
-          style: 'DANGER',
+          style: 'DANGER', // Kırmızı
           roleId: settings.bayanUyeRole
         });
       }
@@ -147,7 +147,7 @@ module.exports = {
         allRoleButtons.push({
           id: `role_partner_${target.id}`,
           label: '🤝 Partner',
-          style: 'SECONDARY',
+          style: 'SUCCESS', // Yeşil
           roleId: settings.partnerRole
         });
       }
@@ -155,6 +155,13 @@ module.exports = {
       // Butonları sayfalar halinde düzenle
       const row1Components = [];
       const row2Components = [];
+      
+      // Butonları yan yana farklı renklerle düzenleyelim
+      // Şu anki butonları karıştıralım böylece yan yana aynı renkler gelmez
+      for (let i = allRoleButtons.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allRoleButtons[i], allRoleButtons[j]] = [allRoleButtons[j], allRoleButtons[i]];
+      }
       
       // İlk satıra en fazla 3 buton ekle
       for (let i = 0; i < Math.min(allRoleButtons.length, 3); i++) {
