@@ -56,6 +56,7 @@ module.exports = {
             roleColor = '#3498db'; // Blue
             break;
           case 'teknikdirektor':
+          case 'tekdir':
             roleId = settings.teknikDirektorRole;
             roleName = 'Teknik Direktör';
             roleEmoji = '📋';

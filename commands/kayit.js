@@ -94,96 +94,88 @@ module.exports = {
         }
       }
       
-      // Sadece mevcut rolleri butonlara ekle
-      const row1Components = [];
-      const row2Components = [];
+      // Tüm mevcut rolleri listele ve ardından en fazla 5 buton olacak şekilde dağıt
+      const allRoleButtons = [];
       
-      // İlk satır butonları (maksimum 3 tane)
+      // Tüm mevcut rol seçeneklerini bir diziye ekle
       if (settings.futbolcuRole) {
-        row1Components.push(
-          new MessageButton()
-            .setCustomId(`role_futbolcu_${target.id}`)
-            .setLabel('⚽ Futbolcu')
-            .setStyle('PRIMARY')
-        );
+        allRoleButtons.push({
+          id: `role_futbolcu_${target.id}`,
+          label: '⚽ Futbolcu',
+          style: 'PRIMARY',
+          roleId: settings.futbolcuRole
+        });
       }
       
       if (settings.teknikDirektorRole) {
-        row1Components.push(
-          new MessageButton()
-            .setCustomId(`role_teknikdirektor_${target.id}`)
-            .setLabel('📋 Teknik Direktör')
-            .setStyle('SUCCESS')
-        );
+        allRoleButtons.push({
+          id: `role_tekdir_${target.id}`,
+          label: '📋 Teknik Direktör',
+          style: 'SUCCESS',
+          roleId: settings.teknikDirektorRole
+        });
       }
       
       if (settings.baskanRole) {
+        allRoleButtons.push({
+          id: `role_baskan_${target.id}`,
+          label: '👑 Başkan',
+          style: 'DANGER',
+          roleId: settings.baskanRole
+        });
+      }
+      
+      if (settings.taraftarRole) {
+        allRoleButtons.push({
+          id: `role_taraftar_${target.id}`,
+          label: '🏟️ Taraftar',
+          style: 'PRIMARY',
+          roleId: settings.taraftarRole
+        });
+      }
+      
+      if (settings.bayanUyeRole) {
+        allRoleButtons.push({
+          id: `role_bayan_${target.id}`,
+          label: '👩 Bayan Üye',
+          style: 'DANGER',
+          roleId: settings.bayanUyeRole
+        });
+      }
+      
+      if (settings.partnerRole) {
+        allRoleButtons.push({
+          id: `role_partner_${target.id}`,
+          label: '🤝 Partner',
+          style: 'SECONDARY',
+          roleId: settings.partnerRole
+        });
+      }
+      
+      // Butonları sayfalar halinde düzenle
+      const row1Components = [];
+      const row2Components = [];
+      
+      // İlk satıra en fazla 3 buton ekle
+      for (let i = 0; i < Math.min(allRoleButtons.length, 3); i++) {
+        const button = allRoleButtons[i];
         row1Components.push(
           new MessageButton()
-            .setCustomId(`role_baskan_${target.id}`)
-            .setLabel('👑 Başkan')
-            .setStyle('DANGER')
+            .setCustomId(button.id)
+            .setLabel(button.label)
+            .setStyle(button.style)
         );
       }
       
-      // Eğer ilk satırda hala yer varsa, ikinci satırdaki butonları buraya taşı
-      if (row1Components.length < 3) {
-        if (settings.taraftarRole && row1Components.length < 3) {
-          row1Components.push(
-            new MessageButton()
-              .setCustomId(`role_taraftar_${target.id}`)
-              .setLabel('🏟️ Taraftar')
-              .setStyle('PRIMARY')
-          );
-        }
-        
-        if (settings.bayanUyeRole && row1Components.length < 3) {
-          row1Components.push(
-            new MessageButton()
-              .setCustomId(`role_bayan_${target.id}`)
-              .setLabel('👩 Bayan Üye')
-              .setStyle('DANGER')
-          );
-        }
-        
-        if (settings.partnerRole && row1Components.length < 3) {
-          row1Components.push(
-            new MessageButton()
-              .setCustomId(`role_partner_${target.id}`)
-              .setLabel('🤝 Partner')
-              .setStyle('SECONDARY')
-          );
-        }
-      }
-      
-      // İkinci satıra kalan butonları ekle
-      if (row1Components.length >= 3) {
-        if (settings.taraftarRole) {
-          row2Components.push(
-            new MessageButton()
-              .setCustomId(`role2_taraftar_${target.id}`)
-              .setLabel('🏟️ Taraftar')
-              .setStyle('PRIMARY')
-          );
-        }
-        
-        if (settings.bayanUyeRole) {
-          row2Components.push(
-            new MessageButton()
-              .setCustomId(`role2_bayan_${target.id}`)
-              .setLabel('👩 Bayan Üye')
-              .setStyle('DANGER')
-          );
-        }
-        
-        if (settings.partnerRole) {
-          row2Components.push(
-            new MessageButton()
-              .setCustomId(`role2_partner_${target.id}`)
-              .setLabel('🤝 Partner')
-              .setStyle('SECONDARY')
-          );
-        }
+      // İkinci satıra kalan butonları ekle (en fazla 2 buton)
+      for (let i = 3; i < Math.min(allRoleButtons.length, 5); i++) {
+        const button = allRoleButtons[i];
+        row2Components.push(
+          new MessageButton()
+            .setCustomId(button.id)
+            .setLabel(button.label)
+            .setStyle(button.style)
+        );
       }
       
       // ActionRow oluştur
