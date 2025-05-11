@@ -161,7 +161,7 @@ module.exports = {
         if (settings.taraftarRole) {
           row2Components.push(
             new MessageButton()
-              .setCustomId(`role_taraftar_${target.id}`)
+              .setCustomId(`role2_taraftar_${target.id}`)
               .setLabel('🏟️ Taraftar')
               .setStyle('PRIMARY')
           );
@@ -170,7 +170,7 @@ module.exports = {
         if (settings.bayanUyeRole) {
           row2Components.push(
             new MessageButton()
-              .setCustomId(`role_bayan_${target.id}`)
+              .setCustomId(`role2_bayan_${target.id}`)
               .setLabel('👩 Bayan Üye')
               .setStyle('DANGER')
           );
@@ -179,7 +179,7 @@ module.exports = {
         if (settings.partnerRole) {
           row2Components.push(
             new MessageButton()
-              .setCustomId(`role_partner_${target.id}`)
+              .setCustomId(`role2_partner_${target.id}`)
               .setLabel('🤝 Partner')
               .setStyle('SECONDARY')
           );

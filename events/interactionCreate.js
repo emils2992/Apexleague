@@ -7,7 +7,7 @@ module.exports = {
     if (!interaction.isButton()) return;
     
     // Handle role assignment buttons
-    if (interaction.customId.startsWith('role_')) {
+    if (interaction.customId.startsWith('role_') || interaction.customId.startsWith('role2_')) {
       // Check if user has permission to assign roles
       const guildId = interaction.guild.id;
       const settings = await db.getGuildSettings(guildId);
@@ -29,7 +29,9 @@ module.exports = {
       }
       
       // Parse the customId to get role type and target user
-      const [_, roleType, targetId] = interaction.customId.split('_');
+      const parts = interaction.customId.split('_');
+      const roleType = parts[1]; // roleType is now the second part (index 1)
+      const targetId = parts[parts.length - 1]; // targetId is the last part
       const targetMember = await interaction.guild.members.fetch(targetId).catch(() => null);
       
       if (!targetMember) {
