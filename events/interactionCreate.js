@@ -1,5 +1,5 @@
 const db = require('../utils/database');
-const { EmbedBuilder } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
   name: 'interactionCreate',
