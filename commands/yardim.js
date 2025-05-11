@@ -46,8 +46,11 @@ module.exports = {
         `**Kayıtsız Rolü**: ${settings.kayitsizRole ? `<@&${settings.kayitsizRole}>` : 'Ayarlanmamış'}\n` +
         `**Yetkili Rolü**: ${settings.yetkiliRole ? `<@&${settings.yetkiliRole}>` : 'Ayarlanmamış'}\n` +
         `**Futbolcu Rolü**: ${settings.futbolcuRole ? `<@&${settings.futbolcuRole}>` : 'Ayarlanmamış'}\n` +
+        `**Teknik Direktör Rolü**: ${settings.teknikDirektorRole ? `<@&${settings.teknikDirektorRole}>` : (settings.tdRole ? `<@&${settings.tdRole}>` : 'Ayarlanmamış')}\n` +
+        `**Başkan Rolü**: ${settings.baskanRole ? `<@&${settings.baskanRole}>` : 'Ayarlanmamış'}\n` +
         `**Taraftar Rolü**: ${settings.taraftarRole ? `<@&${settings.taraftarRole}>` : 'Ayarlanmamış'}\n` +
-        `**Bayan Üye Rolü**: ${settings.bayanUyeRole ? `<@&${settings.bayanUyeRole}>` : 'Ayarlanmamış'}\n` +
+        `**Bayan Üye Rolü**: ${settings.bayanUyeRole ? `<@&${settings.bayanUyeRole}>` : (settings.bayanRole ? `<@&${settings.bayanRole}>` : 'Ayarlanmamış')}\n` +
+        `**Partner Rolü**: ${settings.partnerRole ? `<@&${settings.partnerRole}>` : 'Ayarlanmamış'}\n` +
         `**Üye Rolü**: ${settings.uyeRole ? `<@&${settings.uyeRole}>` : 'Ayarlanmamış'}\n` +
         `**Otomatik Üye Rolü**: ${settings.autoAssignUyeRole ? '`Aktif`' : '`Pasif`'}\n` +
         `**Hoş Geldin Kanalı**: ${settings.welcomeChannel ? `<#${settings.welcomeChannel}>` : 'Ayarlanmamış'}\n` +
