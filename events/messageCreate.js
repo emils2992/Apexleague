@@ -5,47 +5,47 @@ module.exports = {
   async execute(message, client) {
     // Debug: Log all messages for troubleshooting
     console.log(`Message received: ${message.content}`);
-    
+
     // Ignore messages from bots and non-text channels
     if (message.author.bot || !message.guild) {
       console.log('Message ignored: from bot or not in guild');
       return;
     }
-    
+
     // Get prefix (hardcoded as '.' for now)
     const prefix = '.';
-    
+
     // Check if message starts with prefix
     if (!message.content.startsWith(prefix)) {
       console.log('Message ignored: does not start with prefix');
       return;
     }
-    
+
     console.log('Command detected: ' + message.content);
-    
+
     // Parse command and arguments
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
-    
+
     console.log(`Attempting to find command: ${commandName}`);
-    
+
     // Find command in the collection
     let command = client.commands.get(commandName);
-    
+
     // List all commands for debugging
     console.log(`Available commands: ${Array.from(client.commands.keys()).join(', ')}`);
-    
+
     // Debug komut yükleme - Special debug command
     if (commandName === 'debugkomutlar') {
       console.log('Debug command executed');
       const loadedCommands = Array.from(client.commands.keys()).join(', ');
       return message.reply(`Yüklü komutlar: ${loadedCommands}`);
     }
-    
+
     // Handle command aliases
     if (!command) {
       console.log(`Command not found directly. Checking aliases for: ${commandName}`);
-      
+
       // Check for common aliases
       if (commandName === 'topsıra' || commandName === 'topkayıt' || commandName === 'kayıttop') {
         command = client.commands.get('top');
@@ -61,37 +61,39 @@ module.exports = {
         command = client.commands.get('ukayit');
       } else if (commandName === 'id' || commandName === 'isim' || commandName === 'isimdeğiştir' || commandName === 'isimdegistir') {
         command = client.commands.get('id');
-      } else if (commandName === 'sescek' || commandName === 'sesçek' || commandName === 'sesgel' || commandName === 'seseçek') {
+      } else if (commandName === 'sescek' || commandName === 'sesçek' || commandName === 'sesgel' || commandName === 'seseçek' || commandName === 'sescek') {
         try {
           const sescekCommand = require('../commands/sescek.js');
           command = sescekCommand;
         } catch (error) {
           console.error('Sesçek komutu yüklenirken hata oluştu:', error);
         }
-      } else if (commandName === 'sesayril' || commandName === 'sesayrıl' || commandName === 'sesgit' || commandName === 'sesçık') {
+      } else if (commandName === 'sesayril' || commandName === 'sesayrıl' || commandName === 'sesgit' || commandName === 'sesçık' || commandName === 'sesayril') {
         try {
           const sesayrilCommand = require('../commands/sesayril.js');
           command = sesayrilCommand;
         } catch (error) {
           console.error('Sesayril komutu yüklenirken hata oluştu:', error);
         }
+      } else if (commandName === 'kayitsayi' || commandName === 'kayitsayı') {
+        command = client.commands.get('kayitsayi');
       }
-      
+
       if (command) {
         console.log(`Found command through alias: ${command.name}`);
       } else {
         console.log('No command found even after checking aliases');
       }
     }
-    
+
     // If command doesn't exist, return
     if (!command) {
       console.log(`Command not found: ${commandName}`);
       return;
     }
-    
+
     console.log(`Executing command: ${command.name}`);
-    
+
     try {
       // Execute the command
       await command.execute(message, args, client);

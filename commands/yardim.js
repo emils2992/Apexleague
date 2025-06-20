@@ -33,12 +33,19 @@ module.exports = {
       '`.g @kullanıcı` - Kullanıcının geçmiş kayıtlarını ve bilgilerini gösterir\n' +
       '`.id @kullanıcı yeni_isim` - Kullanıcının ismini değiştirir\n' +
       '`.top` - En çok kayıt yapan yetkililerin sıralamasını gösterir\n' +
-      '`.kayitsayi @kullanıcı` - veya .kayitsayi yazarakda -Kullanıcının rol bazında kayıt sayılarını gösterir', false);
+      '`.kayitsayi @kullanıcı` (veya `.kayitsayı`) - Kullanıcının rol bazında kayıt sayılarını gösterir', false);
       
     // Ses komutları
     embed.addField('🎤 Ses Komutları', 
-      '`.sescek` - Botu bulunduğunuz ses kanalına çeker\n' + 
-      '`.sesayril` - Botu ses kanalından çıkarır', false);
+      '`.sescek` (veya `.sesçek`) - Botu bulunduğunuz ses kanalına çeker ve kalıcı olarak tutar\n' + 
+      '`.sesayril` (veya `.sesayrıl`) - Botu ses kanalından çıkarır ve kalıcı bağlantıyı durdurur', false);
+    
+    // Command aliases
+    embed.addField('🔄 Komut Alternatifleri', 
+      '**Yardım**: `.yardım` veya `.yardim`\n' +
+      '**Ses Çek**: `.sescek` veya `.sesçek`\n' +
+      '**Ses Ayrıl**: `.sesayril` veya `.sesayrıl`\n' +
+      '**Kayıt Sayısı**: `.kayitsayi` veya `.kayitsayı`', false);
     
     // Additional help based on setup status
     if (setupDone) {
