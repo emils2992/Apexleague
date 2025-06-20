@@ -25,6 +25,32 @@
       "assignedRole": "Bayan Üye",
       "assignedRoleId": "1352647377496051807",
       "roleAssignedAt": "2025-06-20T10:20:04.483Z"
+    },
+    {
+      "guildId": "1352647377395122208",
+      "memberId": "1173735298329493675",
+      "memberName": "frozydebate",
+      "staffId": "794205713533894696",
+      "staffName": "emilswd",
+      "timestamp": "2025-06-20T10:33:39.391Z",
+      "assignedName": "Kayıtsız",
+      "assignedRole": "Kayıtsız",
+      "assignedRoleId": "1366843224907583548",
+      "unregistered": true,
+      "id": "1750415619391978"
+    },
+    {
+      "guildId": "1352647377395122208",
+      "memberId": "1173735298329493675",
+      "memberName": "frozydebate",
+      "staffId": "794205713533894696",
+      "staffName": "emilswd",
+      "timestamp": "2025-06-20T10:33:51.985Z",
+      "assignedName": "appapa",
+      "id": "1750415631985646",
+      "assignedRole": "Futbolcu",
+      "assignedRoleId": "1366843221971435604",
+      "roleAssignedAt": "2025-06-20T10:34:02.939Z"
     }
   ]
 }
