@@ -62,7 +62,7 @@ module.exports = {
         .addField('🛡️ Verilen Rol', `<:kayitsiz:1385549087629250672> <@&${kayitsizRole.id}>`, true)
         .addField('👮 İşlemi Yapan', `<@${message.author.id}>`, true)
         .addField('⏰ İşlem Zamanı', new Date().toLocaleString('tr-TR'), true)
-        .setFooter({ text: 'Futbol Kayıt Sistemi • Kayıt Sıfırlama' })
+        .setFooter({ text: 'Apex Voucher • Kayıt Sıfırlama' })
         .setTimestamp();
       
       // Log to general log channel if set
@@ -102,7 +102,7 @@ module.exports = {
               .setTitle('<:kayitsiz:1385549087629250672> Kayıt Durumunuz Sıfırlandı')
               .setDescription(`**${message.guild.name}** sunucusundaki üyelik kaydınız sıfırlanmış bulunmaktadır.`)
               .addField('💬 Bilgi', 'Yeniden kayıt olmak için lütfen yetkililere başvurun.')
-              .setFooter({ text: 'Futbol Kayıt Sistemi' })
+              .setFooter({ text: 'Apex Voucher' })
           ]
         });
       } catch (dmError) {

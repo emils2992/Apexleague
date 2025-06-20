@@ -115,7 +115,7 @@ module.exports = {
             **Oluşturulma**: \`${createdAt.toLocaleDateString('tr-TR')}\`
             **Güvenilirlik**: ${isTrusted ? '`✅ Güvenilir`' : '`⚠️ Şüpheli`'}`, false)
             .addField('⏰ Zaman', `\`${new Date().toLocaleString('tr-TR')}\``, false)
-            .setImage('https://i.imgur.com/3Umh6l4.jpg')
+
             .setFooter({ text: `ID: ${member.id} • Genel Log` })
             .setTimestamp();
             
@@ -131,7 +131,7 @@ module.exports = {
           .setDescription(`**${member.guild.name}** sunucusuna hoş geldin!`)
           .addField('💬 Bilgilendirme', 
           'Sunucumuza kayıt olmak için yetkililerin seni kaydetmesini beklemen gerekiyor.\nKayıt olduktan sonra tüm kanalları görebileceksin!')
-          .setFooter({ text: 'Futbol Kayıt Sistemi' })
+          .setFooter({ text: 'Apex Voucher' })
           .setTimestamp();
           
         await member.send({ embeds: [dmEmbed] });

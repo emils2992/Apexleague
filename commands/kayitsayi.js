@@ -77,7 +77,7 @@ module.exports = {
         .setColor('#3498db')
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
         .setDescription(`**${target.user.tag}** kullanıcısının kayıt sayıları:`)
-        .setFooter({ text: 'Futbol Kayıt Sistemi • Kayıt Sayıları' })
+        .setFooter({ text: 'Apex Voucher • Kayıt Sayıları' })
         .setTimestamp();
       
       let statsText = '';

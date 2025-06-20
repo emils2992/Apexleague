@@ -14,11 +14,11 @@ module.exports = {
     
     // Create a fancy embed for help
     const embed = new MessageEmbed()
-      .setTitle('⚽ Futbol Kayıt Sistemi Yardım')
+      .setTitle('⚽ Apex Voucher Yardım')
       .setColor('#3498db')
       .setDescription('Futbol temalı kayıt sistemi. Tüm komutlar ve açıklamaları:')
-      .setThumbnail(message.guild.iconURL({ dynamic: true }) || 'https://i.imgur.com/7HXgvjM.png')
-      .setFooter({ text: 'Futbol Kayıt Sistemi • Yardım Menüsü' })
+      .setThumbnail(message.guild.iconURL({ dynamic: true }))
+      .setFooter({ text: 'Apex Voucher • Yardım Menüsü' })
       .setTimestamp();
     
     // Admin commands
@@ -32,7 +32,8 @@ module.exports = {
       '`.uk @kullanıcı` - Kullanıcının kaydını sıfırlar ve kayıtsız rolü verir\n' +
       '`.g @kullanıcı` - Kullanıcının geçmiş kayıtlarını ve bilgilerini gösterir\n' +
       '`.id @kullanıcı yeni_isim` - Kullanıcının ismini değiştirir\n' +
-      '`.top` - En çok kayıt yapan yetkililerin sıralamasını gösterir', false);
+      '`.top` - En çok kayıt yapan yetkililerin sıralamasını gösterir\n' +
+      '`.kayitsayi @kullanıcı` - Kullanıcının rol bazında kayıt sayılarını gösterir', false);
       
     // Ses komutları
     embed.addField('🎤 Ses Komutları', 

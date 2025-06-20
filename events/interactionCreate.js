@@ -169,7 +169,7 @@ module.exports = {
           .addField('<:uye:1385550973040066651> Kullanıcı', `<@${targetMember.id}>`, true)
           .addField('🛡️ Verilen Rol', `${roleEmoji} <@&${role.id}>`, true)
           .addField('👮 İşlemi Yapan', `<@${interaction.user.id}>`, true)
-          .setFooter({ text: 'Futbol Kayıt Sistemi • Rol Başarıyla Verildi' })
+          .setFooter({ text: 'Apex Voucher • Rol Başarıyla Verildi' })
           .setTimestamp();
         
         // Update the message to show the selection is complete
@@ -210,7 +210,7 @@ module.exports = {
                 .addField('<:uye:1385550973040066651> Kullanıcı', `<@${targetMember.id}>`, true)
                 .addField('🛡️ Verilen Rol', `${roleEmoji} <@&${role.id}>`, true)
                 .addField('👮 İşlemi Yapan', `<@${interaction.user.id}>`, true)
-                .setFooter({ text: `⚽ Futbol Kayıt Sistemi • Rol Atama` })
+                .setFooter({ text: `⚽ Apex Voucher • Rol Atama` })
                 .setTimestamp();
                 
               await logChannel.send({ embeds: [logEmbed] });
@@ -226,8 +226,8 @@ module.exports = {
                 .setColor(roleColor)
                 .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
                 .setDescription(`**${targetMember.displayName}** adlı üye aramıza hoş geldin! **${roleEmoji} ${roleName}** olarak futbol ailemize katıldığın için çok mutluyuz!`)
-                .setImage('https://i.imgur.com/3Umh6l4.jpg')
-                .setFooter({ text: 'Futbol Kayıt Sistemi • Hoş Geldin!' })
+
+                .setFooter({ text: 'Apex Voucher • Hoş Geldin!' })
                 .setTimestamp();
                 
               await welcomeChannel.send({ 

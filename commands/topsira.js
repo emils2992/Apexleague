@@ -50,8 +50,8 @@ module.exports = {
         .setTitle('<:futbolcu:1385547729215819906> Futbol Kayıt Sıralaması')
         .setColor('#e74c3c')
         .setDescription('En çok kayıt yapan yetkililer:')
-        .setThumbnail('https://i.imgur.com/7HXgvjM.png')
-        .setFooter({ text: 'Futbol Kayıt Sistemi • Top Sıralama' })
+
+        .setFooter({ text: 'Apex Voucher • Top Sıralama' })
         .setTimestamp();
       
       // Sıralamayı ekle

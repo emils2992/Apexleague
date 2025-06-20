@@ -51,7 +51,7 @@ module.exports = {
         .addField('📆 Hesap Oluşturulma', `<t:${Math.floor(target.user.createdTimestamp / 1000)}:F>\n(<t:${Math.floor(target.user.createdTimestamp / 1000)}:R>)`, true)
         .addField('🚪 Sunucuya Katılma', `<t:${Math.floor(target.joinedTimestamp / 1000)}:F>\n(<t:${Math.floor(target.joinedTimestamp / 1000)}:R>)`, true)
         .addField('📝 Şu Anki İsim', target.displayName, false)
-        .setFooter({ text: '⚽ Futbol Kayıt Sistemi • Kullanıcı Geçmişi' })
+        .setFooter({ text: '⚽ Apex Voucher • Kullanıcı Geçmişi' })
         .setTimestamp();
       
       // Add current roles
