@@ -92,11 +92,11 @@ module.exports = {
       } else if (response.content.toLowerCase() === 'oluştur') {
         // Create role if it doesn't exist
         kayitsizRole = await message.guild.roles.create({
-          name: '👤 Kayıtsız',
+          name: '<:kayitsiz:1385549087629250672> Kayıtsız',
           color: 'GREY',
           reason: 'Kayıt sistemi kurulumu'
         });
-        await message.channel.send(`✅ '👤 Kayıtsız' rolü oluşturuldu!`);
+        await message.channel.send(`✅ '<:kayitsiz:1385549087629250672> Kayıtsız' rolü oluşturuldu!`);
       } else {
         const mentionedRole = response.mentions.roles.first();
         if (!mentionedRole) {
@@ -128,11 +128,11 @@ module.exports = {
         yetkiliRole = null;
       } else if (response.content.toLowerCase() === 'oluştur') {
         yetkiliRole = await message.guild.roles.create({
-          name: '🛡️ Yetkili',
+          name: '<:yetkili:1385565783307980852> Yetkili',
           color: 'ORANGE',
           reason: 'Kayıt sistemi kurulumu'
         });
-        await message.channel.send(`✅ '🛡️ Yetkili' rolü oluşturuldu!`);
+        await message.channel.send(`✅ '<:yetkili:1385565783307980852> Yetkili' rolü oluşturuldu!`);
       } else {
         const mentionedRole = response.mentions.roles.first();
         if (!mentionedRole) {
@@ -164,11 +164,11 @@ module.exports = {
         futbolcuRole = null;
       } else if (response.content.toLowerCase() === 'oluştur') {
         futbolcuRole = await message.guild.roles.create({
-          name: '⚽ Futbolcu',
+          name: '<:futbolcu:1385547729215819906> Futbolcu',
           color: 'BLUE',
           reason: 'Kayıt sistemi kurulumu'
         });
-        await message.channel.send(`✅ '⚽ Futbolcu' rolü oluşturuldu!`);
+        await message.channel.send(`✅ '<:futbolcu:1385547729215819906> Futbolcu' rolü oluşturuldu!`);
       } else {
         const mentionedRole = response.mentions.roles.first();
         if (!mentionedRole) {
@@ -200,11 +200,11 @@ module.exports = {
         taraftarRole = null;
       } else if (response.content.toLowerCase() === 'oluştur') {
         taraftarRole = await message.guild.roles.create({
-          name: '🏟️ Taraftar',
+          name: '<:taraftar:1385549312607387738> Taraftar',
           color: 'PURPLE',
           reason: 'Kayıt sistemi kurulumu'
         });
-        await message.channel.send(`✅ '🏟️ Taraftar' rolü oluşturuldu!`);
+        await message.channel.send(`✅ '<:taraftar:1385549312607387738> Taraftar' rolü oluşturuldu!`);
       } else {
         const mentionedRole = response.mentions.roles.first();
         if (!mentionedRole) {
@@ -236,11 +236,11 @@ module.exports = {
         bayanRole = null;
       } else if (response.content.toLowerCase() === 'oluştur') {
         bayanRole = await message.guild.roles.create({
-          name: '👩 Bayan Üye',
+          name: '<:bayanuye:1385548584228884594> Bayan Üye',
           color: '#e91e63',
           reason: 'Kayıt sistemi kurulumu'
         });
-        await message.channel.send(`✅ '👩 Bayan Üye' rolü oluşturuldu!`);
+        await message.channel.send(`✅ '<:bayanuye:1385548584228884594> Bayan Üye' rolü oluşturuldu!`);
       } else {
         const mentionedRole = response.mentions.roles.first();
         if (!mentionedRole) {
@@ -272,11 +272,11 @@ module.exports = {
         tdRole = null;
       } else if (response.content.toLowerCase() === 'oluştur') {
         tdRole = await message.guild.roles.create({
-          name: '📋 Teknik Direktör',
+          name: '<:teknikdirektor:1385548384017846272> Teknik Direktör',
           color: 'GREEN',
           reason: 'Kayıt sistemi kurulumu'
         });
-        await message.channel.send(`✅ '📋 Teknik Direktör' rolü oluşturuldu!`);
+        await message.channel.send(`✅ '<:teknikdirektor:1385548384017846272> Teknik Direktör' rolü oluşturuldu!`);
       } else {
         const mentionedRole = response.mentions.roles.first();
         if (!mentionedRole) {
@@ -308,11 +308,11 @@ module.exports = {
         baskanRole = null;
       } else if (response.content.toLowerCase() === 'oluştur') {
         baskanRole = await message.guild.roles.create({
-          name: '👑 Başkan',
+          name: '<:baskan:1385548870523551816> Başkan',
           color: 'RED',
           reason: 'Kayıt sistemi kurulumu'
         });
-        await message.channel.send(`✅ '👑 Başkan' rolü oluşturuldu!`);
+        await message.channel.send(`✅ '<:baskan:1385548870523551816> Başkan' rolü oluşturuldu!`);
       } else {
         const mentionedRole = response.mentions.roles.first();
         if (!mentionedRole) {
@@ -344,11 +344,11 @@ module.exports = {
         partnerRole = null;
       } else if (response.content.toLowerCase() === 'oluştur') {
         partnerRole = await message.guild.roles.create({
-          name: '🤝 Partner',
+          name: '<:partner:1385547942202445966> Partner',
           color: 'PURPLE',
           reason: 'Kayıt sistemi kurulumu'
         });
-        await message.channel.send(`✅ '🤝 Partner' rolü oluşturuldu!`);
+        await message.channel.send(`✅ '<:partner:1385547942202445966> Partner' rolü oluşturuldu!`);
       } else {
         const mentionedRole = response.mentions.roles.first();
         if (!mentionedRole) {
@@ -546,15 +546,15 @@ module.exports = {
         .setTitle('✅ Kayıt Sistemi Kuruldu!')
         .setColor('#2ecc71')
         .setDescription('Futbol kayıt sistemi başarıyla kuruldu! `.k @kullanıcı` komutu ile kayıt yapabilirsiniz.')
-        .addField('🆔 Kayıtsız Rolü', kayitsizRole ? `<@&${kayitsizRole.id}>` : '`Ayarlanmadı`', true)
-        .addField('🛡️ Yetkili Rolü', yetkiliRole ? `<@&${yetkiliRole.id}>` : '`Ayarlanmadı`', true)
-        .addField('⚽ Futbolcu Rolü', futbolcuRole ? `<@&${futbolcuRole.id}>` : '`Ayarlanmadı`', true)
-        .addField('🏟️ Taraftar Rolü', taraftarRole ? `<@&${taraftarRole.id}>` : '`Ayarlanmadı`', true)
-        .addField('👩 Bayan Üye Rolü', bayanRole ? `<@&${bayanRole.id}>` : '`Ayarlanmadı`', true)
-        .addField('📋 Teknik Direktör Rolü', tdRole ? `<@&${tdRole.id}>` : '`Ayarlanmadı`', true)
-        .addField('👑 Başkan Rolü', baskanRole ? `<@&${baskanRole.id}>` : '`Ayarlanmadı`', true)
-        .addField('🤝 Partner Rolü', partnerRole ? `<@&${partnerRole.id}>` : '`Ayarlanmadı`', true)
-        .addField('👤 Üye Rolü', uyeRole ? `<@&${uyeRole.id}>` : '`Ayarlanmadı`', true)
+        .addField('<:kayitsiz:1385549087629250672> Kayıtsız Rolü', kayitsizRole ? `<@&${kayitsizRole.id}>` : '`Ayarlanmadı`', true)
+        .addField('<:yetkili:1385565783307980852> Yetkili Rolü', yetkiliRole ? `<@&${yetkiliRole.id}>` : '`Ayarlanmadı`', true)
+        .addField('<:futbolcu:1385547729215819906> Futbolcu Rolü', futbolcuRole ? `<@&${futbolcuRole.id}>` : '`Ayarlanmadı`', true)
+        .addField('<:taraftar:1385549312607387738> Taraftar Rolü', taraftarRole ? `<@&${taraftarRole.id}>` : '`Ayarlanmadı`', true)
+        .addField('<:bayanuye:1385548584228884594> Bayan Üye Rolü', bayanRole ? `<@&${bayanRole.id}>` : '`Ayarlanmadı`', true)
+        .addField('<:teknikdirektor:1385548384017846272> Teknik Direktör Rolü', tdRole ? `<@&${tdRole.id}>` : '`Ayarlanmadı`', true)
+        .addField('<:baskan:1385548870523551816> Başkan Rolü', baskanRole ? `<@&${baskanRole.id}>` : '`Ayarlanmadı`', true)
+        .addField('<:partner:1385547942202445966> Partner Rolü', partnerRole ? `<@&${partnerRole.id}>` : '`Ayarlanmadı`', true)
+        .addField('<:uye:1385550973040066651> Üye Rolü', uyeRole ? `<@&${uyeRole.id}>` : '`Ayarlanmadı`', true)
         .addField('💬 Hoş Geldin Kanalı', welcomeChannel ? `${welcomeChannel}` : '`Ayarlanmadı`', true)
         .addField('📥 Giriş Log Kanalı', joinLogChannel ? `${joinLogChannel}` : '`Ayarlanmadı`', true)
         .addField('💾 Genel Log Kanalı', logChannel ? `${logChannel}` : '`Ayarlanmadı`', true)
