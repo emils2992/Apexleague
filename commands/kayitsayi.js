@@ -94,11 +94,9 @@ module.exports = {
       // Sadece .kayitkur'da ayarlanan rollerin istatistiklerini göster
       setupRoles.forEach(setupRole => {
         const count = roleCounts[setupRole.id] || 0;
-        const roleObj = message.guild.roles.cache.get(setupRole.id);
-        const roleName = roleObj ? roleObj.name : setupRole.name;
         const emoji = roleEmojis[setupRole.name] || '';
         
-        statsText += `${emoji} **${roleName}**: \`${count}\`\n`;
+        statsText += `${emoji} **${setupRole.name}**: \`${count}\`\n`;
         totalCount += count;
       });
       
