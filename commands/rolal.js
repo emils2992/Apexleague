@@ -96,7 +96,7 @@ module.exports = {
       await target.roles.remove(targetRole, `Rol alındı: ${message.author.tag} tarafından`);
 
       // Başarı mesajı
-      const successMessage = `<a:green:1385549530099744878> **${target.displayName}** kullanıcısından **${targetRole.name}** rolü başarıyla alındı!`;
+      const successMessage = `<a:onay:1385549530099744878> **${target.displayName}** kullanıcısından **${targetRole.name}** rolü başarıyla alındı!`;
       
       message.reply(successMessage);
 
@@ -105,7 +105,7 @@ module.exports = {
         const logChannel = message.guild.channels.cache.get(settings.logChannel);
         if (logChannel) {
           const logMessage = `📋 **Rol Alındı**
-<a:red:1385549644528926730> **Kullanıcı**: ${target} (${target.user.tag})
+<a:onay:1385549530099744878> **Kullanıcı**: ${target} (${target.user.tag})
 <:role:1385550203842396180> **Alınan Rol**: ${targetRole}
 <:yetkili:1385549976543580221> **Yetkili**: ${message.author} (${message.author.tag})
 <:time:1385550376085901312> **Tarih**: <t:${Math.floor(Date.now() / 1000)}:F>`;
