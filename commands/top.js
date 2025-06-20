@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const db = require('../utils/database');
 
 module.exports = {
@@ -21,46 +21,277 @@ module.exports = {
         return message.reply('📊 Henüz hiç kayıt yapılmamış!');
       }
       
-      // Create a fancy embed
+      // Get registrations for detailed stats
+      const registrations = await db.getRegistrations(guildId);
+      
+      // Calculate detailed stats for each user
+      const detailedStats = {};
+      staffStats.forEach(staff => {
+        const userRegs = registrations.filter(reg => 
+          reg.staffId === staff.id && 
+          !reg.unregistered && 
+          reg.assignedRole && 
+          reg.assignedRoleId
+        );
+        
+        const roleCounts = {};
+        userRegs.forEach(reg => {
+          if (reg.assignedRoleId && reg.assignedRole) {
+            roleCounts[reg.assignedRoleId] = (roleCounts[reg.assignedRoleId] || 0) + 1;
+          }
+        });
+        
+        // Only count roles that are set up in kayitkur
+        const setupRoles = [
+          { id: settings.uyeRole, name: 'Futbolcu' },
+          { id: settings.coachRole, name: 'Teknik Direktör' },
+          { id: settings.presidentRole, name: 'Başkan' },
+          { id: settings.partnerRole, name: 'Partner' },
+          { id: settings.taraftarRole, name: 'Taraftar' },
+          { id: settings.bayanRole, name: 'Bayan Üye' }
+        ].filter(role => role.id);
+        
+        let validCount = 0;
+        let roleBreakdown = '';
+        
+        setupRoles.forEach(setupRole => {
+          const count = roleCounts[setupRole.id] || 0;
+          if (count > 0) {
+            const roleObj = message.guild.roles.cache.get(setupRole.id);
+            const roleName = roleObj ? roleObj.name : setupRole.name;
+            roleBreakdown += `${roleName}: ${count} `;
+            validCount += count;
+          }
+        });
+        
+        detailedStats[staff.id] = {
+          ...staff,
+          count: validCount,
+          breakdown: roleBreakdown.trim()
+        };
+      });
+      
+      // Sort by valid count and filter out users with 0 registrations
+      const sortedDetailedStats = Object.values(detailedStats)
+        .filter(staff => staff.count > 0)
+        .sort((a, b) => b.count - a.count);
+      
+      // Pagination variables
+      const itemsPerPage = 10;
+      const totalPages = Math.ceil(sortedDetailedStats.length / itemsPerPage);
+      let currentPage = 0;
+      
+      // Parse page argument if provided
+      if (args.length > 0 && !isNaN(args[0])) {
+        const requestedPage = parseInt(args[0]) - 1;
+        if (requestedPage >= 0 && requestedPage < totalPages) {
+          currentPage = requestedPage;
+        }
+      }
+      
+      const startIndex = currentPage * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const currentPageData = sortedDetailedStats.slice(startIndex, endIndex);
+      
+      // Create embed
       const embed = new MessageEmbed()
         .setTitle('⚽ Futbol Kayıt Sıralaması')
         .setColor('#f39c12')
-        .setDescription('En çok kayıt yapan yetkililer:')
         .setThumbnail(message.guild.iconURL({ dynamic: true }) || 'https://i.imgur.com/7HXgvjM.png')
-        .setFooter({ text: 'Futbol Kayıt Sistemi • Top Sıralama' })
+        .setFooter({ text: `Futbol Kayıt Sistemi • Sayfa ${currentPage + 1}/${totalPages}` })
         .setTimestamp();
       
-      // Format the leaderboard with medals
+      // Format the leaderboard with medals and role breakdown
       let leaderboard = '';
       
-      staffStats.slice(0, 10).forEach((staff, index) => {
+      currentPageData.forEach((staff, index) => {
+        const globalIndex = startIndex + index;
         let medal = '';
-        if (index === 0) medal = '🥇';
-        else if (index === 1) medal = '🥈';
-        else if (index === 2) medal = '🥉';
-        else medal = `${index + 1}.`;
+        if (globalIndex === 0) medal = '🥇';
+        else if (globalIndex === 1) medal = '🥈';
+        else if (globalIndex === 2) medal = '🥉';
+        else medal = `${globalIndex + 1}.`;
         
         leaderboard += `${medal} <@${staff.id}> • **${staff.count}** kayıt\n`;
+        if (staff.breakdown) {
+          leaderboard += `└ ${staff.breakdown}\n`;
+        }
+        leaderboard += '\n';
       });
       
       embed.setDescription(leaderboard || 'Henüz kayıt yapılmamış!');
       
-      // Get total registrations
-      const registrations = await db.getRegistrations(guildId);
-      const totalRegistrations = registrations.length;
-      
-      // Add footer stats
+      // Add total stats
+      const totalRegistrations = sortedDetailedStats.reduce((sum, staff) => sum + staff.count, 0);
       embed.addField('📊 Toplam İstatistikler', 
         `**Toplam Kayıt**: \`${totalRegistrations}\`
-        **Kayıt Yapan Yetkili**: \`${staffStats.length}\`
+        **Kayıt Yapan Yetkili**: \`${sortedDetailedStats.length}\`
         **Sunucu Üye Sayısı**: \`${message.guild.memberCount}\``, false);
       
-      // Send the embed
-      message.reply({ embeds: [embed] });
+      // Create navigation buttons if needed
+      const components = [];
+      if (totalPages > 1) {
+        const row = new MessageActionRow();
+        
+        // Previous button
+        if (currentPage > 0) {
+          row.addComponents(
+            new MessageButton()
+              .setCustomId(`top_prev_${currentPage - 1}`)
+              .setLabel('◀️ Önceki')
+              .setStyle('SECONDARY')
+          );
+        }
+        
+        // Page indicator
+        row.addComponents(
+          new MessageButton()
+            .setCustomId('top_page_indicator')
+            .setLabel(`${currentPage + 1}/${totalPages}`)
+            .setStyle('PRIMARY')
+            .setDisabled(true)
+        );
+        
+        // Next button
+        if (currentPage < totalPages - 1) {
+          row.addComponents(
+            new MessageButton()
+              .setCustomId(`top_next_${currentPage + 1}`)
+              .setLabel('Sonraki ▶️')
+              .setStyle('SECONDARY')
+          );
+        }
+        
+        components.push(row);
+      }
+      
+      // Send the embed with navigation
+      const reply = await message.reply({ 
+        embeds: [embed], 
+        components: components 
+      });
+      
+      // Handle button interactions
+      if (components.length > 0) {
+        const filter = (interaction) => {
+          return interaction.user.id === message.author.id && 
+                 (interaction.customId.startsWith('top_prev_') || 
+                  interaction.customId.startsWith('top_next_'));
+        };
+        
+        const collector = reply.createMessageComponentCollector({ 
+          filter, 
+          time: 300000 // 5 minutes
+        });
+        
+        collector.on('collect', async (interaction) => {
+          if (interaction.customId.startsWith('top_prev_')) {
+            const newPage = parseInt(interaction.customId.split('_')[2]);
+            await this.updateTopPage(interaction, newPage, sortedDetailedStats, settings, message.guild);
+          } else if (interaction.customId.startsWith('top_next_')) {
+            const newPage = parseInt(interaction.customId.split('_')[2]);
+            await this.updateTopPage(interaction, newPage, sortedDetailedStats, settings, message.guild);
+          }
+        });
+        
+        collector.on('end', () => {
+          // Disable buttons after timeout
+          const disabledComponents = components.map(row => {
+            const newRow = new MessageActionRow();
+            row.components.forEach(button => {
+              newRow.addComponents(button.setDisabled(true));
+            });
+            return newRow;
+          });
+          
+          reply.edit({ components: disabledComponents }).catch(() => {});
+        });
+      }
       
     } catch (error) {
       console.error('Sıralama hatası:', error);
       message.reply('❌ Sıralama alınırken bir hata oluştu!');
     }
+  },
+  
+  async updateTopPage(interaction, newPage, sortedDetailedStats, settings, guild) {
+    const itemsPerPage = 10;
+    const totalPages = Math.ceil(sortedDetailedStats.length / itemsPerPage);
+    
+    const startIndex = newPage * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentPageData = sortedDetailedStats.slice(startIndex, endIndex);
+    
+    // Create updated embed
+    const embed = new MessageEmbed()
+      .setTitle('⚽ Futbol Kayıt Sıralaması')
+      .setColor('#f39c12')
+      .setThumbnail(guild.iconURL({ dynamic: true }) || 'https://i.imgur.com/7HXgvjM.png')
+      .setFooter({ text: `Futbol Kayıt Sistemi • Sayfa ${newPage + 1}/${totalPages}` })
+      .setTimestamp();
+    
+    // Format the leaderboard
+    let leaderboard = '';
+    
+    currentPageData.forEach((staff, index) => {
+      const globalIndex = startIndex + index;
+      let medal = '';
+      if (globalIndex === 0) medal = '🥇';
+      else if (globalIndex === 1) medal = '🥈';
+      else if (globalIndex === 2) medal = '🥉';
+      else medal = `${globalIndex + 1}.`;
+      
+      leaderboard += `${medal} <@${staff.id}> • **${staff.count}** kayıt\n`;
+      if (staff.breakdown) {
+        leaderboard += `└ ${staff.breakdown}\n`;
+      }
+      leaderboard += '\n';
+    });
+    
+    embed.setDescription(leaderboard);
+    
+    // Add total stats
+    const totalRegistrations = sortedDetailedStats.reduce((sum, staff) => sum + staff.count, 0);
+    embed.addField('📊 Toplam İstatistikler', 
+      `**Toplam Kayıt**: \`${totalRegistrations}\`
+      **Kayıt Yapan Yetkili**: \`${sortedDetailedStats.length}\`
+      **Sunucu Üye Sayısı**: \`${guild.memberCount}\``, false);
+    
+    // Create navigation buttons
+    const row = new MessageActionRow();
+    
+    // Previous button
+    if (newPage > 0) {
+      row.addComponents(
+        new MessageButton()
+          .setCustomId(`top_prev_${newPage - 1}`)
+          .setLabel('◀️ Önceki')
+          .setStyle('SECONDARY')
+      );
+    }
+    
+    // Page indicator
+    row.addComponents(
+      new MessageButton()
+        .setCustomId('top_page_indicator')
+        .setLabel(`${newPage + 1}/${totalPages}`)
+        .setStyle('PRIMARY')
+        .setDisabled(true)
+    );
+    
+    // Next button
+    if (newPage < totalPages - 1) {
+      row.addComponents(
+        new MessageButton()
+          .setCustomId(`top_next_${newPage + 1}`)
+          .setLabel('Sonraki ▶️')
+          .setStyle('SECONDARY')
+      );
+    }
+    
+    await interaction.update({ 
+      embeds: [embed], 
+      components: [row] 
+    });
   }
 };
