@@ -43,6 +43,7 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 ### 4. Command Categories
 - **Admin Commands**: System setup and configuration
 - **Staff Commands**: Registration management and user queries
+- **Role Management Commands**: Secure role assignment and removal with hierarchy checks
 - **Voice Commands**: Voice channel management
 - **Utility Commands**: Help, statistics, and debugging
 
@@ -121,6 +122,9 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 20, 2025. Added asynchronous file writing to prevent blocking operations during registrations
 - June 20, 2025. Optimized database operations with cache preloading for zero-delay data access
 - June 20, 2025. Enhanced debug command with real-time cache status monitoring
+- June 20, 2025. Added .rolal and .rolver commands with comprehensive permission hierarchy validation
+- June 20, 2025. Enhanced .uk command with security checks to prevent unauthorized role modifications
+- June 20, 2025. Implemented bot position validation and proper error handling for role management operations
 
 ## User Preferences
 

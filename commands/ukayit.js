@@ -28,6 +28,40 @@ module.exports = {
     if (!target) {
       return message.reply('⚠️ Lütfen bir kullanıcı etiketleyin!');
     }
+
+    // Bot kendini kayıt dışı bırakamaz
+    if (target.user.bot) {
+      return message.reply('<:red:1385549644528926730> Botların kaydı sıfırlanamaz!');
+    }
+
+    // Kendi kendini kayıt dışı bırakamaz
+    if (target.id === message.author.id) {
+      return message.reply('<:red:1385549644528926730> Kendi kaydınızı sıfırlayamazsınız!');
+    }
+
+    // Yetki hiyerarşisi kontrolü
+    const authorMember = message.member;
+    const botMember = message.guild.members.cache.get(client.user.id);
+
+    // Yönetici değilse hiyerarşi kontrolü yap
+    if (!authorMember.permissions.has(8n)) {
+      // Komut kullanan kişinin en yüksek rolü
+      const authorHighestRole = authorMember.roles.highest;
+      
+      // Hedef kullanıcının en yüksek rolü
+      const targetHighestRole = target.roles.highest;
+
+      // Komut kullanan kişi, hedef kullanıcıdan düşük yetkili olamaz
+      if (authorHighestRole.position <= targetHighestRole.position) {
+        return message.reply('<:red:1385549644528926730> Bu kullanıcının kaydını sıfırlayamazsınız! (Yetki hiyerarşisi)');
+      }
+    }
+
+    // Bot yetki kontrolü - hedef kullanıcının rollerini alabilir mi?
+    const targetHighestRole = target.roles.highest;
+    if (botMember.roles.highest.position <= targetHighestRole.position) {
+      return message.reply('<:red:1385549644528926730> Bu kullanıcının kaydını sıfırlayamam! Bot rolü yeterince yüksek değil.');
+    }
     
     // Check if the kayitsiz role exists
     if (!settings.kayitsizRole) {
