@@ -89,13 +89,15 @@ module.exports = {
       // Create embed for unregistration
       const embed = new MessageEmbed()
         .setColor('#27ae60')
-        .setTitle('<a:onay:1385553560678305872> Kayıt Sıfırlandı')
-        .setDescription(`**${target.user.tag}** üyesinin kaydı başarıyla sıfırlandı.`)
+        .setTitle('Kayıt Sıfırlandı')
+        .setDescription(`<a:onay:1385553560678305872> **${target.user.tag}** üyesinin kaydı başarıyla sıfırlandı.`)
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
-        .addField('👤 Kullanıcı', `<@${target.id}>`, true)
-        .addField('🛡️ Verilen Rol', `<:kayitsiz:1385549087629250672> <@&${kayitsizRole.id}>`, true)
-        .addField('👮 İşlemi Yapan', `<@${message.author.id}>`, true)
-        .addField('⏰ İşlem Zamanı', new Date().toLocaleString('tr-TR'), true)
+        .addFields(
+          { name: '👤 Kullanıcı', value: `<@${target.id}>`, inline: true },
+          { name: '🛡️ Verilen Rol', value: `<:kayitsiz:1385549087629250672> <@&${kayitsizRole.id}>`, inline: true },
+          { name: '👮 İşlemi Yapan', value: `<@${message.author.id}>`, inline: true },
+          { name: '⏰ İşlem Zamanı', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
+        )
         .setFooter({ text: 'Apex Voucher • Kayıt Sıfırlama' })
         .setTimestamp();
       

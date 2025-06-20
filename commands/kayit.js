@@ -237,9 +237,11 @@ module.exports = {
         .setTitle('👤 Kullanıcı Kaydı')
         .setDescription(`**${name}** kullanıcısı için bir rol seçin!`)
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
-        .addField('🆔 Kullanıcı', `<@${target.id}>`, true)
-        .addField('📝 Kayıt Eden', `<@${message.author.id}>`, true)
-        .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
+        .addFields(
+          { name: '🆔 Kullanıcı', value: `<@${target.id}>`, inline: true },
+          { name: '📝 Kayıt Eden', value: `<@${message.author.id}>`, inline: true },
+          { name: '⏰ Kayıt Zamanı', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
+        )
         .setFooter({ text: 'Futbol Kayıt Sistemi' })
         .setTimestamp();
 
