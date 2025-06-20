@@ -41,15 +41,15 @@ module.exports = {
           }
         });
         
-        // Only count roles that are set up in kayitkur
+        // Only count roles that are set up in kayitkur - exclude test/admin roles
         const setupRoles = [
           { id: settings.futbolcuRole, name: 'Futbolcu' },
           { id: settings.teknikDirektorRole, name: 'Teknik Direktör' },
           { id: settings.baskanRole, name: 'Başkan' },
           { id: settings.partnerRole, name: 'Partner' },
           { id: settings.taraftarRole, name: 'Taraftar' },
-          { id: settings.bayanUyeRole, name: 'Bayan Üye' }
-        ].filter(role => role.id);
+          { id: settings.bayanUyeRole, name: 'Kadın Üye' }
+        ].filter(role => role.id && role.id !== settings.kayitsizRole && role.id !== settings.uyeRole);
         
         let validCount = 0;
         let roleBreakdown = '';
@@ -61,7 +61,7 @@ module.exports = {
           'Başkan': '<:baskan:1385548870523551816>',
           'Partner': '<:partner:1385547942202445966>',
           'Taraftar': '<:taraftar:1385549312607387738>',
-          'Bayan Üye': '<:bayanuye:1385548584228884594>'
+          'Kadın Üye': '<:bayanuye:1385548584228884594>'
         };
         
         setupRoles.forEach(setupRole => {

@@ -61,15 +61,15 @@ module.exports = {
         }
       });
       
-      // .kayitkur komutunda ayarlanan rolleri kontrol et
+      // .kayitkur komutunda ayarlanan rolleri kontrol et - exclude test/admin roles
       const setupRoles = [
         { id: settings.futbolcuRole, name: 'Futbolcu' },
         { id: settings.teknikDirektorRole, name: 'Teknik Direktör' },
         { id: settings.baskanRole, name: 'Başkan' },
         { id: settings.partnerRole, name: 'Partner' },
         { id: settings.taraftarRole, name: 'Taraftar' },
-        { id: settings.bayanUyeRole, name: 'Bayan Üye' }
-      ].filter(role => role.id); // Sadece ayarlanan rolleri al
+        { id: settings.bayanUyeRole, name: 'Kadın Üye' }
+      ].filter(role => role.id && role.id !== settings.kayitsizRole && role.id !== settings.uyeRole);
       
       // Embed oluştur
       const embed = new MessageEmbed()
@@ -90,7 +90,7 @@ module.exports = {
         'Başkan': '<:baskan:1385548870523551816>',
         'Partner': '<:partner:1385547942202445966>',
         'Taraftar': '<:taraftar:1385549312607387738>',
-        'Bayan Üye': '<:bayanuye:1385548584228884594>'
+        'Kadın Üye': '<:bayanuye:1385548584228884594>'
       };
       
       // Sadece .kayitkur'da ayarlanan rollerin istatistiklerini göster

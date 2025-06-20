@@ -112,6 +112,11 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 20, 2025. Removed all imgur.com image links throughout the bot
 - June 20, 2025. Added .kayitsayi command to help menu
 - June 20, 2025. Rebranded bot from "Futbol Kayıt Sistemi" to "Apex Voucher" throughout all messages and footers
+- June 20, 2025. Changed welcome message after registration from embed format to simple text message
+- June 20, 2025. Updated help menu to display bot's profile picture instead of server icon
+- June 20, 2025. Updated bot activity status from "Futbol Kayıt" to "Apex Lig Streaming"
+- June 20, 2025. Renamed "Bayan Üye" to "Kadın Üye" throughout all role displays and help menu
+- June 20, 2025. Enhanced role filtering in .top and .kayitsayi commands to exclude test/admin roles and show only main registration roles
 
 ## User Preferences
 
