@@ -221,8 +221,8 @@ module.exports = {
           if (guildSettings && guildSettings.welcomeChannel) {
             const welcomeChannel = interaction.guild.channels.cache.get(guildSettings.welcomeChannel);
             if (welcomeChannel) {
-              // Normal mesaj olarak hoş geldin mesajı gönder
-              const welcomeMessage = `<a:hosgeldin:1385547269360713779> **${targetMember.displayName}** adlı üye aramıza hoş geldin! **${roleEmoji} ${roleName}** olarak futbol ailemize katıldığın için çok mutluyuz!`;
+              // Normal mesaj olarak hoş geldin mesajı gönder - kullanıcıya etiket at
+              const welcomeMessage = `<a:hosgeldin:1385547269360713779> **${targetMember.displayName}** adlı üye aramıza hoş geldin! **${roleEmoji} ${roleName}** olarak futbol ailemize katıldığın için çok mutluyuz! <@${targetMember.id}>`;
                 
               await welcomeChannel.send(welcomeMessage);
             }
