@@ -227,12 +227,14 @@ module.exports = {
               // Alt embed (siyah renkte)
               const welcomeEmbed = new MessageEmbed()
                 .setColor('#000000') // Siyah renk
+                .setAuthor({ name: `${interaction.guild.name} • Kayıt Yapıldı!`, iconURL: interaction.guild.iconURL({ dynamic: true }) }) // Sol üst sunucu profili
+                .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true })) // Sağ taraf kullanıcı profili
                 .setDescription(
-                  `<a:onay1:1385613791911219223> • **<@${targetMember.id}> aramıza** ${roleEmoji} **${roleName}** rolüyle katıldı.\n` +
-                  `<a:yetkili_geliyor:1385614217884864656> • Kaydı gerçekleştiren yetkili <@${interaction.user.id}>\n` +
+                  `<a:onay1:1385613791911219223> • **> <@${targetMember.id}> aramıza** ${roleEmoji} **${roleName}** rolüyle katıldı.\n\n` +
+                  `<a:yetkili_geliyor:1385614217884864656> • Kaydı gerçekleştiren yetkili > <@${interaction.user.id}>\n\n` +
                   `<a:kopek:1385614129514942495> • Aramıza hoş geldin > <@${targetMember.id}>`
                 )
-                .setFooter({ text: 'Apex Voucher kayıt sistemi' });
+                .setFooter({ text: 'Apex Voucher kayıt sistemi', iconURL: targetMember.user.displayAvatarURL({ dynamic: true }) }); // Alt sol kullanıcı profili
 
               await welcomeChannel.send({
                 content: topMessage,
