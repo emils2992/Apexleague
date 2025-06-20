@@ -291,9 +291,7 @@ module.exports = {
                     `> <@${targetMember.id}>\n`,
                 )
                 .setImage(
-                  interaction.guild.icon ? 
-                    `https://cdn.discordapp.com/icons/${interaction.guild.id}/${interaction.guild.icon}.${interaction.guild.icon.startsWith('a_') ? 'gif' : 'png'}?size=256` :
-                    null,
+                  interaction.guild.iconURL({ dynamic: true, size: 256 }),
                 )
                 .setFooter({
                   text: "Apex Voucher Kayıt Sistemi",
