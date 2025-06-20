@@ -44,7 +44,7 @@ module.exports = {
     if (setupDone) {
       // Add server-specific information
       embed.addField('📋 Sunucu Ayarları', 
-        `**<:kayitsiz:1385550970364059689> Kayıtsız Rolü**: ${settings.kayitsizRole ? `<@&${settings.kayitsizRole}>` : 'Ayarlanmamış'}\n` +
+        `**<:kayitsiz:1385549087629250672> Kayıtsız Rolü**: ${settings.kayitsizRole ? `<@&${settings.kayitsizRole}>` : 'Ayarlanmamış'}\n` +
         `**<:yetkili:1385565783307980852> Yetkili Rolü**: ${settings.yetkiliRole ? `<@&${settings.yetkiliRole}>` : 'Ayarlanmamış'}\n` +
         `**<:futbolcu:1385547729215819906> Futbolcu Rolü**: ${settings.futbolcuRole ? `<@&${settings.futbolcuRole}>` : 'Ayarlanmamış'}\n` +
         `**<:teknikdirektor:1385548384017846272> Teknik Direktör Rolü**: ${settings.teknikDirektorRole ? `<@&${settings.teknikDirektorRole}>` : (settings.tdRole ? `<@&${settings.tdRole}>` : 'Ayarlanmamış')}\n` +
