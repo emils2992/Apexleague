@@ -1,3 +1,4 @@
+const { MessageEmbed } = require('discord.js');
 const db = require('../utils/database');
 
 module.exports = {
@@ -104,13 +105,20 @@ module.exports = {
       if (settings.logChannel) {
         const logChannel = message.guild.channels.cache.get(settings.logChannel);
         if (logChannel) {
-          const logMessage = `📋 **Rol Alındı**
-<a:onay:1385553560678305872> **Kullanıcı**: ${target} (${target.user.tag})
-<:role:1385550203842396180> **Alınan Rol**: ${targetRole}
-<:yetkili:1385549976543580221> **Yetkili**: ${message.author} (${message.author.tag})
-<:time:1385550376085901312> **Tarih**: <t:${Math.floor(Date.now() / 1000)}:F>`;
+          const logEmbed = new MessageEmbed()
+            .setColor('#e74c3c')
+            .setTitle('📋 Rol Alındı')
+            .setDescription(`<a:onay:1385553560678305872> **${target.displayName}** kullanıcısından **${targetRole.name}** rolü alındı!`)
+            .addFields(
+              { name: '👤 Kullanıcı', value: `${target} (${target.user.tag})`, inline: true },
+              { name: '🛡️ Alınan Rol', value: `${targetRole}`, inline: true },
+              { name: '👮 Yetkili', value: `${message.author} (${message.author.tag})`, inline: true },
+              { name: '⏰ Tarih', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
+            )
+            .setFooter({ text: 'Apex Voucher • Rol Yönetimi' })
+            .setTimestamp();
 
-          logChannel.send(logMessage).catch(console.error);
+          logChannel.send({ embeds: [logEmbed] }).catch(console.error);
         }
       }
 
