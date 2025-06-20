@@ -98,6 +98,15 @@ module.exports = {
       const allRoleButtons = [];
       
       // Tüm mevcut rol seçeneklerini bir diziye ekle, her biri farklı renkte
+      console.log('Kayıt sistemi ayarları kontrol ediliyor...', {
+        futbolcuRole: settings.futbolcuRole,
+        teknikDirektorRole: settings.teknikDirektorRole,
+        baskanRole: settings.baskanRole,
+        taraftarRole: settings.taraftarRole,
+        bayanUyeRole: settings.bayanUyeRole,
+        partnerRole: settings.partnerRole
+      });
+      
       if (settings.futbolcuRole) {
         allRoleButtons.push({
           id: `role_futbolcu_${target.id}`,
@@ -129,6 +138,7 @@ module.exports = {
       }
       
       if (settings.taraftarRole) {
+        console.log('Taraftar rolü bulundu:', settings.taraftarRole); // Debug log
         allRoleButtons.push({
           id: `role_taraftar_${target.id}`,
           label: 'Taraftar',
@@ -136,6 +146,8 @@ module.exports = {
           roleId: settings.taraftarRole,
           emoji: '<:taraftar:1385549312607387738>'
         });
+      } else {
+        console.log('Taraftar rolü bulunamadı! Settings:', settings); // Debug log
       }
       
       // Bayan Üye için özel stil - tdRole anahtarı da kontrol edilir
@@ -195,8 +207,8 @@ module.exports = {
         row1Components.push(buttonBuilder);
       }
       
-      // İkinci satıra kalan butonları ekle (en fazla 2 buton)
-      for (let i = 3; i < Math.min(allRoleButtons.length, 5); i++) {
+      // İkinci satıra kalan butonları ekle (en fazla 3 buton - 6 rol için)
+      for (let i = 3; i < Math.min(allRoleButtons.length, 6); i++) {
         const button = allRoleButtons[i];
         const buttonBuilder = new MessageButton()
           .setCustomId(button.id)

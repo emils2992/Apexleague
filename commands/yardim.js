@@ -30,8 +30,8 @@ module.exports = {
     embed.addField('👮 Yetkili Komutları', 
       '`.k @kullanıcı isim` - Kullanıcıyı kayıt eder ve isim değiştirir\n' + 
       '`.uk @kullanıcı` - Kullanıcının kaydını sıfırlar ve kayıtsız rolü verir\n' +
-      '`.rolal @kullanıcı @rol` - Kullanıcıya belirtilen rolü verir (yetki kontrolü ile)\n' +
-      '`.rolver @kullanıcı @rol` - Kullanıcıdan belirtilen rolü alır (yetki kontrolü ile)\n' +
+      '`.rolal @kullanıcı @rol` - Kullanıcıdan belirtilen rolü alır (yetki kontrolü ile)\n' +
+      '`.rolver @kullanıcı @rol` - Kullanıcıya belirtilen rolü verir (yetki kontrolü ile)\n' +
       '`.g @kullanıcı` - Kullanıcının geçmiş kayıtlarını ve bilgilerini gösterir\n' +
       '`.id @kullanıcı yeni_isim` - Kullanıcının ismini değiştirir\n' +
       '`.top` - En çok kayıt yapan yetkililerin sıralamasını gösterir\n' +

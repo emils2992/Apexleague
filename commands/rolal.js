@@ -2,7 +2,7 @@ const db = require('../utils/database');
 
 module.exports = {
   name: 'rolal',
-  description: 'Kullanıcıya belirtilen rolü verir',
+  description: 'Kullanıcıdan belirtilen rolü alır',
   async execute(message, args, client) {
     const guildId = message.guild.id;
     const settings = await db.getGuildSettings(guildId);
@@ -13,7 +13,7 @@ module.exports = {
 
     // Yetki kontrolü
     if (settings.yetkiliRole && !message.member.roles.cache.has(settings.yetkiliRole) && !message.member.permissions.has(8n)) {
-      return message.reply('<:red:1385549644528926730> Bu komutu kullanmak için yetkili olmalısınız!');
+      return message.reply('<a:red:1385549644528926730> Bu komutu kullanmak için yetkili olmalısınız!');
     }
 
     // Komut formatı kontrolü
@@ -27,14 +27,14 @@ module.exports = {
       return message.reply('⚠️ Lütfen bir kullanıcı etiketleyin!');
     }
 
-    // Bot kendine rol veremez
+    // Bot kendinden rol alamaz
     if (target.user.bot) {
-      return message.reply('<:red:1385549644528926730> Botlara rol verilemez!');
+      return message.reply('<a:red:1385549644528926730> Botlardan rol alınamaz!');
     }
 
-    // Kendi kendine rol veremez
+    // Kendi kendinden rol alamaz
     if (target.id === message.author.id) {
-      return message.reply('<:red:1385549644528926730> Kendinize rol veremezsiniz!');
+      return message.reply('<a:red:1385549644528926730> Kendinizden rol alamazsınız!');
     }
 
     // Rolü bul
@@ -67,36 +67,36 @@ module.exports = {
       // Hedef kullanıcının en yüksek rolü
       const targetHighestRole = target.roles.highest;
       
-      // Verilecek rol
-      const roleToGive = targetRole;
+      // Alınacak rol
+      const roleToRemove = targetRole;
 
       // Komut kullanan kişi, hedef kullanıcıdan düşük yetkili olamaz
       if (authorHighestRole.position <= targetHighestRole.position) {
-        return message.reply('<:red:1385549644528926730> Bu kullanıcıya rol veremezsiniz! (Yetki hiyerarşisi)');
+        return message.reply('<a:red:1385549644528926730> Bu kullanıcıdan rol alamazsınız! (Yetki hiyerarşisi)');
       }
 
-      // Komut kullanan kişi, vereceği rolden düşük yetkili olamaz
-      if (authorHighestRole.position <= roleToGive.position) {
-        return message.reply('<:red:1385549644528926730> Bu rolü veremezsiniz! (Rol yetkinizden yüksek)');
+      // Komut kullanan kişi, alacağı rolden düşük yetkili olamaz
+      if (authorHighestRole.position <= roleToRemove.position) {
+        return message.reply('<a:red:1385549644528926730> Bu rolü alamazsınız! (Rol yetkinizden yüksek)');
       }
     }
 
     // Bot yetki kontrolü
     if (botMember.roles.highest.position <= targetRole.position) {
-      return message.reply('<:red:1385549644528926730> Bu rolü veremem! Bot rolü yeterince yüksek değil.');
+      return message.reply('<a:red:1385549644528926730> Bu rolü alamam! Bot rolü yeterince yüksek değil.');
     }
 
-    // Kullanıcıda bu rol zaten var mı?
-    if (target.roles.cache.has(targetRole.id)) {
-      return message.reply(`<:red:1385549644528926730> ${target.displayName} kullanıcısında **${targetRole.name}** rolü zaten mevcut!`);
+    // Kullanıcıda bu rol var mı?
+    if (!target.roles.cache.has(targetRole.id)) {
+      return message.reply(`<a:red:1385549644528926730> ${target.displayName} kullanıcısında **${targetRole.name}** rolü bulunmuyor!`);
     }
 
     try {
-      // Rolü ver
-      await target.roles.add(targetRole, `Rol verildi: ${message.author.tag} tarafından`);
+      // Rolü al
+      await target.roles.remove(targetRole, `Rol alındı: ${message.author.tag} tarafından`);
 
       // Başarı mesajı
-      const successMessage = `<:green:1385549530099744878> **${target.displayName}** kullanıcısına **${targetRole.name}** rolü başarıyla verildi!`;
+      const successMessage = `<a:green:1385549530099744878> **${target.displayName}** kullanıcısından **${targetRole.name}** rolü başarıyla alındı!`;
       
       message.reply(successMessage);
 
@@ -104,9 +104,9 @@ module.exports = {
       if (settings.logChannel) {
         const logChannel = message.guild.channels.cache.get(settings.logChannel);
         if (logChannel) {
-          const logMessage = `📋 **Rol Verildi**
-<:green:1385549530099744878> **Kullanıcı**: ${target} (${target.user.tag})
-<:role:1385550203842396180> **Verilen Rol**: ${targetRole}
+          const logMessage = `📋 **Rol Alındı**
+<a:red:1385549644528926730> **Kullanıcı**: ${target} (${target.user.tag})
+<:role:1385550203842396180> **Alınan Rol**: ${targetRole}
 <:yetkili:1385549976543580221> **Yetkili**: ${message.author} (${message.author.tag})
 <:time:1385550376085901312> **Tarih**: <t:${Math.floor(Date.now() / 1000)}:F>`;
 
@@ -115,8 +115,8 @@ module.exports = {
       }
 
     } catch (error) {
-      console.error('Rol verme hatası:', error);
-      message.reply('<:red:1385549644528926730> Rol verilirken bir hata oluştu! Botun yetkileri kontrol edin.');
+      console.error('Rol alma hatası:', error);
+      message.reply('<a:red:1385549644528926730> Rol alınırken bir hata oluştu! Botun yetkileri kontrol edin.');
     }
   }
 };
