@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const db = require('../utils/database');
 
 module.exports = {
-  name: 'yardim',
+  name: 'yardım',
   description: 'Botun komutlarını ve kullanımını gösterir',
   async execute(message, args, client) {
     // Get guild settings
