@@ -108,6 +108,7 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 20, 2025. Updated join notification format to use quote-style messages with custom emojis and Discord timestamps
 - June 20, 2025. Updated all emoji references to use animated versions for enhanced visual effects
 - June 20, 2025. Fixed role mapping in .kayitsayi and .top commands to use correct database field names
+- June 20, 2025. Updated welcome channel message format to use clean embed structure with animated emojis
 
 ## User Preferences
 

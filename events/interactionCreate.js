@@ -226,16 +226,11 @@ module.exports = {
                 .setColor(roleColor)
                 .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
                 .setDescription(`**${targetMember.displayName}** adlı üye aramıza hoş geldin! **${roleEmoji} ${roleName}** olarak futbol ailemize katıldığın için çok mutluyuz!`)
-                .addField('<:uye:1385550973040066651> Kullanıcı', `<@${targetMember.id}>`, true)
-                .addField('🛡️ Verilen Rol', `${roleEmoji} <@&${role.id}>`, true)
-                .addField('👮 Kaydeden Yetkili', `<@${interaction.user.id}>`, true)
-                .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
                 .setImage('https://i.imgur.com/3Umh6l4.jpg')
-                .setFooter({ text: '⚽ Futbol Kayıt Sistemi • Hoş Geldin!' })
+                .setFooter({ text: 'Futbol Kayıt Sistemi • Hoş Geldin!' })
                 .setTimestamp();
                 
               await welcomeChannel.send({ 
-                content: `🎉 Aramıza **${roleEmoji} ${roleName}** olarak hoş geldin <@${targetMember.id}>!`,
                 embeds: [welcomeEmbed] 
               });
             }
