@@ -1,8 +1,10 @@
+
 const { getVoiceConnection } = require('@discordjs/voice');
+const sescekCommand = require('./sescek');
 
 module.exports = {
   name: 'sesayril',
-  description: 'Botu ses kanalından çıkarır',
+  description: 'Botu ses kanalından çıkarır ve kalıcı bağlantıyı durdurur',
   async execute(message, args, client) {
     try {
       // Sunucu ID'sini al
@@ -15,6 +17,9 @@ module.exports = {
         return message.reply('❓ Zaten herhangi bir ses kanalında değilim!');
       }
       
+      // Kalıcı bağlantı kaydını temizle
+      sescekCommand.clearPersistentConnection(guildId);
+      
       // Ses bağlantısını sonlandır
       connection.destroy();
       
@@ -24,7 +29,7 @@ module.exports = {
       }
       
       // Başarı mesajı
-      return message.reply('✅ Ses kanalından ayrıldım!');
+      return message.reply('✅ Ses kanalından ayrıldım ve kalıcı bağlantı durduruldu!');
     } catch (error) {
       console.error('Ses kanalından ayrılma hatası:', error);
       return message.reply('❌ Ses kanalından ayrılırken bir hata oluştu.');

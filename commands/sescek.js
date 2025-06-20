@@ -1,13 +1,19 @@
+
 const {
   joinVoiceChannel,
   createAudioPlayer,
   NoSubscriberBehavior,
   AudioPlayerStatus,
+  VoiceConnectionStatus,
+  entersState,
 } = require("@discordjs/voice");
+
+// Kalıcı ses bağlantıları için global map
+const persistentConnections = new Map();
 
 module.exports = {
   name: "sescek",
-  description: "Botu ses kanalına çeker",
+  description: "Botu ses kanalına çeker ve kalıcı olarak tutar",
   async execute(message, args, client) {
     try {
       // Kullanıcının ses kanalında olup olmadığını kontrol et
@@ -16,68 +22,115 @@ module.exports = {
         return message.reply("❌ Önce bir ses kanalına katılmalısınız!");
       }
 
-      // Ses kanalını al
       const guildId = message.guild.id;
+      const channelId = voiceChannel.id;
 
-      // Botun zaten bir ses kanalında olup olmadığını kontrol et
-      const existingConnection = client.voice?.adapters?.get(guildId);
-      if (existingConnection) {
-        // Bot zaten bir ses kanalında, bağlantıyı yeni kanala taşı
+      // Kalıcı bağlantı kurma fonksiyonu
+      const createPersistentConnection = () => {
         try {
           const connection = joinVoiceChannel({
-            channelId: voiceChannel.id,
+            channelId: channelId,
             guildId: guildId,
             adapterCreator: message.guild.voiceAdapterCreator,
-            selfDeaf: false, // Kendini sağır yapmaz
-            selfMute: false, // Kendini susturmaz
+            selfDeaf: false,
+            selfMute: false,
           });
 
+          // Bağlantıyı client'a kaydet
           client.voiceConnections = client.voiceConnections || new Map();
           client.voiceConnections.set(guildId, connection);
 
-          // Başarı mesajı
-          return message.reply(`✅ ${voiceChannel.name} kanalına taşındım!`);
+          // Kalıcı bağlantı bilgisini kaydet
+          persistentConnections.set(guildId, {
+            channelId: channelId,
+            guildId: guildId,
+            guild: message.guild,
+            lastConnected: Date.now()
+          });
+
+          // Bağlantı durumu değişikliklerini dinle
+          connection.on(VoiceConnectionStatus.Disconnected, async (oldState, newState) => {
+            console.log(`[SES] ${guildId} sunucusunda bağlantı kesildi, yeniden bağlanmaya çalışılıyor...`);
+            
+            // Kalıcı bağlantı kayıtlı mı kontrol et
+            const persistentInfo = persistentConnections.get(guildId);
+            if (persistentInfo) {
+              // 3 saniye bekle ve yeniden bağlan
+              setTimeout(() => {
+                try {
+                  // Kanal hala mevcut mu kontrol et
+                  const channel = message.guild.channels.cache.get(persistentInfo.channelId);
+                  if (channel && channel.isVoice()) {
+                    console.log(`[SES] ${guildId} sunucusunda yeniden bağlanılıyor...`);
+                    createPersistentConnection();
+                  } else {
+                    console.log(`[SES] ${guildId} sunucusunda hedef kanal bulunamadı, kalıcı bağlantı kaldırılıyor.`);
+                    persistentConnections.delete(guildId);
+                  }
+                } catch (reconnectError) {
+                  console.error(`[SES] ${guildId} sunucusunda yeniden bağlanma hatası:`, reconnectError);
+                  // 10 saniye sonra tekrar dene
+                  setTimeout(() => {
+                    if (persistentConnections.has(guildId)) {
+                      createPersistentConnection();
+                    }
+                  }, 10000);
+                }
+              }, 3000);
+            }
+          });
+
+          // Bağlantı hazır olduğunda
+          connection.on(VoiceConnectionStatus.Ready, () => {
+            console.log(`[SES] ${guildId} sunucusunda ses bağlantısı hazır ve kalıcı olarak ayarlandı.`);
+          });
+
+          // Bağlantı yok edildiğinde
+          connection.on(VoiceConnectionStatus.Destroyed, () => {
+            console.log(`[SES] ${guildId} sunucusunda bağlantı tamamen yok edildi.`);
+            client.voiceConnections?.delete(guildId);
+          });
+
+          return connection;
         } catch (error) {
-          console.error("Ses kanalı değiştirme hatası:", error);
-          return message.reply(
-            "❌ Ses kanalını değiştirirken bir hata oluştu.",
-          );
+          console.error(`[SES] ${guildId} sunucusunda bağlantı oluşturma hatası:`, error);
+          throw error;
+        }
+      };
+
+      // Mevcut bağlantıyı kontrol et
+      const existingConnection = client.voiceConnections?.get(guildId);
+      if (existingConnection) {
+        // Mevcut bağlantıyı kapat ve yenisini oluştur
+        try {
+          existingConnection.destroy();
+        } catch (e) {
+          console.log(`[SES] Mevcut bağlantı kapatma hatası (göz ardı edildi):`, e.message);
         }
       }
 
-      // Yeni ses bağlantısı oluştur
-      try {
-        const connection = joinVoiceChannel({
-          channelId: voiceChannel.id,
-          guildId: guildId,
-          adapterCreator: message.guild.voiceAdapterCreator,
-          selfDeaf: false, // Kendini sağır yapmaz
-          selfMute: false, // Kendini susturmaz
-        });
+      // Yeni kalıcı bağlantı oluştur
+      const connection = createPersistentConnection();
 
-        // Bağlantıyı client'a kaydet
-        client.voiceConnections = client.voiceConnections || new Map();
-        client.voiceConnections.set(guildId, connection);
+      // Başarı mesajı
+      return message.reply(
+        `✅ **${voiceChannel.name}** kanalına başarıyla katıldım ve kalıcı olarak ayarlandım!\n` +
+        `🔄 Bağlantı kesilse bile otomatik olarak tekrar bağlanacağım.\n` +
+        `⏹️ Durdurmak için \`.sesayril\` komutunu kullanın.`
+      );
 
-        // Bot bağlantısı kesildiğinde
-        connection.on("stateChange", (oldState, newState) => {
-          if (newState.status === "disconnected") {
-            client.voiceConnections.delete(guildId);
-            console.log(`[SES] ${guildId} sunucusunda ses bağlantısı kesildi.`);
-          }
-        });
-
-        // Başarı mesajı
-        return message.reply(
-          `✅ **${voiceChannel.name}** kanalına başarıyla katıldım!`,
-        );
-      } catch (error) {
-        console.error("Ses kanalına katılma hatası:", error);
-        return message.reply("❌ Ses kanalına katılırken bir hata oluştu.");
-      }
     } catch (error) {
-      console.error("Ses komutu hatası:", error);
-      return message.reply("❌ Bir hata oluştu.");
+      console.error("Kalıcı ses bağlantısı hatası:", error);
+      return message.reply("❌ Kalıcı ses bağlantısı kurulurken bir hata oluştu.");
     }
   },
+};
+
+// Kalıcı bağlantıları temizleme fonksiyonu (export için)
+module.exports.clearPersistentConnection = (guildId) => {
+  persistentConnections.delete(guildId);
+};
+
+module.exports.getPersistentConnections = () => {
+  return persistentConnections;
 };
