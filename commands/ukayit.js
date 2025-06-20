@@ -134,7 +134,7 @@ module.exports = {
             new MessageEmbed()
               .setColor('#e74c3c')
               .setTitle('<:kayitsiz:1385549087629250672> Kayıt Durumunuz Sıfırlandı')
-              .setDescription(`**Apex League RP** sunucusundaki üyelik kaydınız sıfırlanmış bulunmaktadır.`)
+              .setDescription(`**${message.guild.name}** sunucusundaki üyelik kaydınız sıfırlanmış bulunmaktadır.`)
               .addField('💬 Bilgi', 'Yeniden kayıt olmak için lütfen yetkililere başvurun.')
               .setFooter({ text: 'Apex Voucher' })
           ]
