@@ -63,12 +63,12 @@ module.exports = {
       
       // .kayitkur komutunda ayarlanan rolleri kontrol et
       const setupRoles = [
-        { id: settings.uyeRole, name: 'Futbolcu' },
-        { id: settings.coachRole, name: 'Teknik Direktör' },
-        { id: settings.presidentRole, name: 'Başkan' },
+        { id: settings.futbolcuRole, name: 'Futbolcu' },
+        { id: settings.teknikDirektorRole, name: 'Teknik Direktör' },
+        { id: settings.baskanRole, name: 'Başkan' },
         { id: settings.partnerRole, name: 'Partner' },
         { id: settings.taraftarRole, name: 'Taraftar' },
-        { id: settings.bayanRole, name: 'Bayan Üye' }
+        { id: settings.bayanUyeRole, name: 'Bayan Üye' }
       ].filter(role => role.id); // Sadece ayarlanan rolleri al
       
       // Embed oluştur
