@@ -41,6 +41,9 @@ ephemeral: true
 });
 }
 
+// Defer the interaction update to prevent timeout
+await interaction.deferUpdate();
+
 try {
 let roleId;
 let roleName;
@@ -173,7 +176,7 @@ const successEmbed = new MessageEmbed()
   .setTimestamp();    
 
 // Update the message to show the selection is complete    
-await interaction.update({    
+await interaction.editReply({    
   content: null,    
   embeds: [successEmbed],    
   components: []    
