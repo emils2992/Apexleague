@@ -183,7 +183,7 @@ module.exports = {
         try {
           const dmEmbed = new MessageEmbed()
             .setColor(roleColor)
-            .setTitle('<:hosgeldin:1385547269360713779> Rol Verildi!')
+            .setTitle('<a:hosgeldin:1385547269360713779> Rol Verildi!')
             .setDescription(`**${interaction.guild.name}** sunucusunda size **${roleEmoji} ${roleName}** rolü verildi!`)
             .addField('💡 Bilgi', 'Artık sunucuda daha fazla erişiminiz var!')
             .setFooter({ text: 'İyi eğlenceler!' });
@@ -222,7 +222,7 @@ module.exports = {
             const welcomeChannel = interaction.guild.channels.cache.get(guildSettings.welcomeChannel);
             if (welcomeChannel) {
               const welcomeEmbed = new MessageEmbed()
-                .setTitle('<:hosgeldin:1385547269360713779> Yeni Üye Aramıza Katıldı!')
+                .setTitle('<a:hosgeldin:1385547269360713779> Yeni Üye Aramıza Katıldı!')
                 .setColor(roleColor)
                 .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
                 .setDescription(`**${targetMember.displayName}** adlı üye aramıza hoş geldin! **${roleEmoji} ${roleName}** olarak futbol ailemize katıldığın için çok mutluyuz!`)

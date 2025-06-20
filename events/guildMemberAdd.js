@@ -88,11 +88,11 @@ module.exports = {
           const createdTimestamp = Math.floor(member.user.createdTimestamp / 1000);
           
           // Create the message content in your requested format
-          const messageContent = `> <:uye:1385550973040066651> (<@${member.id}>, **${member.guild.name}**) Sunucusuna Hoş Geldin, Seninle Birlikte (${totalMembers}) Kişiye Ulaştık <:kalp:1385554933373341757>
+          const messageContent = `> <:uye:1385550973040066651> (<@${member.id}>, **${member.guild.name}**) Sunucusuna Hoş Geldin, Seninle Birlikte (${totalMembers}) Kişiye Ulaştık <a:kalp:1385554933373341757>
 
-> <:sure:1385555246314688543> Hesap (**<t:${createdTimestamp}>) Tarihinde <t:${createdTimestamp}:R>**) Oluşturulmuş, (${isTrusted ? '<:onay:1385553560678305872> **Güvenli**' : '<:red:1385554348456542258> **Güvensiz**'})
+> <a:sure:1385555246314688543> Hesap (**<t:${createdTimestamp}>) Tarihinde <t:${createdTimestamp}:R>**) Oluşturulmuş, (${isTrusted ? '<a:onay:1385553560678305872> **Güvenli**' : '<a:red:1385554348456542258> **Güvensiz**'})
 
-> <:buyutec:1385554672562995295> (${yetkiliMention.replace(', ', '')})
+> <a:buyutec:1385554672562995295> (${yetkiliMention.replace(', ', '')})
 \`\`\`Sunucuya Erişebilmek İçin "Kayıt" Yerlerinde Ne Olacağın Hakkında Bilgi Vererek İçeri Giriş Yapabilirsin, Kuralları Okumayı Unutma.\`\`\``;
             
           await joinLogChannel.send({ 
@@ -126,7 +126,7 @@ module.exports = {
       // Try to send welcome DM to the user
       try {
         const dmEmbed = new MessageEmbed()
-          .setTitle('<:hosgeldin:1385547269360713779> Hoş Geldin!')
+          .setTitle('<a:hosgeldin:1385547269360713779> Hoş Geldin!')
           .setColor('#2ecc71')
           .setDescription(`**${member.guild.name}** sunucusuna hoş geldin!`)
           .addField('💬 Bilgilendirme', 
