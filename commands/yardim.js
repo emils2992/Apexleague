@@ -44,15 +44,15 @@ module.exports = {
     if (setupDone) {
       // Add server-specific information
       embed.addField('📋 Sunucu Ayarları', 
-        `**Kayıtsız Rolü**: ${settings.kayitsizRole ? `<@&${settings.kayitsizRole}>` : 'Ayarlanmamış'}\n` +
-        `**Yetkili Rolü**: ${settings.yetkiliRole ? `<@&${settings.yetkiliRole}>` : 'Ayarlanmamış'}\n` +
-        `**Futbolcu Rolü**: ${settings.futbolcuRole ? `<@&${settings.futbolcuRole}>` : 'Ayarlanmamış'}\n` +
-        `**Teknik Direktör Rolü**: ${settings.teknikDirektorRole ? `<@&${settings.teknikDirektorRole}>` : (settings.tdRole ? `<@&${settings.tdRole}>` : 'Ayarlanmamış')}\n` +
-        `**Başkan Rolü**: ${settings.baskanRole ? `<@&${settings.baskanRole}>` : 'Ayarlanmamış'}\n` +
-        `**Taraftar Rolü**: ${settings.taraftarRole ? `<@&${settings.taraftarRole}>` : 'Ayarlanmamış'}\n` +
-        `**Bayan Üye Rolü**: ${settings.bayanUyeRole ? `<@&${settings.bayanUyeRole}>` : (settings.bayanRole ? `<@&${settings.bayanRole}>` : 'Ayarlanmamış')}\n` +
-        `**Partner Rolü**: ${settings.partnerRole ? `<@&${settings.partnerRole}>` : 'Ayarlanmamış'}\n` +
-        `**Üye Rolü**: ${settings.uyeRole ? `<@&${settings.uyeRole}>` : 'Ayarlanmamış'}\n` +
+        `**<:kayitsiz:1385550970364059689> Kayıtsız Rolü**: ${settings.kayitsizRole ? `<@&${settings.kayitsizRole}>` : 'Ayarlanmamış'}\n` +
+        `**<:yetkili:1385565783307980852> Yetkili Rolü**: ${settings.yetkiliRole ? `<@&${settings.yetkiliRole}>` : 'Ayarlanmamış'}\n` +
+        `**<:futbolcu:1385547729215819906> Futbolcu Rolü**: ${settings.futbolcuRole ? `<@&${settings.futbolcuRole}>` : 'Ayarlanmamış'}\n` +
+        `**<:teknikdirektor:1385548384017846272> Teknik Direktör Rolü**: ${settings.teknikDirektorRole ? `<@&${settings.teknikDirektorRole}>` : (settings.tdRole ? `<@&${settings.tdRole}>` : 'Ayarlanmamış')}\n` +
+        `**<:baskan:1385548870523551816> Başkan Rolü**: ${settings.baskanRole ? `<@&${settings.baskanRole}>` : 'Ayarlanmamış'}\n` +
+        `**<:taraftar:1385549312607387738> Taraftar Rolü**: ${settings.taraftarRole ? `<@&${settings.taraftarRole}>` : 'Ayarlanmamış'}\n` +
+        `**<:bayanuye:1385548584228884594> Bayan Üye Rolü**: ${settings.bayanUyeRole ? `<@&${settings.bayanUyeRole}>` : (settings.bayanRole ? `<@&${settings.bayanRole}>` : 'Ayarlanmamış')}\n` +
+        `**<:partner:1385547942202445966> Partner Rolü**: ${settings.partnerRole ? `<@&${settings.partnerRole}>` : 'Ayarlanmamış'}\n` +
+        `**<:uye:1385550973040066651> Üye Rolü**: ${settings.uyeRole ? `<@&${settings.uyeRole}>` : 'Ayarlanmamış'}\n` +
         `**Otomatik Üye Rolü**: ${settings.autoAssignUyeRole ? '`Aktif`' : '`Pasif`'}\n` +
         `**Hoş Geldin Kanalı**: ${settings.welcomeChannel ? `<#${settings.welcomeChannel}>` : 'Ayarlanmamış'}\n` +
         `**Giriş Log Kanalı**: ${settings.joinLogChannel ? `<#${settings.joinLogChannel}>` : 'Ayarlanmamış'}\n` +
