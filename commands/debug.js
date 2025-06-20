@@ -1,3 +1,5 @@
+const db = require('../utils/database');
+
 module.exports = {
   name: 'debug',
   description: 'Debug komutları ve bot durumunu gösterir',
@@ -5,6 +7,15 @@ module.exports = {
     // Komut listesini göster
     const commandList = Array.from(client.commands.keys()).join(', ');
     await message.reply(`🔍 **Yüklü komutlar**: ${commandList}`);
+    
+    // Cache durumunu kontrol et
+    const cacheStatus = db.getCacheStatus();
+    const cacheInfo = `📚 **Hızlı Erişim Durumu**:
+- Kayıt Cache: ${cacheStatus.registrations.cached ? '✅ Aktif' : '❌ Pasif'} (${cacheStatus.registrations.recordCount} kayıt)
+- Ayar Cache: ${cacheStatus.settings.cached ? '✅ Aktif' : '❌ Pasif'} (${cacheStatus.settings.guildCount} sunucu)
+- Son Güncelleme: <t:${Math.floor(Math.max(cacheStatus.registrations.lastUpdated, cacheStatus.settings.lastUpdated) / 1000)}:R>`;
+    
+    await message.reply(cacheInfo);
     
     // Kayitkur komutunu özel olarak kontrol et
     const kayitkurCommand = client.commands.get('kayitkur');

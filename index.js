@@ -62,6 +62,11 @@ if (!fs.existsSync(dataDir)) {
   console.log('[SETUP] Data dizini oluşturuldu');
 }
 
+// ========== CACHE PRELOADING ==========
+const db = require('./utils/database');
+console.log('[SETUP] Cache ön yükleme başlatılıyor...');
+db.preloadCache();
+
 // ========== DISCORD CLIENT SETUP ==========
 const client = new Client({
   intents: 32767, // ALL intents

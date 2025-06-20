@@ -6,6 +6,14 @@ const dataDir = path.join(__dirname, '..', 'data');
 const settingsPath = path.join(dataDir, 'settings.json');
 const registrationsPath = path.join(dataDir, 'registrations.json');
 
+// Memory cache for fast data access
+let registrationsCache = null;
+let settingsCache = null;
+let cacheLastUpdated = {
+  registrations: 0,
+  settings: 0
+};
+
 // Initialize the database files if they don't exist
 function initDb() {
   // Ensure data directory exists
@@ -26,32 +34,63 @@ function initDb() {
   }
 }
 
-// Read the settings database file
+// Read the settings database file with caching
 function readSettings() {
   initDb();
+  
+  // Check if cache is valid
+  const fileStats = fs.statSync(settingsPath);
+  const fileModified = fileStats.mtime.getTime();
+  
+  if (settingsCache && cacheLastUpdated.settings >= fileModified) {
+    return settingsCache;
+  }
+  
   try {
     const data = fs.readFileSync(settingsPath, 'utf8');
-    return JSON.parse(data);
+    settingsCache = JSON.parse(data);
+    cacheLastUpdated.settings = Date.now();
+    return settingsCache;
   } catch (error) {
     console.error('Error reading settings database file:', error);
     // Return empty object if there's an error
-    return {};
+    settingsCache = {};
+    return settingsCache;
   }
 }
 
-// Write to the settings database file
+// Write to the settings database file with cache update
 function writeSettings(data) {
   try {
-    fs.writeFileSync(settingsPath, JSON.stringify(data, null, 2));
-    console.log('Settings database updated successfully');
+    // Update cache immediately for instant access
+    settingsCache = data;
+    cacheLastUpdated.settings = Date.now();
+    
+    // Write to file asynchronously for persistence
+    fs.writeFile(settingsPath, JSON.stringify(data, null, 2), (error) => {
+      if (error) {
+        console.error('Error writing to settings database file:', error);
+      } else {
+        console.log('Settings database updated successfully');
+      }
+    });
   } catch (error) {
-    console.error('Error writing to settings database file:', error);
+    console.error('Error updating settings cache:', error);
   }
 }
 
-// Read the registrations database file
+// Read the registrations database file with caching
 function readRegistrations() {
   initDb();
+  
+  // Check if cache is valid
+  const fileStats = fs.statSync(registrationsPath);
+  const fileModified = fileStats.mtime.getTime();
+  
+  if (registrationsCache && cacheLastUpdated.registrations >= fileModified) {
+    return registrationsCache;
+  }
+  
   try {
     const data = fs.readFileSync(registrationsPath, 'utf8');
     const parsedData = JSON.parse(data);
@@ -61,21 +100,34 @@ function readRegistrations() {
       parsedData.registrations = [];
     }
     
-    return parsedData;
+    registrationsCache = parsedData;
+    cacheLastUpdated.registrations = Date.now();
+    return registrationsCache;
   } catch (error) {
     console.error('Error reading registrations database file:', error);
     // Return empty registrations array if there's an error
-    return { registrations: [] };
+    registrationsCache = { registrations: [] };
+    return registrationsCache;
   }
 }
 
-// Write to the registrations database file
+// Write to the registrations database file with instant cache update
 function writeRegistrations(data) {
   try {
-    fs.writeFileSync(registrationsPath, JSON.stringify(data, null, 2));
-    console.log('Registrations database updated successfully');
+    // Update cache immediately for instant access
+    registrationsCache = data;
+    cacheLastUpdated.registrations = Date.now();
+    
+    // Write to file asynchronously for persistence
+    fs.writeFile(registrationsPath, JSON.stringify(data, null, 2), (error) => {
+      if (error) {
+        console.error('Error writing to registrations database file:', error);
+      } else {
+        console.log('Registrations database updated successfully');
+      }
+    });
   } catch (error) {
-    console.error('Error writing to registrations database file:', error);
+    console.error('Error updating registrations cache:', error);
   }
 }
 
@@ -143,10 +195,8 @@ async function deleteGuildSettings(guildId) {
   return false;
 }
 
-// Add a new registration record
+// Add a new registration record with instant cache update
 async function addRegistration(registrationData) {
-  const db = readRegistrations();
-  
   // Generate a unique ID for the registration
   registrationData.id = Date.now().toString() + Math.floor(Math.random() * 1000).toString();
   
@@ -155,14 +205,22 @@ async function addRegistration(registrationData) {
     registrationData.timestamp = new Date().toISOString();
   }
   
+  // Get current data (from cache if available)
+  const db = readRegistrations();
+  
+  // Add to cache immediately for instant access
   db.registrations.push(registrationData);
+  
+  // Update cache and write to file
   writeRegistrations(db);
   
+  console.log(`[FAST] Registration added instantly to cache: ${registrationData.assignedName || 'Unknown'}`);
   return registrationData;
 }
 
-// Update a registration with assigned role information
+// Update a registration with assigned role information with instant cache update
 async function updateRegistrationRole(guildId, memberId, roleId, roleName) {
+  // Get current data (from cache if available)
   const db = readRegistrations();
   
   // Find the most recent registration for this member in this guild
@@ -174,32 +232,38 @@ async function updateRegistrationRole(guildId, memberId, roleId, roleName) {
   const regIndex = db.registrations.indexOf(recentRegistrations[0]);
   
   if (regIndex !== -1) {
-    // Update the registration with role info
+    // Update the registration with role info in cache immediately
     db.registrations[regIndex].assignedRole = roleName;
     db.registrations[regIndex].assignedRoleId = roleId;
     db.registrations[regIndex].roleAssignedAt = new Date().toISOString();
     
+    // Update cache and write to file
     writeRegistrations(db);
+    
+    console.log(`[FAST] Role assignment updated instantly: ${roleName} for ${memberId}`);
     return db.registrations[regIndex];
   }
   
   return null;
 }
 
-// Get all registrations for a guild
+// Get all registrations for a guild with instant cache access
 async function getRegistrations(guildId) {
   const db = readRegistrations();
-  return db.registrations.filter(registration => registration.guildId === guildId);
+  const guildRegistrations = db.registrations.filter(registration => registration.guildId === guildId);
+  console.log(`[FAST] Retrieved ${guildRegistrations.length} registrations instantly from cache for guild ${guildId}`);
+  return guildRegistrations;
 }
 
-// Get registration stats per staff member
+// Get registration stats per staff member with optimized processing
 async function getStaffStats(guildId) {
+  const startTime = Date.now();
   const registrations = await getRegistrations(guildId);
   
-  // Group registrations by staff member
+  // Group registrations by staff member with optimized loop
   const staffStats = {};
   
-  registrations.forEach(reg => {
+  for (const reg of registrations) {
     if (!staffStats[reg.staffId]) {
       staffStats[reg.staffId] = {
         id: reg.staffId,
@@ -208,10 +272,66 @@ async function getStaffStats(guildId) {
       };
     }
     staffStats[reg.staffId].count++;
-  });
+  }
   
   // Convert to array and sort by count
-  return Object.values(staffStats).sort((a, b) => b.count - a.count);
+  const result = Object.values(staffStats).sort((a, b) => b.count - a.count);
+  
+  const processingTime = Date.now() - startTime;
+  console.log(`[FAST] Staff stats calculated in ${processingTime}ms for ${result.length} staff members`);
+  
+  return result;
+}
+
+// Preload cache function for instant startup
+function preloadCache() {
+  console.log('[CACHE] Preloading data for instant access...');
+  const startTime = Date.now();
+  
+  try {
+    // Preload settings
+    readSettings();
+    
+    // Preload registrations
+    readRegistrations();
+    
+    const loadTime = Date.now() - startTime;
+    console.log(`[CACHE] Data preloaded successfully in ${loadTime}ms`);
+    console.log(`[CACHE] Settings cache ready: ${settingsCache ? 'YES' : 'NO'}`);
+    console.log(`[CACHE] Registrations cache ready: ${registrationsCache ? 'YES' : 'NO'}`);
+    
+    if (registrationsCache) {
+      console.log(`[CACHE] Total registrations loaded: ${registrationsCache.registrations.length}`);
+    }
+  } catch (error) {
+    console.error('[CACHE] Error preloading cache:', error);
+  }
+}
+
+// Clear cache function for maintenance
+function clearCache() {
+  console.log('[CACHE] Clearing memory cache...');
+  registrationsCache = null;
+  settingsCache = null;
+  cacheLastUpdated.registrations = 0;
+  cacheLastUpdated.settings = 0;
+  console.log('[CACHE] Memory cache cleared');
+}
+
+// Get cache status for debugging
+function getCacheStatus() {
+  return {
+    registrations: {
+      cached: !!registrationsCache,
+      lastUpdated: cacheLastUpdated.registrations,
+      recordCount: registrationsCache ? registrationsCache.registrations.length : 0
+    },
+    settings: {
+      cached: !!settingsCache,
+      lastUpdated: cacheLastUpdated.settings,
+      guildCount: settingsCache ? Object.keys(settingsCache).length : 0
+    }
+  };
 }
 
 module.exports = {
@@ -221,5 +341,8 @@ module.exports = {
   addRegistration,
   updateRegistrationRole,
   getRegistrations,
-  getStaffStats
+  getStaffStats,
+  preloadCache,
+  clearCache,
+  getCacheStatus
 };

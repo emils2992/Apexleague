@@ -117,6 +117,10 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 20, 2025. Updated bot activity status from "Futbol Kayıt" to "Apex Lig Streaming"
 - June 20, 2025. Updated bot activity to STREAMING type with purple streaming button
 - June 20, 2025. Enhanced role filtering in .top and .kayitsayi commands to exclude test/admin roles and show only main registration roles
+- June 20, 2025. Implemented instant data loading with memory caching system for registration data
+- June 20, 2025. Added asynchronous file writing to prevent blocking operations during registrations
+- June 20, 2025. Optimized database operations with cache preloading for zero-delay data access
+- June 20, 2025. Enhanced debug command with real-time cache status monitoring
 
 ## User Preferences
 
