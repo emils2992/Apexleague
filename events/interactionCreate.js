@@ -221,10 +221,23 @@ module.exports = {
           if (guildSettings && guildSettings.welcomeChannel) {
             const welcomeChannel = interaction.guild.channels.cache.get(guildSettings.welcomeChannel);
             if (welcomeChannel) {
-              // Send welcome message to welcome channel
-              const welcomeMessage = `<@${targetMember.id}> <a:hosgeldin:1385547269360713779> aramıza hoş geldin! **${roleEmoji} ${roleName}** olarak futbol ailemize katıldığın için çok mutluyuz!`;
+              // Üst mesaj
+              const topMessage = `> <@${targetMember.id}> aramıza katıldı.`;
+              
+              // Alt embed (siyah renkte)
+              const welcomeEmbed = new MessageEmbed()
+                .setColor('#000000') // Siyah renk
+                .setDescription(
+                  `<a:onay1:1385613791911219223> • **<@${targetMember.id}> aramıza** ${roleEmoji} **${roleName}** rolüyle katıldı.\n` +
+                  `<a:yetkili_geliyor:1385614217884864656> • Kaydı gerçekleştiren yetkili <@${interaction.user.id}>\n` +
+                  `<a:kopek:1385614129514942495> • Aramıza hoş geldin > <@${targetMember.id}>`
+                )
+                .setFooter({ text: 'Apex Voucher kayıt sistemi' });
 
-              await welcomeChannel.send(welcomeMessage);
+              await welcomeChannel.send({
+                content: topMessage,
+                embeds: [welcomeEmbed]
+              });
             }
           }
         } catch (logError) {
