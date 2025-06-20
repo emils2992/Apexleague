@@ -197,6 +197,8 @@ async function deleteGuildSettings(guildId) {
 
 // Add a new registration record with instant cache update
 async function addRegistration(registrationData) {
+  const startTime = Date.now();
+  
   // Generate a unique ID for the registration
   registrationData.id = Date.now().toString() + Math.floor(Math.random() * 1000).toString();
   
@@ -205,16 +207,33 @@ async function addRegistration(registrationData) {
     registrationData.timestamp = new Date().toISOString();
   }
   
+  console.log(`[KAYIT-TIMING] Kayıt işlemi başladı: ${registrationData.assignedName || 'Unknown'}`);
+  
   // Get current data (from cache if available)
   const db = readRegistrations();
+  const cacheReadTime = Date.now();
   
   // Add to cache immediately for instant access
   db.registrations.push(registrationData);
+  const cacheUpdateTime = Date.now();
   
   // Update cache and write to file
   writeRegistrations(db);
+  const fileWriteStartTime = Date.now();
   
-  console.log(`[FAST] Registration added instantly to cache: ${registrationData.assignedName || 'Unknown'}`);
+  const totalTime = Date.now() - startTime;
+  const cacheTime = cacheReadTime - startTime;
+  const updateTime = cacheUpdateTime - cacheReadTime;
+  const writeTime = fileWriteStartTime - cacheUpdateTime;
+  
+  console.log(`[KAYIT-TIMING] ✅ Kayıt başarıyla tamamlandı!`);
+  console.log(`[KAYIT-TIMING] 📊 Süre detayları:`);
+  console.log(`[KAYIT-TIMING]   • Cache okuma: ${cacheTime}ms`);
+  console.log(`[KAYIT-TIMING]   • Cache güncelleme: ${updateTime}ms`);
+  console.log(`[KAYIT-TIMING]   • Dosya yazma başlangıcı: ${writeTime}ms`);
+  console.log(`[KAYIT-TIMING]   • TOPLAM SÜRE: ${totalTime}ms`);
+  console.log(`[KAYIT-TIMING] 🎯 Kullanıcı için görünür süre: ${totalTime}ms (Cache sayesinde anında!)`);
+  
   return registrationData;
 }
 

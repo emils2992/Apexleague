@@ -110,10 +110,10 @@ module.exports = {
             .setTitle('📋 Rol Alındı')
             .setDescription(`<a:onay:1385553560678305872> **${target.displayName}** kullanıcısından **${targetRole.name}** rolü alındı!`)
             .addFields(
-              { name: '👤 Kullanıcı', value: `${target} (${target.user.tag})`, inline: true },
-              { name: '🛡️ Alınan Rol', value: `${targetRole}`, inline: true },
-              { name: '👮 Yetkili', value: `${message.author} (${message.author.tag})`, inline: true },
-              { name: '⏰ Tarih', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
+              { name: '<:uye:1385550973040066651> Kullanıcı', value: `${target} (${target.user.tag})`, inline: true },
+              { name: '<:role:1385550203842396180> Alınan Rol', value: `${targetRole}`, inline: true },
+              { name: '<:yetkili:1385549976543580221> Yetkili', value: `${message.author} (${message.author.tag})`, inline: true },
+              { name: '<a:sure:1385550376085901312> Tarih', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
             )
             .setFooter({ text: 'Apex Voucher • Rol Yönetimi' })
             .setTimestamp();

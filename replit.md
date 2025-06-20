@@ -125,6 +125,10 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 20, 2025. Added .rolal and .rolver commands with comprehensive permission hierarchy validation
 - June 20, 2025. Enhanced .uk command with security checks to prevent unauthorized role modifications
 - June 20, 2025. Implemented bot position validation and proper error handling for role management operations
+- June 20, 2025. Corrected emoji usage in role management commands to use existing custom Discord emojis instead of Unicode emojis
+- June 20, 2025. Updated log message format in .rolal and .rolver commands to use consistent embed structure with custom emojis
+- June 20, 2025. Changed time emoji from static to animated version for better visual feedback
+- June 20, 2025. Added detailed timing logs to registration process to monitor database write performance
 
 ## User Preferences
 
