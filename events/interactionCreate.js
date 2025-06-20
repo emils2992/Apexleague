@@ -221,11 +221,11 @@ module.exports = {
           if (guildSettings && guildSettings.welcomeChannel) {
             const welcomeChannel = interaction.guild.channels.cache.get(guildSettings.welcomeChannel);
             if (welcomeChannel) {
-              // Üst mesaj
+              // Üst mesaj (quote formatında)
               const topMessage = `> <@${targetMember.id}> aramıza katıldı.`;
               
-              // Alt embed (siyah renkte)
-              const welcomeEmbed = new MessageEmbed()
+              // Ana embed (siyah renkte)
+              const mainEmbed = new MessageEmbed()
                 .setColor('#000000') // Siyah renk
                 .setAuthor({ 
                   name: `${interaction.guild.name} • Kayıt Yapıldı!`, 
@@ -233,18 +233,22 @@ module.exports = {
                 }) // Sol üst sunucu profili
                 .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true, size: 128 })) // Sağ taraf kullanıcı profili
                 .setDescription(
-                  `<a:onay1:1385613791911219223> • **> <@${targetMember.id}> aramıza** ${roleEmoji} **${roleName}** rolüyle katıldı.\n\n` +
-                  `<a:yetkili_geliyor:1385614217884864656> • Kaydı gerçekleştiren yetkili > <@${interaction.user.id}>\n\n` +
-                  `<a:kopek:1385614129514942495> • Aramıza hoş geldin > <@${targetMember.id}>`
+                  `<a:onay1:1385613791911219223> • **${roleEmoji} ${roleName}** rolüyle katıldı.\n\n` +
+                  `<a:yetkili_geliyor:1385614217884864656> • Kaydı gerçekleştiren yetkili <@${interaction.user.id}>`
                 )
                 .setFooter({ 
                   text: 'Apex Voucher kayıt sistemi', 
                   iconURL: interaction.client.user.displayAvatarURL({ dynamic: true, size: 64 }) 
                 }); // Alt sol bot profili
 
+              // Ayrı hoş geldin embed'i
+              const welcomeEmbed = new MessageEmbed()
+                .setColor('#000000')
+                .setDescription(`<a:kopek:1385614129514942495> • Aramıza hoş geldin <@${targetMember.id}>`);
+
               await welcomeChannel.send({
                 content: topMessage,
-                embeds: [welcomeEmbed]
+                embeds: [mainEmbed, welcomeEmbed]
               });
             }
           }
