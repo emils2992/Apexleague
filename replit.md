@@ -136,6 +136,7 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 20, 2025. Enhanced welcome embed with server icon in author section, user avatar as thumbnail, proper spacing, and "Kayıt Yapıldı!" text
 - June 20, 2025. Fixed embed profile display - server icon in top left (author), bot profile in bottom left (footer), user avatar on right (thumbnail)
 - June 20, 2025. Restructured welcome message to match user's screenshot - separated welcome greeting into second embed for better visual hierarchy
+- June 20, 2025. Fixed welcome message format to use proper `> @user` mentions and separated welcome greeting into completely separate message below main embed
 
 ## User Preferences
 
