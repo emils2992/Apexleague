@@ -17,14 +17,12 @@ module.exports = {
       return message.reply('🚫 Bu komutu kullanmak için yetkili olmalısınız!');
     }
     
-    // Kullanıcı kontrolü
-    if (args.length < 1) {
-      return message.reply('ℹ️ Doğru kullanım: `.kayitsayi @kullanıcı`');
-    }
-    
-    const target = message.mentions.members.first();
-    if (!target) {
-      return message.reply('⚠️ Lütfen bir kullanıcı etiketleyin!');
+    // Kullanıcı kontrolü - eğer etiket yoksa komutu yazan kişiyi al
+    let target;
+    if (args.length > 0 && message.mentions.members.first()) {
+      target = message.mentions.members.first();
+    } else {
+      target = message.member;
     }
     
     try {
