@@ -14,7 +14,7 @@ module.exports = {
 
     // Yetki kontrolü
     if (settings.yetkiliRole && !message.member.roles.cache.has(settings.yetkiliRole) && !message.member.permissions.has(8n)) {
-      return message.reply('<a:red:1385549644528926730> Bu komutu kullanmak için yetkili olmalısınız!');
+      return message.reply('<a:red:1385554348456542258> Bu komutu kullanmak için yetkili olmalısınız!');
     }
 
     // Komut formatı kontrolü
@@ -30,12 +30,12 @@ module.exports = {
 
     // Bot kendine rol veremez
     if (target.user.bot) {
-      return message.reply('<a:red:1385549644528926730> Botlara rol verilemez!');
+      return message.reply('<a:red:1385554348456542258> Botlara rol verilemez!');
     }
 
     // Kendi kendine rol veremez
     if (target.id === message.author.id) {
-      return message.reply('<a:red:1385549644528926730> Kendinize rol veremezsiniz!');
+      return message.reply('<a:red:1385554348456542258> Kendinize rol veremezsiniz!');
     }
 
     // Rolü bul
@@ -53,7 +53,7 @@ module.exports = {
     }
 
     if (!targetRole) {
-      return message.reply('<:red:1385549644528926730> Belirtilen rol bulunamadı!');
+      return message.reply('<a:red:1385554348456542258> Belirtilen rol bulunamadı!');
     }
 
     // Yetki hiyerarşisi kontrolü
@@ -73,23 +73,23 @@ module.exports = {
 
       // Komut kullanan kişi, hedef kullanıcıdan düşük yetkili olamaz
       if (authorHighestRole.position <= targetHighestRole.position) {
-        return message.reply('<a:red:1385549644528926730> Bu kullanıcıya rol veremezsiniz! (Yetki hiyerarşisi)');
+        return message.reply('<a:red:1385554348456542258> Bu kullanıcıya rol veremezsiniz! (Yetki hiyerarşisi)');
       }
 
       // Komut kullanan kişi, vereceği rolden düşük yetkili olamaz
       if (authorHighestRole.position <= roleToGive.position) {
-        return message.reply('<a:red:1385549644528926730> Bu rolü veremezsiniz! (Rol yetkinizden yüksek)');
+        return message.reply('<a:red:1385554348456542258> Bu rolü veremezsiniz! (Rol yetkinizden yüksek)');
       }
     }
 
     // Bot yetki kontrolü
     if (botMember.roles.highest.position <= targetRole.position) {
-      return message.reply('<a:red:1385549644528926730> Bu rolü veremem! Bot rolü yeterince yüksek değil.');
+      return message.reply('<a:red:1385554348456542258> Bu rolü veremem! Bot rolü yeterince yüksek değil.');
     }
 
     // Kullanıcıda bu rol zaten var mı?
     if (target.roles.cache.has(targetRole.id)) {
-      return message.reply(`<a:red:1385549644528926730> ${target.displayName} kullanıcısında **${targetRole.name}** rolü zaten mevcut!`);
+      return message.reply(`<a:red:1385554348456542258> ${target.displayName} kullanıcısında **${targetRole.name}** rolü zaten mevcut!`);
     }
 
     try {
@@ -112,8 +112,8 @@ module.exports = {
             .addFields(
               { name: '<:uye:1385550973040066651> Kullanıcı', value: `${target} (${target.user.tag})`, inline: true },
               { name: '<:role:1385550203842396180> Verilen Rol', value: `${targetRole}`, inline: true },
-              { name: '<:yetkili:1385549976543580221> Yetkili', value: `${message.author} (${message.author.tag})`, inline: true },
-              { name: '<a:sure:1385550376085901312> Tarih', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
+              { name: '<:yetkili:1385565783307980852> Yetkili', value: `${message.author} (${message.author.tag})`, inline: true },
+              { name: '<a:sure:1385555246314688543> Tarih', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
             )
             .setFooter({ text: 'Apex Voucher • Rol Yönetimi' })
             .setTimestamp();
@@ -124,7 +124,7 @@ module.exports = {
 
     } catch (error) {
       console.error('Rol verme hatası:', error);
-      message.reply('<a:red:1385549644528926730> Rol verilirken bir hata oluştu! Botun yetkileri kontrol edin.');
+      message.reply('<a:red:1385554348456542258> Rol verilirken bir hata oluştu! Botun yetkileri kontrol edin.');
     }
   }
 };

@@ -280,8 +280,12 @@ module.exports = {
         assignedName: name
       };
       
+      console.log(`[DEBUG-KAYIT] Saving registration data:`, registrationData);
+      
       // Veritabanına kaydet
       await db.addRegistration(registrationData);
+      
+      console.log(`[DEBUG-KAYIT] Registration data saved for ${target.user.tag}`);
       
       // (Log mesajı burada gönderilmeyecek - çift gönderim önlemek için)
       

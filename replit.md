@@ -129,6 +129,7 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 20, 2025. Updated log message format in .rolal and .rolver commands to use consistent embed structure with custom emojis
 - June 20, 2025. Changed time emoji from static to animated version for better visual feedback
 - June 20, 2025. Added detailed timing logs to registration process to monitor database write performance
+- June 20, 2025. Updated all role management commands (.rolal, .rolver, .uk) to use correct custom emoji IDs for consistent display
 
 ## User Preferences
 

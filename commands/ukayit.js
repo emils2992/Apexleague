@@ -31,12 +31,12 @@ module.exports = {
 
     // Bot kendini kayıt dışı bırakamaz
     if (target.user.bot) {
-      return message.reply('<a:red:1385549644528926730> Botların kaydı sıfırlanamaz!');
+      return message.reply('<a:red:1385554348456542258> Botların kaydı sıfırlanamaz!');
     }
 
     // Kendi kendini kayıt dışı bırakamaz
     if (target.id === message.author.id) {
-      return message.reply('<a:red:1385549644528926730> Kendi kaydınızı sıfırlayamazsınız!');
+      return message.reply('<a:red:1385554348456542258> Kendi kaydınızı sıfırlayamazsınız!');
     }
 
     // Yetki hiyerarşisi kontrolü
@@ -53,14 +53,14 @@ module.exports = {
 
       // Komut kullanan kişi, hedef kullanıcıdan düşük yetkili olamaz
       if (authorHighestRole.position <= targetHighestRole.position) {
-        return message.reply('<a:red:1385549644528926730> Bu kullanıcının kaydını sıfırlayamazsınız! (Yetki hiyerarşisi)');
+        return message.reply('<a:red:1385554348456542258> Bu kullanıcının kaydını sıfırlayamazsınız! (Yetki hiyerarşisi)');
       }
     }
 
     // Bot yetki kontrolü - hedef kullanıcının rollerini alabilir mi?
     const targetHighestRole = target.roles.highest;
     if (botMember.roles.highest.position <= targetHighestRole.position) {
-      return message.reply('<a:red:1385549644528926730> Bu kullanıcının kaydını sıfırlayamam! Bot rolü yeterince yüksek değil.');
+      return message.reply('<a:red:1385554348456542258> Bu kullanıcının kaydını sıfırlayamam! Bot rolü yeterince yüksek değil.');
     }
     
     // Check if the kayitsiz role exists
@@ -93,10 +93,10 @@ module.exports = {
         .setDescription(`<a:onay:1385553560678305872> **${target.user.tag}** üyesinin kaydı başarıyla sıfırlandı.`)
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
         .addFields(
-          { name: '👤 Kullanıcı', value: `<@${target.id}>`, inline: true },
-          { name: '🛡️ Verilen Rol', value: `<:kayitsiz:1385549087629250672> <@&${kayitsizRole.id}>`, inline: true },
-          { name: '👮 İşlemi Yapan', value: `<@${message.author.id}>`, inline: true },
-          { name: '⏰ İşlem Zamanı', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
+          { name: '<:uye:1385550973040066651> Kullanıcı', value: `<@${target.id}>`, inline: true },
+          { name: '<:role:1385550203842396180> Verilen Rol', value: `<:kayitsiz:1385549087629250672> <@&${kayitsizRole.id}>`, inline: true },
+          { name: '<:yetkili:1385565783307980852> İşlemi Yapan', value: `<@${message.author.id}>`, inline: true },
+          { name: '<a:sure:1385555246314688543> İşlem Zamanı', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
         )
         .setFooter({ text: 'Apex Voucher • Kayıt Sıfırlama' })
         .setTimestamp();
