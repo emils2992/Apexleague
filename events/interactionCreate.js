@@ -5,13 +5,13 @@ module.exports = {
   name: 'interactionCreate',
   async execute(interaction, client) {
     if (!interaction.isButton()) return;
-    
+
     // Handle role assignment buttons
     if (interaction.customId.startsWith('role_') || interaction.customId.startsWith('role2_')) {
       // Check if user has permission to assign roles
       const guildId = interaction.guild.id;
       const settings = await db.getGuildSettings(guildId);
-      
+
       if (settings && settings.yetkiliRole && 
           !interaction.member.roles.cache.has(settings.yetkiliRole) && 
           !interaction.member.permissions.has(8n)) { // 8n = ADMINISTRATOR in Discord.js v13
@@ -20,33 +20,33 @@ module.exports = {
           ephemeral: true 
         });
       }
-      
+
       if (!settings) {
         return interaction.reply({ 
           content: '❓ Kayıt sistemi kurulmamış! Lütfen önce `.kayıtkur` komutunu kullanın.', 
           ephemeral: true 
         });
       }
-      
+
       // Parse the customId to get role type and target user
       const parts = interaction.customId.split('_');
       const roleType = parts[1]; // roleType is now the second part (index 1)
       const targetId = parts[parts.length - 1]; // targetId is the last part
       const targetMember = await interaction.guild.members.fetch(targetId).catch(() => null);
-      
+
       if (!targetMember) {
         return interaction.reply({ 
           content: '❌ Kullanıcı bulunamadı!', 
           ephemeral: true 
         });
       }
-      
+
       try {
         let roleId;
         let roleName;
         let roleEmoji;
         let roleColor;
-        
+
         // Determine which role to assign with emojis and colors
         switch (roleType) {
           case 'futbolcu':
@@ -92,14 +92,14 @@ module.exports = {
               ephemeral: true 
             });
         }
-        
+
         if (!roleId) {
           return interaction.reply({ 
             content: `❓ ${roleName} rolü ayarlanmamış!`, 
             ephemeral: true 
           });
         }
-        
+
         const role = interaction.guild.roles.cache.get(roleId);
         if (!role) {
           return interaction.reply({ 
@@ -107,18 +107,18 @@ module.exports = {
             ephemeral: true 
           });
         }
-        
+
         // Botun rolü ile atanacak rolün hiyerarşisini kontrol et
         const botMember = interaction.guild.me;
         const botRole = botMember.roles.highest;
-        
+
         if (botRole.position <= role.position) {
           // Bot rolü daha aşağıda, uyarı ver
           await interaction.reply({ 
             content: `\u26a0️ **Uyarı:** <@&${role.id}> rolünü veremiyorum, çünkü botun rolü daha alt sırada! Lütfen Discord rol ayarlarından bot rolünü daha üste taşıyın.`, 
             ephemeral: true 
           });
-          
+
           // Log kanalına da uyarı gönder
           if (guildSettings.logChannel) {
             const logChannel = interaction.guild.channels.cache.get(guildSettings.logChannel);
@@ -128,10 +128,10 @@ module.exports = {
               );
             }
           }
-          
+
           return;
         }
-        
+
         // Assign the role
         await targetMember.roles.add(role).catch(async (error) => {
           console.error(`Rol verme hatası: ${error}`);
@@ -141,7 +141,7 @@ module.exports = {
           });
           return;
         });
-        
+
         // Ayrıca üye rolü varsa ve otomatik atama ayarlanmışsa, üye rolünü ver
         const guildSettings = await db.getGuildSettings(guildId);
         if (guildSettings && guildSettings.uyeRole && guildSettings.autoAssignUyeRole) {
@@ -156,10 +156,10 @@ module.exports = {
             }
           }
         }
-        
+
         // Update registration database with role assignment
         await db.updateRegistrationRole(guildId, targetId, role.id, roleName);
-        
+
         // Create a fancy embed for completion
         const successEmbed = new MessageEmbed()
           .setColor(roleColor)
@@ -171,14 +171,14 @@ module.exports = {
           .addField('👮 İşlemi Yapan', `<@${interaction.user.id}>`, true)
           .setFooter({ text: 'Apex Voucher • Rol Başarıyla Verildi' })
           .setTimestamp();
-        
+
         // Update the message to show the selection is complete
         await interaction.update({
           content: null,
           embeds: [successEmbed],
           components: []
         });
-        
+
         // Try to send DM to user
         try {
           const dmEmbed = new MessageEmbed()
@@ -187,17 +187,17 @@ module.exports = {
             .setDescription(`**${interaction.guild.name}** sunucusunda size **${roleEmoji} ${roleName}** rolü verildi!`)
             .addField('💡 Bilgi', 'Artık sunucuda daha fazla erişiminiz var!')
             .setFooter({ text: 'İyi eğlenceler!' });
-            
+
           await targetMember.send({ embeds: [dmEmbed] });
         } catch (dmError) {
           console.log(`DM gönderilemedi: ${dmError}`);
           // Don't worry if DM fails
         }
-        
+
         // Rol atandıktan sonra hoş geldin mesajlarını gönder
         try {
           const guildSettings = await db.getGuildSettings(guildId);
-          
+
           // Log kanalına rol atama bilgisi gönder
           if (guildSettings && guildSettings.logChannel) {
             const logChannel = interaction.guild.channels.cache.get(guildSettings.logChannel);
@@ -212,18 +212,18 @@ module.exports = {
                 .addField('👮 İşlemi Yapan', `<@${interaction.user.id}>`, true)
                 .setFooter({ text: `⚽ Apex Voucher • Rol Atama` })
                 .setTimestamp();
-                
+
               await logChannel.send({ embeds: [logEmbed] });
             }
           }
-          
+
           // Hoş geldin kanalına rol atama sonrası hoş geldin mesajı gönder
           if (guildSettings && guildSettings.welcomeChannel) {
             const welcomeChannel = interaction.guild.channels.cache.get(guildSettings.welcomeChannel);
             if (welcomeChannel) {
-              // Normal mesaj olarak hoş geldin mesajı gönder - kullanıcıya etiket at
-              const welcomeMessage = `<a:hosgeldin:1385547269360713779> **${targetMember.displayName}** adlı üye aramıza hoş geldin! **${roleEmoji} ${roleName}** olarak futbol ailemize katıldığın için çok mutluyuz! <@${targetMember.id}>`;
-                
+              // Send welcome message to welcome channel
+              const welcomeMessage = `<@${targetMember.id}> <a:hosgeldin:1385547269360713779> aramıza hoş geldin! **${roleEmoji} ${roleName}** olarak futbol ailemize katıldığın için çok mutluyuz!`;
+
               await welcomeChannel.send(welcomeMessage);
             }
           }
@@ -231,7 +231,7 @@ module.exports = {
           console.error('Log mesajı gönderilemedi:', logError);
           // Don't worry if log message fails
         }
-        
+
       } catch (error) {
         console.error('Role assignment error:', error);
         return interaction.reply({ 
