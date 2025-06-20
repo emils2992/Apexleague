@@ -83,13 +83,24 @@ module.exports = {
       let statsText = '';
       let totalCount = 0;
       
+      // Role emojis mapping
+      const roleEmojis = {
+        'Futbolcu': '<:futbolcu:1385547729215819906>',
+        'Teknik Direktör': '<:teknikdirektor:1385548384017846272>',
+        'Başkan': '<:baskan:1385548870523551816>',
+        'Partner': '<:partner:1385547942202445966>',
+        'Taraftar': '<:taraftar:1385549312607387738>',
+        'Bayan Üye': '<:bayanuye:1385548584228884594>'
+      };
+      
       // Sadece .kayitkur'da ayarlanan rollerin istatistiklerini göster
       setupRoles.forEach(setupRole => {
         const count = roleCounts[setupRole.id] || 0;
         const roleObj = message.guild.roles.cache.get(setupRole.id);
         const roleName = roleObj ? roleObj.name : setupRole.name;
+        const emoji = roleEmojis[setupRole.name] || '';
         
-        statsText += `**${roleName}**: \`${count}\`\n`;
+        statsText += `${emoji} **${roleName}**: \`${count}\`\n`;
         totalCount += count;
       });
       

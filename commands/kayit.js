@@ -101,36 +101,40 @@ module.exports = {
       if (settings.futbolcuRole) {
         allRoleButtons.push({
           id: `role_futbolcu_${target.id}`,
-          label: '⚽ Futbolcu',
+          label: 'Futbolcu',
           style: 'PRIMARY', // Mavi
-          roleId: settings.futbolcuRole
+          roleId: settings.futbolcuRole,
+          emoji: '<:futbolcu:1385547729215819906>'
         });
       }
       
       if (settings.teknikDirektorRole) {
         allRoleButtons.push({
           id: `role_tekdir_${target.id}`,
-          label: '📋 Teknik Direktör',
+          label: 'Teknik Direktör',
           style: 'SUCCESS', // Yeşil
-          roleId: settings.teknikDirektorRole
+          roleId: settings.teknikDirektorRole,
+          emoji: '<:teknikdirektor:1385548384017846272>'
         });
       }
       
       if (settings.baskanRole) {
         allRoleButtons.push({
           id: `role_baskan_${target.id}`,
-          label: '👑 Başkan',
+          label: 'Başkan',
           style: 'DANGER', // Kırmızı
-          roleId: settings.baskanRole
+          roleId: settings.baskanRole,
+          emoji: '<:baskan:1385548870523551816>'
         });
       }
       
       if (settings.taraftarRole) {
         allRoleButtons.push({
           id: `role_taraftar_${target.id}`,
-          label: '🏟️ Taraftar',
+          label: 'Taraftar',
           style: 'SECONDARY', // Gri
-          roleId: settings.taraftarRole
+          roleId: settings.taraftarRole,
+          emoji: '<:taraftar:1385549312607387738>'
         });
       }
       
@@ -139,9 +143,10 @@ module.exports = {
         console.log('Bayan üye rolü bulundu:', settings.bayanUyeRole); // Debug log
         allRoleButtons.push({
           id: `role_bayan_${target.id}`,
-          label: '👩 Bayan Üye',
+          label: 'Bayan Üye',
           style: 'DANGER', // Kırmızı
-          roleId: settings.bayanUyeRole
+          roleId: settings.bayanUyeRole,
+          emoji: '<:bayanuye:1385548584228884594>'
         });
       } else {
         console.log('Bayan üye rolü bulunamadı!', settings); // Debug log
@@ -150,9 +155,10 @@ module.exports = {
       if (settings.partnerRole) {
         allRoleButtons.push({
           id: `role_partner_${target.id}`,
-          label: '🤝 Partner',
+          label: 'Partner',
           style: 'SUCCESS', // Yeşil
-          roleId: settings.partnerRole
+          roleId: settings.partnerRole,
+          emoji: '<:partner:1385547942202445966>'
         });
       }
       
@@ -177,23 +183,31 @@ module.exports = {
       // İlk satıra en fazla 3 buton ekle
       for (let i = 0; i < Math.min(allRoleButtons.length, 3); i++) {
         const button = allRoleButtons[i];
-        row1Components.push(
-          new MessageButton()
-            .setCustomId(button.id)
-            .setLabel(button.label)
-            .setStyle(button.style)
-        );
+        const buttonBuilder = new MessageButton()
+          .setCustomId(button.id)
+          .setLabel(button.label)
+          .setStyle(button.style);
+        
+        if (button.emoji) {
+          buttonBuilder.setEmoji(button.emoji);
+        }
+        
+        row1Components.push(buttonBuilder);
       }
       
       // İkinci satıra kalan butonları ekle (en fazla 2 buton)
       for (let i = 3; i < Math.min(allRoleButtons.length, 5); i++) {
         const button = allRoleButtons[i];
-        row2Components.push(
-          new MessageButton()
-            .setCustomId(button.id)
-            .setLabel(button.label)
-            .setStyle(button.style)
-        );
+        const buttonBuilder = new MessageButton()
+          .setCustomId(button.id)
+          .setLabel(button.label)
+          .setStyle(button.style);
+        
+        if (button.emoji) {
+          buttonBuilder.setEmoji(button.emoji);
+        }
+        
+        row2Components.push(buttonBuilder);
       }
       
       // ActionRow oluştur

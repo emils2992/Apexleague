@@ -47,7 +47,7 @@ module.exports = {
       
       // Embed oluştur
       const embed = new MessageEmbed()
-        .setTitle('⚽ Futbol Kayıt Sıralaması')
+        .setTitle('<:futbolcu:1385547729215819906> Futbol Kayıt Sıralaması')
         .setColor('#e74c3c')
         .setDescription('En çok kayıt yapan yetkililer:')
         .setThumbnail('https://i.imgur.com/7HXgvjM.png')

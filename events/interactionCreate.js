@@ -52,38 +52,38 @@ module.exports = {
           case 'futbolcu':
             roleId = settings.futbolcuRole;
             roleName = 'Futbolcu';
-            roleEmoji = '⚽';
+            roleEmoji = '<:futbolcu:1385547729215819906>';
             roleColor = '#3498db'; // Blue
             break;
           case 'teknikdirektor':
           case 'tekdir':
             roleId = settings.teknikDirektorRole;
             roleName = 'Teknik Direktör';
-            roleEmoji = '📋';
+            roleEmoji = '<:teknikdirektor:1385548384017846272>';
             roleColor = '#2ecc71'; // Green
             break;
           case 'baskan':
             roleId = settings.baskanRole;
             roleName = 'Başkan';
-            roleEmoji = '👑';
+            roleEmoji = '<:baskan:1385548870523551816>';
             roleColor = '#e74c3c'; // Red
             break;
           case 'taraftar':
             roleId = settings.taraftarRole;
             roleName = 'Taraftar';
-            roleEmoji = '🏟️';
+            roleEmoji = '<:taraftar:1385549312607387738>';
             roleColor = '#9b59b6'; // Purple
             break;
           case 'bayan':
             roleId = settings.bayanUyeRole;
             roleName = 'Bayan Üye';
-            roleEmoji = '👩';
+            roleEmoji = '<:bayanuye:1385548584228884594>';
             roleColor = '#e91e63'; // Pink
             break;
           case 'partner':
             roleId = settings.partnerRole;
             roleName = 'Partner';
-            roleEmoji = '🤝';
+            roleEmoji = '<:partner:1385547942202445966>';
             roleColor = '#95a5a6'; // Gray
             break;
           default:
@@ -166,8 +166,8 @@ module.exports = {
           .setTitle(`${roleEmoji} Rol Ataması Başarılı!`)
           .setDescription(`**${targetMember.displayName}** kullanıcısına **${roleEmoji} ${roleName}** rolü verildi!`)
           .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
-          .addField('🆔 Kullanıcı', `<@${targetMember.id}>`, true)
-          .addField('🛡️ Verilen Rol', `<@&${role.id}>`, true)
+          .addField('<:uye:1385550973040066651> Kullanıcı', `<@${targetMember.id}>`, true)
+          .addField('🛡️ Verilen Rol', `${roleEmoji} <@&${role.id}>`, true)
           .addField('👮 İşlemi Yapan', `<@${interaction.user.id}>`, true)
           .setFooter({ text: 'Futbol Kayıt Sistemi • Rol Başarıyla Verildi' })
           .setTimestamp();
@@ -183,10 +183,10 @@ module.exports = {
         try {
           const dmEmbed = new MessageEmbed()
             .setColor(roleColor)
-            .setTitle('🎊 Rol Verildi!')
+            .setTitle('<:hosgeldin:1385547269360713779> Rol Verildi!')
             .setDescription(`**${interaction.guild.name}** sunucusunda size **${roleEmoji} ${roleName}** rolü verildi!`)
             .addField('💡 Bilgi', 'Artık sunucuda daha fazla erişiminiz var!')
-            .setFooter({ text: 'İyi eğlenceler! ⚽' });
+            .setFooter({ text: 'İyi eğlenceler!' });
             
           await targetMember.send({ embeds: [dmEmbed] });
         } catch (dmError) {
@@ -207,8 +207,8 @@ module.exports = {
                 .setColor(roleColor)
                 .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
                 .setDescription(`**${targetMember.displayName}** kullanıcısına **${roleEmoji} ${roleName}** rolü verildi.`)
-                .addField('👤 Kullanıcı', `<@${targetMember.id}>`, true)
-                .addField('🛡️ Verilen Rol', `<@&${role.id}>`, true)
+                .addField('<:uye:1385550973040066651> Kullanıcı', `<@${targetMember.id}>`, true)
+                .addField('🛡️ Verilen Rol', `${roleEmoji} <@&${role.id}>`, true)
                 .addField('👮 İşlemi Yapan', `<@${interaction.user.id}>`, true)
                 .setFooter({ text: `⚽ Futbol Kayıt Sistemi • Rol Atama` })
                 .setTimestamp();
@@ -222,12 +222,12 @@ module.exports = {
             const welcomeChannel = interaction.guild.channels.cache.get(guildSettings.welcomeChannel);
             if (welcomeChannel) {
               const welcomeEmbed = new MessageEmbed()
-                .setTitle('🎊 Yeni Üye Aramıza Katıldı!')
+                .setTitle('<:hosgeldin:1385547269360713779> Yeni Üye Aramıza Katıldı!')
                 .setColor(roleColor)
                 .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
-                .setDescription(`**${targetMember.displayName}** adlı üye aramıza hoş geldin! **${roleEmoji} ${roleName}** olarak futbol ailemize katıldığın için çok mutluyuz! ⚽`)
-                .addField('👤 Kullanıcı', `<@${targetMember.id}>`, true)
-                .addField('🛡️ Verilen Rol', `<@&${role.id}>`, true)
+                .setDescription(`**${targetMember.displayName}** adlı üye aramıza hoş geldin! **${roleEmoji} ${roleName}** olarak futbol ailemize katıldığın için çok mutluyuz!`)
+                .addField('<:uye:1385550973040066651> Kullanıcı', `<@${targetMember.id}>`, true)
+                .addField('🛡️ Verilen Rol', `${roleEmoji} <@&${role.id}>`, true)
                 .addField('👮 Kaydeden Yetkili', `<@${interaction.user.id}>`, true)
                 .addField('⏰ Kayıt Zamanı', new Date().toLocaleString('tr-TR'), true)
                 .setImage('https://i.imgur.com/3Umh6l4.jpg')

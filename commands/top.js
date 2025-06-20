@@ -54,12 +54,23 @@ module.exports = {
         let validCount = 0;
         let roleBreakdown = '';
         
+        // Role emojis mapping
+        const roleEmojis = {
+          'Futbolcu': '<:futbolcu:1385547729215819906>',
+          'Teknik Direktör': '<:teknikdirektor:1385548384017846272>',
+          'Başkan': '<:baskan:1385548870523551816>',
+          'Partner': '<:partner:1385547942202445966>',
+          'Taraftar': '<:taraftar:1385549312607387738>',
+          'Bayan Üye': '<:bayanuye:1385548584228884594>'
+        };
+        
         setupRoles.forEach(setupRole => {
           const count = roleCounts[setupRole.id] || 0;
           if (count > 0) {
             const roleObj = message.guild.roles.cache.get(setupRole.id);
             const roleName = roleObj ? roleObj.name : setupRole.name;
-            roleBreakdown += `${roleName}: ${count} `;
+            const emoji = roleEmojis[setupRole.name] || '';
+            roleBreakdown += `${emoji}${count} `;
             validCount += count;
           }
         });

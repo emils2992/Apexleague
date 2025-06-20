@@ -55,11 +55,11 @@ module.exports = {
       // Create embed for unregistration
       const embed = new MessageEmbed()
         .setColor('#e74c3c')
-        .setTitle('🔄 Kayıt Sıfırlandı')
+        .setTitle('<:kayitsiz:1385549087629250672> Kayıt Sıfırlandı')
         .setDescription(`**${target.user.tag}** üyesinin kaydı başarıyla sıfırlandı.`)
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
         .addField('👤 Kullanıcı', `<@${target.id}>`, true)
-        .addField('🛡️ Verilen Rol', `<@&${kayitsizRole.id}>`, true)
+        .addField('🛡️ Verilen Rol', `<:kayitsiz:1385549087629250672> <@&${kayitsizRole.id}>`, true)
         .addField('👮 İşlemi Yapan', `<@${message.author.id}>`, true)
         .addField('⏰ İşlem Zamanı', new Date().toLocaleString('tr-TR'), true)
         .setFooter({ text: 'Futbol Kayıt Sistemi • Kayıt Sıfırlama' })
@@ -99,7 +99,7 @@ module.exports = {
           embeds: [
             new MessageEmbed()
               .setColor('#e74c3c')
-              .setTitle('🔄 Kayıt Durumunuz Sıfırlandı')
+              .setTitle('<:kayitsiz:1385549087629250672> Kayıt Durumunuz Sıfırlandı')
               .setDescription(`**${message.guild.name}** sunucusundaki üyelik kaydınız sıfırlanmış bulunmaktadır.`)
               .addField('💬 Bilgi', 'Yeniden kayıt olmak için lütfen yetkililere başvurun.')
               .setFooter({ text: 'Futbol Kayıt Sistemi' })

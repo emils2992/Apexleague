@@ -101,7 +101,7 @@ module.exports = {
             .setTimestamp();
             
           await joinLogChannel.send({ 
-            content: `🔔 ${yetkiliMention}<@${member.id}> sunucuya katıldı!`,
+            content: `🔔 ${yetkiliMention}<@${member.id}> sunucuya <:kayitsiz:1385549087629250672> kayıtsız olarak katıldı!`,
             embeds: [joinLogEmbed] 
           });
         }
@@ -132,7 +132,7 @@ module.exports = {
       // Try to send welcome DM to the user
       try {
         const dmEmbed = new MessageEmbed()
-          .setTitle('⚽ Hoş Geldin!')
+          .setTitle('<:hosgeldin:1385547269360713779> Hoş Geldin!')
           .setColor('#2ecc71')
           .setDescription(`**${member.guild.name}** sunucusuna hoş geldin!`)
           .addField('💬 Bilgilendirme', 

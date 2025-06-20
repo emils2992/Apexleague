@@ -81,7 +81,18 @@ module.exports = {
           entryText += `| Tarih: ${formattedDate}`;
           
           if (reg.assignedRole) {
-            entryText += ` | Rol: <@&${reg.assignedRoleId}>`;
+            // Role emojis mapping
+            const roleEmojis = {
+              'Futbolcu': '<:futbolcu:1385547729215819906>',
+              'Teknik Direktör': '<:teknikdirektor:1385548384017846272>',
+              'Başkan': '<:baskan:1385548870523551816>',
+              'Partner': '<:partner:1385547942202445966>',
+              'Taraftar': '<:taraftar:1385549312607387738>',
+              'Bayan Üye': '<:bayanuye:1385548584228884594>',
+              'Kayıtsız': '<:kayitsiz:1385549087629250672>'
+            };
+            const emoji = roleEmojis[reg.assignedRole] || '';
+            entryText += ` | Rol: ${emoji} <@&${reg.assignedRoleId}>`;
           }
           
           entryText += '\n';

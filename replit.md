@@ -104,6 +104,7 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 20, 2025. Initial setup
 - June 20, 2025. Added `.kayitsayi` command for individual user registration statistics with role breakdown
 - June 20, 2025. Enhanced `.top` command with detailed role statistics and pagination functionality
+- June 20, 2025. Integrated custom Discord emojis throughout all registration messages, commands, and role displays
 
 ## User Preferences
 
