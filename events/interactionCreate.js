@@ -240,6 +240,7 @@ try {
           `<a:yetkili_geliyor:1385614217884864656> • Kaydı gerçekleştiren yetkili <@${interaction.user.id}>\n\n` +
           `<a:kopek:1385614129514942495> • Aramıza hoş geldin > <@${targetMember.id}>`
         )
+        .setImage(interaction.guild.iconURL({ dynamic: true, size: 256 }))
         .setFooter({ 
           text: 'Apex Voucher kayıt sistemi', 
           iconURL: interaction.client.user.displayAvatarURL({ dynamic: true, size: 64 }) 
