@@ -126,6 +126,29 @@
       "assignedRole": "Taraftar",
       "assignedRoleId": "1352647377433137216",
       "roleAssignedAt": "2025-04-30T20:49:50.573Z"
+    },
+    {
+      "guildId": "1352647377395122208",
+      "memberId": "1173735298329493675",
+      "memberName": "frozydebate",
+      "staffId": "794205713533894696",
+      "staffName": "emilswd",
+      "timestamp": "2025-06-20T09:42:48.742Z",
+      "assignedName": "Kayıtsız",
+      "assignedRole": "Kayıtsız",
+      "assignedRoleId": "1366843224907583548",
+      "unregistered": true,
+      "id": "175041256874323"
+    },
+    {
+      "guildId": "1352647377395122208",
+      "memberId": "1173735298329493675",
+      "memberName": "frozydebate",
+      "staffId": "794205713533894696",
+      "staffName": "emilswd",
+      "timestamp": "2025-06-20T09:42:59.649Z",
+      "assignedName": "aoao",
+      "id": "1750412579649815"
     }
   ]
 }

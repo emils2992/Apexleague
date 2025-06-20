@@ -84,25 +84,19 @@ module.exports = {
       if (settings.joinLogChannel) {
         const joinLogChannel = member.guild.channels.cache.get(settings.joinLogChannel);
         if (joinLogChannel) {
-          const joinLogEmbed = new MessageEmbed()
-            .setTitle('📥 Sunucuya Yeni Üye Katıldı')
-            .setColor('#3498db')
-            .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-            .addField('👤 Kullanıcı', `<@${member.id}> (\`${member.user.tag}\`)`, false)
-            .addField('🔍 Detaylar', 
-            `**ID**: \`${member.id}\`
-            **Oluşturulma**: \`${createdAt.toLocaleDateString('tr-TR')}\`
-            **Güvenilirlik**: ${isTrusted ? '`✅ Güvenilir`' : '`⚠️ Şüpheli`'}`, false)
-            .addField('📊 Sunucu Bilgisi', 
-            `**Toplam Üye**: \`${totalMembers}\`
-            **Katılma Zamanı**: \`${new Date().toLocaleString('tr-TR')}\``, false)
-            .setImage('https://i.imgur.com/3Umh6l4.jpg')
-            .setFooter({ text: `ID: ${member.id} • Giriş Logu` })
-            .setTimestamp();
+          // Calculate account creation timestamp
+          const createdTimestamp = Math.floor(member.user.createdTimestamp / 1000);
+          
+          // Create the message content in your requested format
+          const messageContent = `> <:uye:1385550973040066651> (<@${member.id}>, **${member.guild.name}**) Sunucusuna Hoş Geldin, Seninle Birlikte (${totalMembers}) Kişiye Ulaştık <:kalp:1385554933373341757>
+
+> <:sure:1385555246314688543> Hesap (**<t:${createdTimestamp}>) Tarihinde <t:${createdTimestamp}:R>**) Oluşturulmuş, (${isTrusted ? '<:onay:1385553560678305872> **Güvenli**' : '<:red:1385554348456542258> **Güvensiz**'})
+
+> <:buyutec:1385554672562995295> (${yetkiliMention.replace(', ', '')})
+\`\`\`Sunucuya Erişebilmek İçin "Kayıt" Yerlerinde Ne Olacağın Hakkında Bilgi Vererek İçeri Giriş Yapabilirsin, Kuralları Okumayı Unutma.\`\`\``;
             
           await joinLogChannel.send({ 
-            content: `🔔 ${yetkiliMention}<@${member.id}> sunucuya <:kayitsiz:1385549087629250672> kayıtsız olarak katıldı!`,
-            embeds: [joinLogEmbed] 
+            content: messageContent
           });
         }
       }
