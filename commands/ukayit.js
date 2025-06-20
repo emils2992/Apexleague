@@ -88,8 +88,8 @@ module.exports = {
       
       // Create embed for unregistration
       const embed = new MessageEmbed()
-        .setColor('#e74c3c')
-        .setTitle('<:kayitsiz:1385549087629250672> Kayıt Sıfırlandı')
+        .setColor('#27ae60')
+        .setTitle('<a:onay:1385549530099744878> Kayıt Sıfırlandı')
         .setDescription(`**${target.user.tag}** üyesinin kaydı başarıyla sıfırlandı.`)
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
         .addField('👤 Kullanıcı', `<@${target.id}>`, true)
