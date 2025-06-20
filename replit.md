@@ -139,6 +139,7 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 20, 2025. Fixed welcome message format to use proper `> @user` mentions and separated welcome greeting into completely separate message below main embed
 - June 20, 2025. Corrected embed profile display in welcome messages - server icon in top left (author), bot profile in bottom left (footer), user avatar on right (thumbnail)
 - June 20, 2025. Fixed interaction timeout error by implementing deferUpdate() and switching to editReply() method to prevent "Unknown interaction" failures
+- June 20, 2025. Combined welcome greeting into main embed instead of separate message for cleaner single-embed welcome format
 
 ## User Preferences
 

@@ -237,26 +237,17 @@ try {
         .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true, size: 128 })) // Sağ taraf kullanıcı profili
         .setDescription(
           `<a:onay1:1385613791911219223> • **> <@${targetMember.id}> aramıza** ${roleEmoji} **${roleName}** rolüyle katıldı.\n\n` +
-          `<a:yetkili_geliyor:1385614217884864656> • Kaydı gerçekleştiren yetkili <@${interaction.user.id}>`
+          `<a:yetkili_geliyor:1385614217884864656> • Kaydı gerçekleştiren yetkili <@${interaction.user.id}>\n\n` +
+          `<a:kopek:1385614129514942495> • Aramıza hoş geldin > <@${targetMember.id}>`
         )
         .setFooter({ 
           text: 'Apex Voucher kayıt sistemi', 
           iconURL: interaction.client.user.displayAvatarURL({ dynamic: true, size: 64 }) 
         }); // Alt sol bot profili
 
-      // Ayrı hoş geldin embed'i
-      const welcomeEmbed = new MessageEmbed()
-        .setColor('#000000')
-        .setDescription(`<a:kopek:1385614129514942495> • Aramıza hoş geldin > <@${targetMember.id}>`);
-
       await welcomeChannel.send({
         content: topMessage,
         embeds: [mainEmbed]
-      });
-
-      // Ayrı mesaj olarak hoş geldin embed'ini gönder
-      await welcomeChannel.send({
-        embeds: [welcomeEmbed]
       });    
     }    
   }    
