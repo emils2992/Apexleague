@@ -221,18 +221,10 @@ module.exports = {
           if (guildSettings && guildSettings.welcomeChannel) {
             const welcomeChannel = interaction.guild.channels.cache.get(guildSettings.welcomeChannel);
             if (welcomeChannel) {
-              const welcomeEmbed = new MessageEmbed()
-                .setTitle('<a:hosgeldin:1385547269360713779> Yeni Üye Aramıza Katıldı!')
-                .setColor(roleColor)
-                .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
-                .setDescription(`**${targetMember.displayName}** adlı üye aramıza hoş geldin! **${roleEmoji} ${roleName}** olarak futbol ailemize katıldığın için çok mutluyuz!`)
-
-                .setFooter({ text: 'Apex Voucher • Hoş Geldin!' })
-                .setTimestamp();
+              // Normal mesaj olarak hoş geldin mesajı gönder
+              const welcomeMessage = `<a:hosgeldin:1385547269360713779> **${targetMember.displayName}** adlı üye aramıza hoş geldin! **${roleEmoji} ${roleName}** olarak futbol ailemize katıldığın için çok mutluyuz!`;
                 
-              await welcomeChannel.send({ 
-                embeds: [welcomeEmbed] 
-              });
+              await welcomeChannel.send(welcomeMessage);
             }
           }
         } catch (logError) {

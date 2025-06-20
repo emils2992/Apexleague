@@ -17,7 +17,7 @@ module.exports = {
       .setTitle('⚽ Apex Voucher Yardım')
       .setColor('#3498db')
       .setDescription('Futbol temalı kayıt sistemi. Tüm komutlar ve açıklamaları:')
-      .setThumbnail(message.guild.iconURL({ dynamic: true }))
+      .setThumbnail(client.user.displayAvatarURL({ dynamic: true }))
       .setFooter({ text: 'Apex Voucher • Yardım Menüsü' })
       .setTimestamp();
     
