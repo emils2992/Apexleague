@@ -33,7 +33,7 @@ module.exports = {
       '`.g @kullanıcı` - Kullanıcının geçmiş kayıtlarını ve bilgilerini gösterir\n' +
       '`.id @kullanıcı yeni_isim` - Kullanıcının ismini değiştirir\n' +
       '`.top` - En çok kayıt yapan yetkililerin sıralamasını gösterir\n' +
-      '`.kayitsayi @kullanıcı` - Kullanıcının rol bazında kayıt sayılarını gösterir', false);
+      '`.kayitsayi @kullanıcı` - veya .kayitsayi yazarakda -Kullanıcının rol bazında kayıt sayılarını gösterir', false);
       
     // Ses komutları
     embed.addField('🎤 Ses Komutları', 
