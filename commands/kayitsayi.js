@@ -68,7 +68,7 @@ module.exports = {
         { id: settings.baskanRole, name: 'Başkan' },
         { id: settings.partnerRole, name: 'Partner' },
         { id: settings.taraftarRole, name: 'Taraftar' },
-        { id: settings.bayanUyeRole, name: 'Kadın Üye' }
+        { id: settings.bayanUyeRole, name: 'Bayan Üye' }
       ].filter(role => role.id && role.id !== settings.kayitsizRole && role.id !== settings.uyeRole);
       
       // Embed oluştur
@@ -90,7 +90,7 @@ module.exports = {
         'Başkan': '<:baskan:1385548870523551816>',
         'Partner': '<:partner:1385547942202445966>',
         'Taraftar': '<:taraftar:1385549312607387738>',
-        'Kadın Üye': '<:bayanuye:1385548584228884594>'
+        'Bayan Üye': '<:bayanuye:1385548584228884594>'
       };
       
       // Sadece .kayitkur'da ayarlanan rollerin istatistiklerini göster

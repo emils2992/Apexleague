@@ -50,7 +50,7 @@ module.exports = {
         `**Teknik Direktör Rolü**: ${settings.teknikDirektorRole ? `<@&${settings.teknikDirektorRole}>` : (settings.tdRole ? `<@&${settings.tdRole}>` : 'Ayarlanmamış')}\n` +
         `**Başkan Rolü**: ${settings.baskanRole ? `<@&${settings.baskanRole}>` : 'Ayarlanmamış'}\n` +
         `**Taraftar Rolü**: ${settings.taraftarRole ? `<@&${settings.taraftarRole}>` : 'Ayarlanmamış'}\n` +
-        `**Kadın Üye Rolü**: ${settings.bayanUyeRole ? `<@&${settings.bayanUyeRole}>` : (settings.bayanRole ? `<@&${settings.bayanRole}>` : 'Ayarlanmamış')}\n` +
+        `**Bayan Üye Rolü**: ${settings.bayanUyeRole ? `<@&${settings.bayanUyeRole}>` : (settings.bayanRole ? `<@&${settings.bayanRole}>` : 'Ayarlanmamış')}\n` +
         `**Partner Rolü**: ${settings.partnerRole ? `<@&${settings.partnerRole}>` : 'Ayarlanmamış'}\n` +
         `**Üye Rolü**: ${settings.uyeRole ? `<@&${settings.uyeRole}>` : 'Ayarlanmamış'}\n` +
         `**Otomatik Üye Rolü**: ${settings.autoAssignUyeRole ? '`Aktif`' : '`Pasif`'}\n` +
