@@ -94,7 +94,7 @@ module.exports = {
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
         .addFields(
           { name: '<:uye:1385550973040066651> Kullanıcı', value: `<@${target.id}>`, inline: true },
-          { name: '<:role:1385550203842396180> Verilen Rol', value: `<:kayitsiz:1385549087629250672> <@&${kayitsizRole.id}>`, inline: true },
+          { name: '<:roleyetkili:1385586860134240307> Verilen Rol', value: `<:kayitsiz:1385549087629250672> <@&${kayitsizRole.id}>`, inline: true },
           { name: '<:yetkili:1385565783307980852> İşlemi Yapan', value: `<@${message.author.id}>`, inline: true },
           { name: '<a:sure:1385555246314688543> İşlem Zamanı', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
         )

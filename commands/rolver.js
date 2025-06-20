@@ -111,7 +111,7 @@ module.exports = {
             .setDescription(`<a:onay:1385553560678305872> **${target.displayName}** kullanıcısına **${targetRole.name}** rolü verildi!`)
             .addFields(
               { name: '<:uye:1385550973040066651> Kullanıcı', value: `${target} (${target.user.tag})`, inline: true },
-              { name: '<:role:1385550203842396180> Verilen Rol', value: `${targetRole}`, inline: true },
+              { name: '<:roleyetkili:1385586860134240307> Verilen Rol', value: `${targetRole}`, inline: true },
               { name: '<:yetkili:1385565783307980852> Yetkili', value: `${message.author} (${message.author.tag})`, inline: true },
               { name: '<a:sure:1385555246314688543> Tarih', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
             )
