@@ -561,7 +561,7 @@ module.exports = {
         .addField('💾 Genel Log Kanalı', logChannel ? `${logChannel}` : '`Ayarlanmadı`', true)
         .addField('🔄 Otomatik Üye Atama', autoAssignUyeRole ? '`Aktif`' : '`Pasif`', true)
         .addField('🔄 Otomatik İsim Değiştirme', autoNickname ? '`Aktif`' : '`Pasif`', true)
-        .setFooter({ text: 'Futbol Kayıt Sistemi • Kayıt Kurulumu Tamamlandı', iconURL: message.guild.iconURL({ dynamic: true }) })
+        .setFooter({ text: 'Futbol Kayıt Sistemi • Kayıt Kurulumu Tamamlandı' })
         .setTimestamp();
       
       await message.channel.send({ embeds: [successEmbed] });

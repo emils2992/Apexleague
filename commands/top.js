@@ -129,7 +129,7 @@ module.exports = {
       const embed = new MessageEmbed()
         .setTitle('⚽ Futbol Kayıt Sıralaması')
         .setColor('#f39c12')
-        .setThumbnail(message.guild.iconURL({ dynamic: true }))
+
         .setFooter({ text: `Apex Voucher • Sayfa ${currentPage + 1}/${totalPages} • ${formatTurkishDate(new Date())}` })
       
       // Format the leaderboard with medals and role breakdown
@@ -257,7 +257,7 @@ module.exports = {
     const embed = new MessageEmbed()
       .setTitle('⚽ Futbol Kayıt Sıralaması')
       .setColor('#f39c12')
-      .setThumbnail(guild.iconURL({ dynamic: true }))
+
       .setFooter({ text: `Apex Voucher • Sayfa ${newPage + 1}/${totalPages}` })
       .setTimestamp();
     
