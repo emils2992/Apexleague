@@ -265,7 +265,7 @@ module.exports = {
             );
             if (welcomeChannel) {
               // Üst mesaj (quote formatında)
-              const topMessage = `> <@${targetMember.id}> aramıza katıldı.`;
+              const topMessage = `> <@${targetMember.id}> **aramıza katıldı.**`;
 
               // Ana embed (siyah renkte)
               const mainEmbed = new MessageEmbed()
@@ -284,16 +284,11 @@ module.exports = {
                   }),
                 ) // Sağ taraf kullanıcı profili
                 .setDescription(
-                  `<a:onay1:1385613791911219223> • ** <@${targetMember.id}> aramıza** ${roleEmoji} **${roleName}** *rolüyle katıldı.*\n\n` +
+                  `<a:onay1:1385613791911219223> • ** <@${targetMember.id}> aramıza** *${roleEmoji} ${roleName}* **rolüyle katıldı.**\n\n` +
                     `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
                     `> <@${interaction.user.id}>\n\n` +
                     `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
                     `> <@${targetMember.id}>\n`,
-                )
-                .setImage(
-                  interaction.guild.icon ? 
-                    `https://cdn.discordapp.com/icons/${interaction.guild.id}/${interaction.guild.icon}.${interaction.guild.icon.startsWith('a_') ? 'gif' : 'png'}?size=256` :
-                    null,
                 )
                 .setFooter({
                   text: "Apex Voucher Kayıt Sistemi",
