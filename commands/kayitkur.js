@@ -3,6 +3,7 @@ const db = require('../utils/database');
 
 module.exports = {
   name: 'kayitkur',
+  aliases: ['kayıtkur'],
   description: 'Set up registration system',
   async execute(message, args, client) {
     // Check if user has admin permission

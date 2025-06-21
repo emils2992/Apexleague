@@ -13,6 +13,7 @@ const persistentConnections = new Map();
 
 module.exports = {
   name: "sescek",
+  aliases: ["sesçek"],
   description: "Botu ses kanalına çeker ve kalıcı olarak tutar",
   async execute(message, args, client) {
     try {

@@ -42,46 +42,52 @@ module.exports = {
       return message.reply(`Yüklü komutlar: ${loadedCommands}`);
     }
 
-    // Handle command aliases
+    // Handle command aliases - search through all commands for aliases
     if (!command) {
       console.log(`Command not found directly. Checking aliases for: ${commandName}`);
-
-      // Check for common aliases
-      if (commandName === 'topsıra' || commandName === 'topkayıt' || commandName === 'kayıttop') {
-        command = client.commands.get('top');
-      } else if (commandName === 'kayıt' || commandName === 'kayit' || commandName === 'k') {
-        command = client.commands.get('kayit');
-      } else if (commandName === 'kayıtkur' || commandName === 'kayitkur' || commandName === 'kurulum') {
-        command = client.commands.get('kayitkur');
-      } else if (commandName === 'help' || commandName === 'yardim' || commandName === 'komutlar' || commandName === 'yardım') {
-        command = client.commands.get('yardim');
-      } else if (commandName === 'geçmiş' || commandName === 'gecmis' || commandName === 'bilgi' || commandName === 'info' || commandName === 'g') {
-        command = client.commands.get('gecmis');
-      } else if (commandName === 'ukayıt' || commandName === 'ukayit' || commandName === 'ksil' || commandName === 'kayıtsil' || commandName === 'uk' || commandName === 'kayitsifirla' || commandName === 'kayıtsıfırla') {
-        command = client.commands.get('ukayit');
-      } else if (commandName === 'id' || commandName === 'isim' || commandName === 'isimdeğiştir' || commandName === 'isimdegistir') {
-        command = client.commands.get('id');
-      } else if (commandName === 'sescek' || commandName === 'sesçek' || commandName === 'sesgel' || commandName === 'seseçek' || commandName === 'sescek') {
-        try {
-          const sescekCommand = require('../commands/sescek.js');
-          command = sescekCommand;
-        } catch (error) {
-          console.error('Sesçek komutu yüklenirken hata oluştu:', error);
+      
+      for (const [name, cmd] of client.commands) {
+        if (cmd.aliases && cmd.aliases.includes(commandName)) {
+          command = cmd;
+          console.log(`Found command through alias: ${name} (alias: ${commandName})`);
+          break;
         }
-      } else if (commandName === 'sesayril' || commandName === 'sesayrıl' || commandName === 'sesgit' || commandName === 'sesçık' || commandName === 'sesayril') {
-        try {
-          const sesayrilCommand = require('../commands/sesayril.js');
-          command = sesayrilCommand;
-        } catch (error) {
-          console.error('Sesayril komutu yüklenirken hata oluştu:', error);
-        }
-      } else if (commandName === 'kayitsayi' || commandName === 'kayitsayı') {
-        command = client.commands.get('kayitsayi');
       }
 
-      if (command) {
-        console.log(`Found command through alias: ${command.name}`);
-      } else {
+      // Additional hardcoded aliases for backward compatibility
+      if (!command) {
+        const hardcodedAliases = {
+          'k': 'kayit',
+          'uk': 'ukayit',
+          'topsıra': 'topsira',
+          'topkayıt': 'top',
+          'kayıttop': 'top',
+          'help': 'yardım',
+          'komutlar': 'yardım',
+          'bilgi': 'g',
+          'info': 'g',
+          'isim': 'id',
+          'isimdeğiştir': 'id',
+          'isimdegistir': 'id',
+          'ksil': 'ukayit',
+          'kayıtsil': 'ukayit',
+          'kayitsifirla': 'ukayit',
+          'kayıtsıfırla': 'ukayit',
+          'sesgel': 'sescek',
+          'seseçek': 'sescek',
+          'sesgit': 'sesayril',
+          'sesçık': 'sesayril'
+        };
+        
+        if (hardcodedAliases[commandName]) {
+          command = client.commands.get(hardcodedAliases[commandName]);
+          if (command) {
+            console.log(`Found command through hardcoded alias: ${hardcodedAliases[commandName]} (alias: ${commandName})`);
+          }
+        }
+      }
+
+      if (!command) {
         console.log('No command found even after checking aliases');
       }
     }

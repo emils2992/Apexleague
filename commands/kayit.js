@@ -3,6 +3,7 @@ const db = require('../utils/database');
 
 module.exports = {
   name: 'kayit',
+  aliases: ['kayıt'],
   description: 'Register a user with a name and select a role',
   async execute(message, args, client) {
     // Get server settings from database

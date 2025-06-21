@@ -26,6 +26,7 @@ function truncateText(text, maxLength = 1000) {
 
 module.exports = {
   name: 'g',
+  aliases: ['gecmis', 'geçmiş'],
   description: 'Kullanıcının geçmiş kayıtlarını ve sunucu giriş-çıkış bilgilerini gösterir',
   async execute(message, args, client) {
     // Get guild settings

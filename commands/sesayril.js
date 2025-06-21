@@ -4,6 +4,7 @@ const sescekCommand = require('./sescek');
 
 module.exports = {
   name: 'sesayril',
+  aliases: ['sesayrıl'],
   description: 'Botu ses kanalından çıkarır ve kalıcı bağlantıyı durdurur',
   async execute(message, args, client) {
     try {

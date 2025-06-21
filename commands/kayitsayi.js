@@ -19,6 +19,7 @@ function formatTurkishDate(date) {
 
 module.exports = {
   name: 'kayitsayi',
+  aliases: ['kayıtsayi', 'kayıtsayı', 'kayitsayı'],
   description: 'Belirtilen kullanıcının kayıt sayılarını rol bazında gösterir',
   async execute(message, args, client) {
     // Yetkili rolü kontrolü

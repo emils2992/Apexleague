@@ -3,6 +3,7 @@ const db = require('../utils/database');
 
 module.exports = {
   name: 'yardım',
+  aliases: ['yardim'],
   description: 'Botun komutlarını ve kullanımını gösterir',
   async execute(message, args, client) {
     // Get guild settings
@@ -44,10 +45,14 @@ module.exports = {
     
     // Command aliases
     embed.addField('🔄 Komut Alternatifleri', 
+      '**Kayıt**: `.kayit` veya `.kayıt` veya `.k`\n' +
+      '**Kayıt Kur**: `.kayitkur` veya `.kayıtkur`\n' +
+      '**Kayıt Sayısı**: `.kayitsayi`, `.kayıtsayi`, `.kayıtsayı`, `.kayitsayı`\n' +
+      '**Üye Kayıt Sıfırla**: `.ukayit` veya `.ukayıt` veya `.uk`\n' +
+      '**Geçmiş**: `.g`, `.gecmis` veya `.geçmiş`\n' +
       '**Yardım**: `.yardım` veya `.yardim`\n' +
       '**Ses Çek**: `.sescek` veya `.sesçek`\n' +
-      '**Ses Ayrıl**: `.sesayril` veya `.sesayrıl`\n' +
-      '**Kayıt Sayısı**: `.kayitsayi` veya `.kayitsayı`', false);
+      '**Ses Ayrıl**: `.sesayril` veya `.sesayrıl`', false);
     
     // Additional help based on setup status
     if (setupDone) {

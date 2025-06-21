@@ -145,6 +145,9 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 21, 2025. Added authorization checks to .top, .topsira, .kayitsayi, and .gecmis commands - only authorized staff can view statistics
 - June 21, 2025. Implemented Turkish date/time formatting across all statistics commands using Europe/Istanbul timezone
 - June 21, 2025. Updated all command footers to display Turkish formatted timestamps instead of Discord's default timestamp format
+- June 21, 2025. Added comprehensive command aliases system for Turkish character variations (ı/i, ç/c, ğ/g, ü/u, ş/s, ö/o)
+- June 21, 2025. Implemented automatic alias detection in messageCreate event handler for seamless command recognition
+- June 21, 2025. Updated help command to display all available command aliases and alternative spellings
 
 ## User Preferences
 

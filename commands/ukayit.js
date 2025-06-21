@@ -3,6 +3,7 @@ const db = require('../utils/database');
 
 module.exports = {
   name: 'ukayit',
+  aliases: ['ukayıt'],
   description: 'Kullanıcının üyelik kaydını sıfırla ve kayıtsız rolü ver',
   async execute(message, args, client) {
     // Get guild settings
