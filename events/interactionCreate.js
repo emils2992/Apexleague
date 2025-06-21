@@ -193,7 +193,7 @@ module.exports = {
           .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
           .addField(
             "<:uye:1385550973040066651> Kullanıcı",
-            `<@${targetMember.id}>`,
+            `**${targetMember.displayName}** (<@${targetMember.id}>)`,
             true,
           )
           .addField("🛡️ Verilen Rol", `${roleEmoji} <@&${role.id}>`, true)
@@ -246,7 +246,7 @@ module.exports = {
                 )
                 .addField(
                   "<:uye:1385550973040066651> Kullanıcı",
-                  `<@${targetMember.id}>`,
+                  `**${targetMember.displayName}** (<@${targetMember.id}>)`,
                   true,
                 )
                 .addField("🛡️ Verilen Rol", `${roleEmoji} <@&${role.id}>`, true)
@@ -264,8 +264,8 @@ module.exports = {
               guildSettings.welcomeChannel,
             );
             if (welcomeChannel) {
-              // Üst mesaj (quote formatında)
-              const topMessage = `> <@${targetMember.id}> aramıza katıldı.`;
+              // Üst mesaj (quote formatında) - isim ile birlikte
+              const topMessage = `> **${targetMember.displayName}** aramıza katıldı.`;
 
               // Ana embed (siyah renkte)
               const mainEmbed = new MessageEmbed()
@@ -284,11 +284,11 @@ module.exports = {
                   }),
                 ) // Sağ taraf kullanıcı profili
                 .setDescription(
-                  `<a:onay1:1385613791911219223> • ** <@${targetMember.id}> aramıza** ${roleEmoji} **${roleName}** *rolüyle katıldı.*\n\n` +
+                  `<a:onay1:1385613791911219223> • **${targetMember.displayName} aramıza** ${roleEmoji} **${roleName}** *rolüyle katıldı.*\n\n` +
                     `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
                     `> <@${interaction.user.id}>\n\n` +
                     `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
-                    `> <@${targetMember.id}>\n`,
+                    `> **${targetMember.displayName}**\n`,
                 )
                 .setImage(
                   interaction.guild.icon ? 
