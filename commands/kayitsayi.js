@@ -42,7 +42,7 @@ module.exports = {
       );
       
       if (userRegistrations.length === 0) {
-        return message.reply(`📊 **${target.displayName}** henüz hiç kayıt yapmamış!`);
+        return message.reply(`📊 **${target.user.tag}** henüz hiç kayıt yapmamış!`);
       }
       
       // Rol bazında kayıt sayılarını hesapla
@@ -74,7 +74,7 @@ module.exports = {
         .setTitle('📊 Kayıt İstatistikleri')
         .setColor('#3498db')
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
-        .setDescription(`**${target.displayName}** kullanıcısının kayıt sayıları:`)
+        .setDescription(`**${target.user.tag}** kullanıcısının kayıt sayıları:`)
         .setFooter({ text: 'Apex Voucher • Kayıt Sayıları' })
         .setTimestamp();
       

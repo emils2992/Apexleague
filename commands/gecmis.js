@@ -53,7 +53,7 @@ module.exports = {
       const embed = new MessageEmbed()
         .setColor('#9b59b6')
         .setTitle('👤 Kullanıcı Geçmişi')
-        .setDescription(`**${target.displayName}** kullanıcısının geçmiş bilgileri`)
+        .setDescription(`**${target.user.tag}** kullanıcısının geçmiş bilgileri`)
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
         .addField('🆔 Kullanıcı ID', target.id, true)
         .addField('📆 Hesap Oluşturulma', `<t:${Math.floor(target.user.createdTimestamp / 1000)}:F>\n(<t:${Math.floor(target.user.createdTimestamp / 1000)}:R>)`, true)
