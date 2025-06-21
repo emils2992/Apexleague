@@ -258,55 +258,65 @@ module.exports = {
             }
           }
 
-          // Hoş geldin kanalına rol atama sonrası hoş geldin mesajı gönder
+          // Hoş geldin kanalına rol atama sonrası hoş geldin mesajı gönder (gecikmeyle)
           if (guildSettings && guildSettings.welcomeChannel) {
             const welcomeChannel = interaction.guild.channels.cache.get(
               guildSettings.welcomeChannel,
             );
             if (welcomeChannel) {
-              // Üst mesaj (quote formatında)
-              const topMessage = `> <@${targetMember.id}> aramıza katıldı.`;
+              // Discord'un kullanıcı ismini güncellemesi için 3 saniye bekle
+              setTimeout(async () => {
+                try {
+                  // Kullanıcıyı yeniden fetch et (güncel isim için)
+                  const updatedMember = await interaction.guild.members.fetch(targetId);
+                  
+                  // Üst mesaj (quote formatında)
+                  const topMessage = `> <@${updatedMember.id}> aramıza katıldı.`;
 
-              // Ana embed (siyah renkte)
-              const mainEmbed = new MessageEmbed()
-                .setColor("#000000") // Siyah renk
-                .setAuthor({
-                  name: `${interaction.guild.name} • Kayıt Yapıldı!`,
-                  iconURL: interaction.guild.iconURL({
-                    dynamic: true,
-                    size: 64,
-                  }),
-                }) // Sol üst sunucu profili
-                .setThumbnail(
-                  targetMember.user.displayAvatarURL({
-                    dynamic: true,
-                    size: 128,
-                  }),
-                ) // Sağ taraf kullanıcı profili
-                .setDescription(
-                  `<a:onay1:1385613791911219223> • ** <@${targetMember.id}> aramıza** ${roleEmoji} **${roleName}** *rolüyle katıldı.*\n\n` +
-                    `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
-                    `> <@${interaction.user.id}>\n\n` +
-                    `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
-                    `> <@${targetMember.id}>\n`,
-                )
-                .setImage(
-                  interaction.guild.icon ? 
-                    `https://cdn.discordapp.com/icons/${interaction.guild.id}/${interaction.guild.icon}.${interaction.guild.icon.startsWith('a_') ? 'gif' : 'png'}?size=256` :
-                    null,
-                )
-                .setFooter({
-                  text: "Apex Voucher Kayıt Sistemi",
-                  iconURL: interaction.client.user.displayAvatarURL({
-                    dynamic: true,
-                    size: 64,
-                  }),
-                }); // Alt sol bot profili
+                  // Ana embed (siyah renkte)
+                  const mainEmbed = new MessageEmbed()
+                    .setColor("#000000") // Siyah renk
+                    .setAuthor({
+                      name: `${interaction.guild.name} • Kayıt Yapıldı!`,
+                      iconURL: interaction.guild.iconURL({
+                        dynamic: true,
+                        size: 64,
+                      }),
+                    }) // Sol üst sunucu profili
+                    .setThumbnail(
+                      updatedMember.user.displayAvatarURL({
+                        dynamic: true,
+                        size: 128,
+                      }),
+                    ) // Sağ taraf kullanıcı profili
+                    .setDescription(
+                      `<a:onay1:1385613791911219223> • ** <@${updatedMember.id}> aramıza** ${roleEmoji} **${roleName}** *rolüyle katıldı.*\n\n` +
+                        `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
+                        `> <@${interaction.user.id}>\n\n` +
+                        `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
+                        `> <@${updatedMember.id}>\n`,
+                    )
+                    .setImage(
+                      interaction.guild.icon ? 
+                        `https://cdn.discordapp.com/icons/${interaction.guild.id}/${interaction.guild.icon}.${interaction.guild.icon.startsWith('a_') ? 'gif' : 'png'}?size=256` :
+                        null,
+                    )
+                    .setFooter({
+                      text: "Apex Voucher Kayıt Sistemi",
+                      iconURL: interaction.client.user.displayAvatarURL({
+                        dynamic: true,
+                        size: 64,
+                      }),
+                    }); // Alt sol bot profili
 
-              await welcomeChannel.send({
-                content: topMessage,
-                embeds: [mainEmbed],
-              });
+                  await welcomeChannel.send({
+                    content: topMessage,
+                    embeds: [mainEmbed],
+                  });
+                } catch (delayedWelcomeError) {
+                  console.error("Gecikmiş hoşgeldin mesajı gönderilemedi:", delayedWelcomeError);
+                }
+              }, 3000); // 3 saniye gecikme
             }
           }
         } catch (logError) {
