@@ -214,7 +214,7 @@ module.exports = {
             .setColor(roleColor)
             .setTitle("<a:hosgeldin:1385547269360713779> Rol Verildi!")
             .setDescription(
-              `**${interaction.guild.name}** sunucusunda size **${roleEmoji} ${roleName}** rolü verildi!`,
+              `**${interaction.guild.name}** sunucusunda size **${roleEmoji} ${roleName}** rolü verildi!\n\nSunucudaki isminiz: **${targetMember.displayName}**`,
             )
             .addField("💡 Bilgi", "Artık sunucuda daha fazla erişiminiz var!")
             .setFooter({ text: "İyi eğlenceler!" });
@@ -265,7 +265,7 @@ module.exports = {
             );
             if (welcomeChannel) {
               // Üst mesaj (quote formatında)
-              const topMessage = `> <@${targetMember.id}> **aramıza katıldı.**`;
+              const topMessage = `> <@${targetMember.id}> (**${targetMember.displayName}**) **aramıza katıldı.**`;
 
               // Ana embed (siyah renkte)
               const mainEmbed = new MessageEmbed()
@@ -284,11 +284,11 @@ module.exports = {
                   }),
                 ) // Sağ taraf kullanıcı profili
                 .setDescription(
-                  `<a:onay1:1385613791911219223> • ** <@${targetMember.id}> aramıza** *${roleEmoji} ${roleName}* **rolüyle katıldı.**\n\n` +
+                  `<a:onay1:1385613791911219223> • **<@${targetMember.id}> (${targetMember.displayName}) aramıza** *${roleEmoji} ${roleName}* **rolüyle katıldı.**\n\n` +
                     `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
                     `> <@${interaction.user.id}>\n\n` +
                     `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
-                    `> <@${targetMember.id}>\n`,
+                    `> <@${targetMember.id}> (**${targetMember.displayName}**)\n`,
                 )
                 .setFooter({
                   text: "Apex Voucher Kayıt Sistemi",
