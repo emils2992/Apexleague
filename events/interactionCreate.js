@@ -300,8 +300,7 @@ module.exports = {
                   `<a:onay1:1385613791911219223> • **${registeredName} aramıza** *${roleEmoji} ${roleName}* **rolüyle katıldı.**\n\n` +
                     `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
                     `> <@${interaction.user.id}>\n\n` +
-                    `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
-                    `> **${registeredName}**\n`,
+                    `<a:kopek:1385614129514942495> **• Aramıza hoş geldin ${registeredName}**\n`,
                 )
                 .setFooter({
                   text: "Apex Voucher Kayıt Sistemi",
