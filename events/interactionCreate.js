@@ -278,7 +278,7 @@ module.exports = {
               const registeredName = updatedRegistration ? updatedRegistration.assignedName : targetMember.displayName;
               
               // Üst mesaj (quote formatında)
-              const topMessage = `> **${registeredName}** aramıza katıldı.`;
+              const topMessage = `> <@${targetMember.id}> **${registeredName}** aramıza katıldı.`;
 
               // Ana embed (siyah renkte)
               const mainEmbed = new MessageEmbed()
@@ -297,10 +297,11 @@ module.exports = {
                   }),
                 ) // Sağ taraf kullanıcı profili
                 .setDescription(
-                  `<a:onay1:1385613791911219223> • **${registeredName} aramıza** *${roleEmoji} ${roleName}* **rolüyle katıldı.**\n\n` +
+                  `<a:onay1:1385613791911219223> • **<@${targetMember.id}> ${registeredName} aramıza** *${roleEmoji} ${roleName}* **rolüyle katıldı.**\n\n` +
                     `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
                     `> <@${interaction.user.id}>\n\n` +
-                    `<a:kopek:1385614129514942495> **• Aramıza hoş geldin ${registeredName}**\n`,
+                    `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
+                    `> <@${targetMember.id}> **${registeredName}**\n`,
                 )
                 .setFooter({
                   text: "Apex Voucher Kayıt Sistemi",

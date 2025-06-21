@@ -143,7 +143,7 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 20, 2025. Added server logo as main image in welcome embed for enhanced visual branding
 - June 21, 2025. Fixed nickname display issue where registered name wasn't properly maintained after role assignment - added nickname re-setting during role assignment process
 - June 21, 2025. Updated welcome messages to display registered name instead of Discord username mentions to ensure consistent name display
-- June 21, 2025. Removed user mentions from welcome greeting, now only shows registered name without tagging the user
+- June 21, 2025. Updated welcome messages to include both user mentions and registered names for complete identification
 
 ## User Preferences
 
