@@ -181,7 +181,17 @@ module.exports = {
         }
 
         // Update registration database with role assignment
-        await db.updateRegistrationRole(guildId, targetId, role.id, roleName);
+        const updatedRegistration = await db.updateRegistrationRole(guildId, targetId, role.id, roleName);
+        
+        // Re-set the nickname using the assigned name from registration
+        if (updatedRegistration && updatedRegistration.assignedName) {
+          try {
+            await targetMember.setNickname(updatedRegistration.assignedName);
+            console.log(`[NICKNAME] Nickname re-set to: ${updatedRegistration.assignedName} for ${targetMember.user.tag}`);
+          } catch (nicknameError) {
+            console.error(`[NICKNAME] Failed to set nickname: ${nicknameError}`);
+          }
+        }
 
         // Create a fancy embed for completion
         const successEmbed = new MessageEmbed()
@@ -264,8 +274,11 @@ module.exports = {
               guildSettings.welcomeChannel,
             );
             if (welcomeChannel) {
+              // Kayıtlı ismini al
+              const registeredName = updatedRegistration ? updatedRegistration.assignedName : targetMember.displayName;
+              
               // Üst mesaj (quote formatında)
-              const topMessage = `> <@${targetMember.id}> **aramıza katıldı.**`;
+              const topMessage = `> **${registeredName}** aramıza katıldı.`;
 
               // Ana embed (siyah renkte)
               const mainEmbed = new MessageEmbed()
@@ -284,11 +297,11 @@ module.exports = {
                   }),
                 ) // Sağ taraf kullanıcı profili
                 .setDescription(
-                  `<a:onay1:1385613791911219223> • ** <@${targetMember.id}> aramıza** *${roleEmoji} ${roleName}* **rolüyle katıldı.**\n\n` +
+                  `<a:onay1:1385613791911219223> • **${registeredName} aramıza** *${roleEmoji} ${roleName}* **rolüyle katıldı.**\n\n` +
                     `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
                     `> <@${interaction.user.id}>\n\n` +
                     `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
-                    `> <@${targetMember.id}>\n`,
+                    `> **${registeredName}**\n`,
                 )
                 .setFooter({
                   text: "Apex Voucher Kayıt Sistemi",
