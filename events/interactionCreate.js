@@ -147,41 +147,44 @@ module.exports = {
           return;
         }
 
-        // Assign the role
-        await targetMember.roles.add(role).catch(async (error) => {
-          console.error(`Rol verme hatası: ${error}`);
-          await interaction.reply({
-            content: `\u26a0️ **Hata:** <@&${role.id}> rolünü vermeye çalışırken bir hata oluştu. Bot rolünün daha üst sırada olduğundan emin olun.`,
-            ephemeral: true,
-          });
-          return;
-        });
+        // Hızlı işlem için paralel operasyonlar
+        const roleOperations = [];
+        
+        // Ana rolü ekle
+        roleOperations.push(
+          targetMember.roles.add(role).catch(error => {
+            console.log(`Rol verme hatası: ${error.message}`);
+            throw error;
+          })
+        );
 
-        // Ayrıca üye rolü varsa ve otomatik atama ayarlanmışsa, üye rolünü ver
+        // Üye rolü varsa ekle
         const guildSettings = await db.getGuildSettings(guildId);
-        if (
-          guildSettings &&
-          guildSettings.uyeRole &&
-          guildSettings.autoAssignUyeRole
-        ) {
-          const uyeRole = interaction.guild.roles.cache.get(
-            guildSettings.uyeRole,
-          );
+        if (guildSettings?.uyeRole && guildSettings.autoAssignUyeRole) {
+          const uyeRole = interaction.guild.roles.cache.get(guildSettings.uyeRole);
           if (uyeRole && !targetMember.roles.cache.has(uyeRole.id)) {
-            try {
-              await targetMember.roles.add(uyeRole);
-              console.log(
-                `${targetMember.user.tag} kullanıcısına üye rolü verildi: ${uyeRole.name}`,
-              );
-            } catch (uyeRoleError) {
-              console.error(`Üye rolü verme hatası: ${uyeRoleError}`);
-              // Hata logla ama işlemi durdurma
-            }
+            roleOperations.push(
+              targetMember.roles.add(uyeRole).catch(error => {
+                console.log(`Üye rolü verme hatası: ${error.message}`);
+              })
+            );
           }
         }
 
-        // Update registration database with role assignment
-        await db.updateRegistrationRole(guildId, targetId, role.id, roleName);
+        // Veritabanı güncelleme
+        roleOperations.push(
+          db.updateRegistrationRole(guildId, targetId, role.id, roleName)
+        );
+
+        // Tüm işlemleri paralel çalıştır
+        try {
+          await Promise.all(roleOperations);
+        } catch (error) {
+          return interaction.editReply({
+            content: `❌ Rol verme hatası: ${error.message}`,
+            components: [],
+          });
+        }
 
         // Create a fancy embed for completion
         const successEmbed = new MessageEmbed()
@@ -208,111 +211,88 @@ module.exports = {
           components: [],
         });
 
-        // Try to send DM to user
-        try {
-          const dmEmbed = new MessageEmbed()
-            .setColor(roleColor)
-            .setTitle("<a:hosgeldin:1385547269360713779> Rol Verildi!")
-            .setDescription(
-              `**${interaction.guild.name}** sunucusunda size **${roleEmoji} ${roleName}** rolü verildi!`,
-            )
-            .addField("💡 Bilgi", "Artık sunucuda daha fazla erişiminiz var!")
-            .setFooter({ text: "İyi eğlenceler!" });
 
-          await targetMember.send({ embeds: [dmEmbed] });
-        } catch (dmError) {
-          console.log(`DM gönderilemedi: ${dmError}`);
-          // Don't worry if DM fails
+
+        // Hoş geldin mesajlarını paralel olarak gönder - daha hızlı!
+        const messageOperations = [];
+
+        // Log kanalına mesaj gönder (paralel)
+        if (guildSettings?.logChannel) {
+          const logChannel = interaction.guild.channels.cache.get(guildSettings.logChannel);
+          if (logChannel) {
+            const logEmbed = new MessageEmbed()
+              .setTitle(`${roleEmoji} Rol Ataması Yapıldı`)
+              .setColor(roleColor)
+              .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
+              .setDescription(`**${targetMember.displayName}** kullanıcısına **${roleEmoji} ${roleName}** rolü verildi.`)
+              .addField("<:uye:1385550973040066651> Kullanıcı", `<@${targetMember.id}>`, true)
+              .addField("🛡️ Verilen Rol", `${roleEmoji} <@&${role.id}>`, true)
+              .addField("👮 İşlemi Yapan", `<@${interaction.user.id}>`, true)
+              .setFooter({ text: `⚽ Apex Voucher • Rol Atama` })
+              .setTimestamp();
+
+            messageOperations.push(
+              logChannel.send({ embeds: [logEmbed] }).catch(err => 
+                console.log(`Log mesajı hatası: ${err.message}`)
+              )
+            );
+          }
         }
 
-        // Rol atandıktan sonra hoş geldin mesajlarını gönder
-        try {
-          const guildSettings = await db.getGuildSettings(guildId);
+        // Hoş geldin kanalına mesaj gönder (paralel)
+        if (guildSettings?.welcomeChannel) {
+          const welcomeChannel = interaction.guild.channels.cache.get(guildSettings.welcomeChannel);
+          if (welcomeChannel) {
+            const topMessage = `> <@${targetMember.id}> (**${targetMember.displayName}**) **aramıza katıldı.**`;
 
-          // Log kanalına rol atama bilgisi gönder
-          if (guildSettings && guildSettings.logChannel) {
-            const logChannel = interaction.guild.channels.cache.get(
-              guildSettings.logChannel,
-            );
-            if (logChannel) {
-              const logEmbed = new MessageEmbed()
-                .setTitle(`${roleEmoji} Rol Ataması Yapıldı`)
-                .setColor(roleColor)
-                .setThumbnail(
-                  targetMember.user.displayAvatarURL({ dynamic: true }),
-                )
-                .setDescription(
-                  `**${targetMember.displayName}** kullanıcısına **${roleEmoji} ${roleName}** rolü verildi.`,
-                )
-                .addField(
-                  "<:uye:1385550973040066651> Kullanıcı",
-                  `<@${targetMember.id}>`,
-                  true,
-                )
-                .addField("🛡️ Verilen Rol", `${roleEmoji} <@&${role.id}>`, true)
-                .addField("👮 İşlemi Yapan", `<@${interaction.user.id}>`, true)
-                .setFooter({ text: `⚽ Apex Voucher • Rol Atama` })
-                .setTimestamp();
-
-              await logChannel.send({ embeds: [logEmbed] });
-            }
-          }
-
-          // Hoş geldin kanalına rol atama sonrası hoş geldin mesajı gönder
-          if (guildSettings && guildSettings.welcomeChannel) {
-            const welcomeChannel = interaction.guild.channels.cache.get(
-              guildSettings.welcomeChannel,
-            );
-            if (welcomeChannel) {
-              // Üst mesaj (quote formatında)
-              const topMessage = `> <@${targetMember.id}> aramıza katıldı.`;
-
-              // Ana embed (siyah renkte)
-              const mainEmbed = new MessageEmbed()
-                .setColor("#000000") // Siyah renk
-                .setAuthor({
-                  name: `${interaction.guild.name} • Kayıt Yapıldı!`,
-                  iconURL: interaction.guild.iconURL({
-                    dynamic: true,
-                    size: 64,
-                  }),
-                }) // Sol üst sunucu profili
-                .setThumbnail(
-                  targetMember.user.displayAvatarURL({
-                    dynamic: true,
-                    size: 128,
-                  }),
-                ) // Sağ taraf kullanıcı profili
-                .setDescription(
-                  `<a:onay1:1385613791911219223> • ** <@${targetMember.id}> aramıza** ${roleEmoji} **${roleName}** *rolüyle katıldı.*\n\n` +
-                    `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
-                    `> <@${interaction.user.id}>\n\n` +
-                    `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
-                    `> <@${targetMember.id}>\n`,
-                )
-                .setImage(
-                  interaction.guild.icon ? 
-                    `https://cdn.discordapp.com/icons/${interaction.guild.id}/${interaction.guild.icon}.${interaction.guild.icon.startsWith('a_') ? 'gif' : 'png'}?size=256` :
-                    null,
-                )
-                .setFooter({
-                  text: "Apex Voucher Kayıt Sistemi",
-                  iconURL: interaction.client.user.displayAvatarURL({
-                    dynamic: true,
-                    size: 64,
-                  }),
-                }); // Alt sol bot profili
-
-              await welcomeChannel.send({
-                content: topMessage,
-                embeds: [mainEmbed],
+            const mainEmbed = new MessageEmbed()
+              .setColor("#000000")
+              .setAuthor({
+                name: `${interaction.guild.name} • Kayıt Yapıldı!`,
+                iconURL: interaction.guild.iconURL({ dynamic: true, size: 64 }),
+              })
+              .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true, size: 128 }))
+              .setDescription(
+                `<a:onay1:1385613791911219223> • ** <@${targetMember.id}> aramıza** ${roleEmoji} **${roleName}** *rolüyle katıldı.*\n\n` +
+                `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n> <@${interaction.user.id}>\n\n` +
+                `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n> <@${targetMember.id}>\n`
+              )
+              .setImage(
+                interaction.guild.icon ? 
+                  `https://cdn.discordapp.com/icons/${interaction.guild.id}/${interaction.guild.icon}.${interaction.guild.icon.startsWith('a_') ? 'gif' : 'png'}?size=256` :
+                  null
+              )
+              .setFooter({
+                text: "Apex Voucher Kayıt Sistemi",
+                iconURL: interaction.client.user.displayAvatarURL({ dynamic: true, size: 64 }),
               });
-            }
+
+            messageOperations.push(
+              welcomeChannel.send({ content: topMessage, embeds: [mainEmbed] }).catch(err => 
+                console.log(`Hoş geldin mesajı hatası: ${err.message}`)
+              )
+            );
           }
-        } catch (logError) {
-          console.error("Log mesajı gönderilemedi:", logError);
-          // Don't worry if log message fails
         }
+
+        // DM gönder (paralel)
+        const dmEmbed = new MessageEmbed()
+          .setColor(roleColor)
+          .setTitle("<a:hosgeldin:1385547269360713779> Rol Verildi!")
+          .setDescription(`**${interaction.guild.name}** sunucusunda size **${roleEmoji} ${roleName}** rolü verildi!`)
+          .addField("💡 Bilgi", "Artık sunucuda daha fazla erişiminiz var!")
+          .setFooter({ text: "İyi eğlenceler!" });
+
+        messageOperations.push(
+          targetMember.send({ embeds: [dmEmbed] }).catch(err => 
+            console.log(`DM hatası: ${err.message}`)
+          )
+        );
+
+        // Tüm mesajları paralel gönder - çok daha hızlı!
+        Promise.all(messageOperations).catch(() => {
+          // Mesaj hatalarını yok say, ana işlem devam etsin
+        });
       } catch (error) {
         console.error("Role assignment error:", error);
         return interaction.reply({

@@ -68,31 +68,39 @@ module.exports = {
         return message.reply('\u26a0️ Kayıt işlemi durduruldu: Bot rolü, sunucudaki diğer rollerden daha alt sırada. Lütfen bot rolünü yönetici panelinden daha üst sıraya taşıyın!');
       }
       
-      // Set nickname (without emoji)
-      await target.setNickname(name).catch(nicknameError => {
-        console.error(`İsim değiştirme hatası: ${nicknameError}`);
-        message.channel.send(`\u26a0️ **Not:** Kullanıcının ismini değiştiremedim. Bu, kullanıcının yetkisi sizden veya bottan yüksek olabilir.`);
-      });
+      // Hızlı işlem için tüm operasyonları paralel olarak başlat
+      const operations = [];
       
-      // Remove "Kayıtsız" role if exists
+      // İsim değiştirme işlemini ekle
+      operations.push(
+        target.setNickname(name).catch(nicknameError => {
+          console.log(`İsim değiştirme hatası: ${nicknameError.message}`);
+        })
+      );
+      
+      // Kayıtsız rolü kaldırma işlemini ekle
       if (settings.kayitsizRole && target.roles.cache.has(settings.kayitsizRole)) {
-        await target.roles.remove(settings.kayitsizRole).catch(roleError => {
-          console.error(`Kayıtsız rolü kaldırma hatası: ${roleError}`);
-          message.channel.send(`\u26a0️ **Not:** Kayıtsız rolünü kaldıramadım. Bot rolünün, rol hiyerarşisinde daha üst sırada olduğundan emin olun.`);
-        });
+        operations.push(
+          target.roles.remove(settings.kayitsizRole).catch(roleError => {
+            console.log(`Kayıtsız rolü kaldırma hatası: ${roleError.message}`);
+          })
+        );
       }
       
-      // Automatically add the member role if configured
+      // Üye rolü ekleme işlemini ekle
       if (settings.uyeRole && settings.autoAssignUyeRole) {
         const uyeRole = message.guild.roles.cache.get(settings.uyeRole);
         if (uyeRole) {
-          await target.roles.add(uyeRole).catch(roleError => {
-            console.error(`Üye rolü ekleme hatası: ${roleError}`);
-            message.channel.send(`\u26a0️ **Not:** Üye rolünü ekleyemedim. Bot rolünün, rol hiyerarşisinde daha üst sırada olduğundan emin olun.`);
-          });
-          // Üye rolü verme mesajı loglara gönderilmeyecek, sadece log embed'ine ekleyeceğiz
+          operations.push(
+            target.roles.add(uyeRole).catch(roleError => {
+              console.log(`Üye rolü ekleme hatası: ${roleError.message}`);
+            })
+          );
         }
       }
+      
+      // Tüm işlemleri paralel olarak çalıştır - çok daha hızlı!
+      await Promise.all(operations);
       
       // Tüm mevcut rolleri listele ve ardından en fazla 5 buton olacak şekilde dağıt
       const allRoleButtons = [];
