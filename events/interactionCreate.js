@@ -285,12 +285,8 @@ module.exports = {
                   const mainEmbed = new MessageEmbed()
                     .setColor("#000000") // Siyah renk
                     .setAuthor({
-                      name: `${interaction.guild.name} • Kayıt Yapıldı!`,
-                      iconURL: interaction.guild.iconURL({
-                        dynamic: true,
-                        size: 64,
-                      }),
-                    }) // Sol üst sunucu profili
+                      name: `${interaction.guild.name} • Kayıt Yapıldı!`
+                    }) // Sol üst sunucu ismi (logo olmadan)
                     .setThumbnail(
                       updatedMember.user.displayAvatarURL({
                         dynamic: true,
