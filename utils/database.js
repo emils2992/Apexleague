@@ -207,30 +207,20 @@ async function addRegistration(registrationData) {
     registrationData.timestamp = new Date().toISOString();
   }
   
-  console.log(`[KAYIT-TIMING] Kayıt işlemi başladı: ${registrationData.assignedName || 'Unknown'}`);
-  
   // Get current data (from cache if available)
   const db = readRegistrations();
-  const cacheReadTime = Date.now();
   
   // Add to cache immediately for instant access
   db.registrations.push(registrationData);
-  const cacheUpdateTime = Date.now();
   
-  // Update cache and write to file
-  writeRegistrations(db);
-  const fileWriteStartTime = Date.now();
-  
-  const totalTime = Date.now() - startTime;
-  const cacheTime = cacheReadTime - startTime;
-  const updateTime = cacheUpdateTime - cacheReadTime;
-  const writeTime = fileWriteStartTime - cacheUpdateTime;
+  // Update cache and write to file asynchronously
+  setImmediate(() => writeRegistrations(db));
   
   return registrationData;
 }
 
 // Update a registration with assigned role information with instant cache update
-async function updateRegistrationRole(guildId, memberId, roleId, roleName) {
+function updateRegistrationRole(guildId, memberId, roleId, roleName) {
   // Get current data (from cache if available)
   const db = readRegistrations();
   
@@ -248,8 +238,8 @@ async function updateRegistrationRole(guildId, memberId, roleId, roleName) {
     db.registrations[regIndex].assignedRoleId = roleId;
     db.registrations[regIndex].roleAssignedAt = new Date().toISOString();
     
-    // Update cache and write to file
-    writeRegistrations(db);
+    // Write to file asynchronously without blocking
+    setImmediate(() => writeRegistrations(db));
     
     return db.registrations[regIndex];
   }

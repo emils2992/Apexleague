@@ -78,14 +78,20 @@ module.exports = {
       // Get all user's current roles (except @everyone)
       const currentRoles = target.roles.cache.filter(role => role.id !== message.guild.id);
       
+      // Paralel işlemler için promise array
+      const promises = [];
+      
       // Remove all roles and add kayitsiz role
-      await target.roles.remove(currentRoles);
-      await target.roles.add(kayitsizRole);
+      promises.push(target.roles.remove(currentRoles));
+      promises.push(target.roles.add(kayitsizRole));
       
       // Set nickname to "Kayıtsız" if autoNickname is enabled
       if (settings.autoNickname) {
-        await target.setNickname('Kayıtsız');
+        promises.push(target.setNickname('Kayıtsız'));
       }
+      
+      // Tüm işlemleri paralel çalıştır
+      await Promise.allSettled(promises);
       
       // Create embed for unregistration
       const embed = new MessageEmbed()

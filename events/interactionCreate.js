@@ -147,15 +147,16 @@ module.exports = {
           return;
         }
 
+        // Paralel işlemler için promise array
+        const rolePromises = [];
+        
         // Assign the role
-        await targetMember.roles.add(role).catch(async (error) => {
-          console.error(`Rol verme hatası: ${error}`);
-          await interaction.reply({
-            content: `\u26a0️ **Hata:** <@&${role.id}> rolünü vermeye çalışırken bir hata oluştu. Bot rolünün daha üst sırada olduğundan emin olun.`,
-            ephemeral: true,
-          });
-          return;
-        });
+        rolePromises.push(
+          targetMember.roles.add(role).catch((error) => {
+            console.error(`Rol verme hatası: ${error}`);
+            throw error;
+          })
+        );
 
         // Ayrıca üye rolü varsa ve otomatik atama ayarlanmışsa, üye rolünü ver
         const guildSettings = await db.getGuildSettings(guildId);
@@ -168,16 +169,28 @@ module.exports = {
             guildSettings.uyeRole,
           );
           if (uyeRole && !targetMember.roles.cache.has(uyeRole.id)) {
-            try {
-              await targetMember.roles.add(uyeRole);
-            } catch (uyeRoleError) {
-              console.error(`Üye rolü verme hatası: ${uyeRoleError}`);
-            }
+            rolePromises.push(
+              targetMember.roles.add(uyeRole).catch((uyeRoleError) => {
+                console.error(`Üye rolü verme hatası: ${uyeRoleError}`);
+              })
+            );
           }
         }
 
-        // Update registration database with role assignment
-        await db.updateRegistrationRole(guildId, targetId, role.id, roleName);
+        // Tüm rol işlemlerini paralel çalıştır
+        const roleResults = await Promise.allSettled(rolePromises);
+        
+        // Ana rol ataması başarısız olduysa hata ver
+        if (roleResults[0].status === 'rejected') {
+          await interaction.editReply({
+            content: `⚠️ **Hata:** <@&${role.id}> rolünü vermeye çalışırken bir hata oluştu. Bot rolünün daha üst sırada olduğundan emin olun.`,
+            components: [],
+          });
+          return;
+        }
+
+        // Database güncellemesini paralel başlat (beklemeden)
+        db.updateRegistrationRole(guildId, targetId, role.id, roleName);
 
         // Create a fancy embed for completion
         const successEmbed = new MessageEmbed()
@@ -259,7 +272,7 @@ module.exports = {
               guildSettings.welcomeChannel,
             );
             if (welcomeChannel) {
-              // Discord'un kullanıcı ismini güncellemesi için 3 saniye bekle
+              // Discord'un kullanıcı ismini güncellemesi için 1.5 saniye bekle
               setTimeout(async () => {
                 try {
                   // Kullanıcıyı yeniden fetch et (güncel isim için)
@@ -311,7 +324,7 @@ module.exports = {
                 } catch (delayedWelcomeError) {
                   console.error("Gecikmiş hoşgeldin mesajı gönderilemedi:", delayedWelcomeError);
                 }
-              }, 3000); // 3 saniye gecikme
+              }, 1500); // 1.5 saniye gecikme
             }
           }
         } catch (logError) {
