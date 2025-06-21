@@ -170,12 +170,8 @@ module.exports = {
           if (uyeRole && !targetMember.roles.cache.has(uyeRole.id)) {
             try {
               await targetMember.roles.add(uyeRole);
-              console.log(
-                `${targetMember.user.tag} kullanıcısına üye rolü verildi: ${uyeRole.name}`,
-              );
             } catch (uyeRoleError) {
               console.error(`Üye rolü verme hatası: ${uyeRoleError}`);
-              // Hata logla ama işlemi durdurma
             }
           }
         }
@@ -221,8 +217,7 @@ module.exports = {
 
           await targetMember.send({ embeds: [dmEmbed] });
         } catch (dmError) {
-          console.log(`DM gönderilemedi: ${dmError}`);
-          // Don't worry if DM fails
+          // DM fails silently
         }
 
         // Rol atandıktan sonra hoş geldin mesajlarını gönder
@@ -321,7 +316,6 @@ module.exports = {
           }
         } catch (logError) {
           console.error("Log mesajı gönderilemedi:", logError);
-          // Don't worry if log message fails
         }
       } catch (error) {
         console.error("Role assignment error:", error);

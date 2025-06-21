@@ -99,14 +99,7 @@ module.exports = {
       const allRoleButtons = [];
       
       // Tüm mevcut rol seçeneklerini bir diziye ekle, her biri farklı renkte
-      console.log('Kayıt sistemi ayarları kontrol ediliyor...', {
-        futbolcuRole: settings.futbolcuRole,
-        teknikDirektorRole: settings.teknikDirektorRole,
-        baskanRole: settings.baskanRole,
-        taraftarRole: settings.taraftarRole,
-        bayanUyeRole: settings.bayanUyeRole,
-        partnerRole: settings.partnerRole
-      });
+
       
       if (settings.futbolcuRole) {
         allRoleButtons.push({
@@ -139,7 +132,6 @@ module.exports = {
       }
       
       if (settings.taraftarRole) {
-        console.log('Taraftar rolü bulundu:', settings.taraftarRole); // Debug log
         allRoleButtons.push({
           id: `role_taraftar_${target.id}`,
           label: 'Taraftar',
@@ -147,13 +139,10 @@ module.exports = {
           roleId: settings.taraftarRole,
           emoji: '<:taraftar:1385549312607387738>'
         });
-      } else {
-        console.log('Taraftar rolü bulunamadı! Settings:', settings); // Debug log
       }
       
-      // Bayan Üye için özel stil - tdRole anahtarı da kontrol edilir
+      // Bayan Üye için özel stil
       if (settings.bayanUyeRole) {
-        console.log('Bayan üye rolü bulundu:', settings.bayanUyeRole); // Debug log
         allRoleButtons.push({
           id: `role_bayan_${target.id}`,
           label: 'Bayan Üye',
@@ -161,8 +150,6 @@ module.exports = {
           roleId: settings.bayanUyeRole,
           emoji: '<:bayanuye:1385548584228884594>'
         });
-      } else {
-        console.log('Bayan üye rolü bulunamadı!', settings); // Debug log
       }
       
       if (settings.partnerRole) {
@@ -281,12 +268,8 @@ module.exports = {
         assignedName: name
       };
       
-      console.log(`[DEBUG-KAYIT] Saving registration data:`, registrationData);
-      
       // Veritabanına kaydet
       await db.addRegistration(registrationData);
-      
-      console.log(`[DEBUG-KAYIT] Registration data saved for ${target.user.tag}`);
       
       // (Log mesajı burada gönderilmeyecek - çift gönderim önlemek için)
       

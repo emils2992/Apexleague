@@ -56,15 +56,7 @@ module.exports = {
     try {
       // Get all registrations for this user in this guild
       const registrations = await db.getRegistrations(guildId);
-      console.log(`[DEBUG-GECMIS] Total registrations in database: ${registrations.length}`);
-      console.log(`[DEBUG-GECMIS] Looking for member ID: ${target.id}`);
-      
       const userRegistrations = registrations.filter(reg => reg.memberId === target.id);
-      console.log(`[DEBUG-GECMIS] Found ${userRegistrations.length} registrations for user ${target.user.tag}`);
-      
-      if (userRegistrations.length > 0) {
-        console.log(`[DEBUG-GECMIS] First registration:`, userRegistrations[0]);
-      }
 
       // Create embed for user history
       const embed = new MessageEmbed()

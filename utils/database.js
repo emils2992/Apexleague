@@ -226,14 +226,6 @@ async function addRegistration(registrationData) {
   const updateTime = cacheUpdateTime - cacheReadTime;
   const writeTime = fileWriteStartTime - cacheUpdateTime;
   
-  console.log(`[KAYIT-TIMING] ✅ Kayıt başarıyla tamamlandı!`);
-  console.log(`[KAYIT-TIMING] 📊 Süre detayları:`);
-  console.log(`[KAYIT-TIMING]   • Cache okuma: ${cacheTime}ms`);
-  console.log(`[KAYIT-TIMING]   • Cache güncelleme: ${updateTime}ms`);
-  console.log(`[KAYIT-TIMING]   • Dosya yazma başlangıcı: ${writeTime}ms`);
-  console.log(`[KAYIT-TIMING]   • TOPLAM SÜRE: ${totalTime}ms`);
-  console.log(`[KAYIT-TIMING] 🎯 Kullanıcı için görünür süre: ${totalTime}ms (Cache sayesinde anında!)`);
-  
   return registrationData;
 }
 
@@ -259,7 +251,6 @@ async function updateRegistrationRole(guildId, memberId, roleId, roleName) {
     // Update cache and write to file
     writeRegistrations(db);
     
-    console.log(`[FAST] Role assignment updated instantly: ${roleName} for ${memberId}`);
     return db.registrations[regIndex];
   }
   
@@ -270,7 +261,6 @@ async function updateRegistrationRole(guildId, memberId, roleId, roleName) {
 async function getRegistrations(guildId) {
   const db = readRegistrations();
   const guildRegistrations = db.registrations.filter(registration => registration.guildId === guildId);
-  console.log(`[FAST] Retrieved ${guildRegistrations.length} registrations instantly from cache for guild ${guildId}`);
   return guildRegistrations;
 }
 
@@ -295,9 +285,6 @@ async function getStaffStats(guildId) {
   
   // Convert to array and sort by count
   const result = Object.values(staffStats).sort((a, b) => b.count - a.count);
-  
-  const processingTime = Date.now() - startTime;
-  console.log(`[FAST] Staff stats calculated in ${processingTime}ms for ${result.length} staff members`);
   
   return result;
 }
