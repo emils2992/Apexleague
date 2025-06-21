@@ -1,6 +1,22 @@
 const { MessageEmbed } = require('discord.js');
 const db = require('../utils/database');
 
+// Türkçe tarih formatı için yardımcı fonksiyon
+function formatTurkishDate(date) {
+  const turkishDate = new Date(date.getTime() + (3 * 60 * 60 * 1000)); // UTC+3 Türkiye saati
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Europe/Istanbul'
+  };
+  
+  const formatter = new Intl.DateTimeFormat('tr-TR', options);
+  return formatter.format(turkishDate);
+}
+
 // Metni belirli uzunlukta kısaltma fonksiyonu
 function truncateText(text, maxLength = 1000) {
   if (!text) return 'Bilgi yok';
@@ -59,8 +75,7 @@ module.exports = {
         .addField('📆 Hesap Oluşturulma', `<t:${Math.floor(target.user.createdTimestamp / 1000)}:F>\n(<t:${Math.floor(target.user.createdTimestamp / 1000)}:R>)`, true)
         .addField('🚪 Sunucuya Katılma', `<t:${Math.floor(target.joinedTimestamp / 1000)}:F>\n(<t:${Math.floor(target.joinedTimestamp / 1000)}:R>)`, true)
         .addField('📝 Şu Anki İsim', target.displayName, false)
-        .setFooter({ text: '⚽ Apex Voucher • Kullanıcı Geçmişi' })
-        .setTimestamp();
+        .setFooter({ text: `⚽ Apex Voucher • Kullanıcı Geçmişi • ${formatTurkishDate(new Date())}` });
 
       // Add current roles
       const roles = target.roles.cache

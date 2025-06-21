@@ -1,6 +1,22 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const db = require('../utils/database');
 
+// Türkçe tarih formatı için yardımcı fonksiyon
+function formatTurkishDate(date) {
+  const turkishDate = new Date(date.getTime() + (3 * 60 * 60 * 1000)); // UTC+3 Türkiye saati
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Europe/Istanbul'
+  };
+  
+  const formatter = new Intl.DateTimeFormat('tr-TR', options);
+  return formatter.format(turkishDate);
+}
+
 module.exports = {
   name: 'top',
   description: 'En çok kayıt yapan yetkililerin sıralamasını gösterir',
@@ -11,6 +27,11 @@ module.exports = {
     
     if (!settings) {
       return message.reply('❓ Kayıt sistemi kurulmamış! Lütfen önce `.kayıtkur` komutunu kullanın.');
+    }
+    
+    // Check if user has permission to use this command
+    if (settings.yetkiliRole && !message.member.roles.cache.has(settings.yetkiliRole) && !message.member.permissions.has(8n)) {
+      return message.reply('🚫 Bu komutu kullanmak için yetkili olmalısınız!');
     }
     
     try {
@@ -109,8 +130,7 @@ module.exports = {
         .setTitle('⚽ Futbol Kayıt Sıralaması')
         .setColor('#f39c12')
         .setThumbnail(message.guild.iconURL({ dynamic: true }))
-        .setFooter({ text: `Apex Voucher • Sayfa ${currentPage + 1}/${totalPages}` })
-        .setTimestamp();
+        .setFooter({ text: `Apex Voucher • Sayfa ${currentPage + 1}/${totalPages} • ${formatTurkishDate(new Date())}` })
       
       // Format the leaderboard with medals and role breakdown
       let leaderboard = '';

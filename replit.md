@@ -142,6 +142,9 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 20, 2025. Combined welcome greeting into main embed instead of separate message for cleaner single-embed welcome format
 - June 20, 2025. Added server logo as main image in welcome embed for enhanced visual branding
 - June 21, 2025. Added 3-second delay to welcome message after registration to allow Discord time to update user nickname before sending welcome message
+- June 21, 2025. Added authorization checks to .top, .topsira, .kayitsayi, and .gecmis commands - only authorized staff can view statistics
+- June 21, 2025. Implemented Turkish date/time formatting across all statistics commands using Europe/Istanbul timezone
+- June 21, 2025. Updated all command footers to display Turkish formatted timestamps instead of Discord's default timestamp format
 
 ## User Preferences
 

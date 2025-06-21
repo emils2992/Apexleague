@@ -1,6 +1,22 @@
 const { MessageEmbed } = require('discord.js');
 const db = require('../utils/database');
 
+// Türkçe tarih formatı için yardımcı fonksiyon
+function formatTurkishDate(date) {
+  const turkishDate = new Date(date.getTime() + (3 * 60 * 60 * 1000)); // UTC+3 Türkiye saati
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Europe/Istanbul'
+  };
+  
+  const formatter = new Intl.DateTimeFormat('tr-TR', options);
+  return formatter.format(turkishDate);
+}
+
 module.exports = {
   name: 'topsira',
   description: 'En çok kayıt yapan yetkililerin sıralamasını gösterir',
@@ -51,8 +67,7 @@ module.exports = {
         .setColor('#e74c3c')
         .setDescription('En çok kayıt yapan yetkililer:')
 
-        .setFooter({ text: 'Apex Voucher • Top Sıralama' })
-        .setTimestamp();
+        .setFooter({ text: `Apex Voucher • Top Sıralama • ${formatTurkishDate(new Date())}` });
       
       // Sıralamayı ekle
       let description = '';

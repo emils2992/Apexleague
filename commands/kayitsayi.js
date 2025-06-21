@@ -1,6 +1,22 @@
 const { MessageEmbed } = require('discord.js');
 const db = require('../utils/database');
 
+// Türkçe tarih formatı için yardımcı fonksiyon
+function formatTurkishDate(date) {
+  const turkishDate = new Date(date.getTime() + (3 * 60 * 60 * 1000)); // UTC+3 Türkiye saati
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Europe/Istanbul'
+  };
+  
+  const formatter = new Intl.DateTimeFormat('tr-TR', options);
+  return formatter.format(turkishDate);
+}
+
 module.exports = {
   name: 'kayitsayi',
   description: 'Belirtilen kullanıcının kayıt sayılarını rol bazında gösterir',
@@ -75,8 +91,7 @@ module.exports = {
         .setColor('#3498db')
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
         .setDescription(`**${target.user.tag}** kullanıcısının kayıt sayıları:`)
-        .setFooter({ text: 'Apex Voucher • Kayıt Sayıları' })
-        .setTimestamp();
+        .setFooter({ text: `Apex Voucher • Kayıt Sayıları • ${formatTurkishDate(new Date())}` });
       
       let statsText = '';
       let totalCount = 0;
