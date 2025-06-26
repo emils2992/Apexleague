@@ -272,11 +272,18 @@ module.exports = {
               guildSettings.welcomeChannel,
             );
             if (welcomeChannel) {
-              // Discord'un kullanıcı ismini güncellemesi için 1.5 saniye bekle
+              // Discord'un kullanıcı ismini güncellemesi için daha uzun süre bekle
+              // Mobil ve PC senkronizasyonu için 3 saniye gecikme
               setTimeout(async () => {
                 try {
                   // Kullanıcıyı yeniden fetch et (güncel isim için)
-                  const updatedMember = await interaction.guild.members.fetch(targetId);
+                  let updatedMember = await interaction.guild.members.fetch(targetId);
+                  
+                  // Eğer isim hala güncel değilse, 2 saniye daha bekle ve tekrar dene
+                  if (updatedMember.displayName === 'Kayıtsız' || updatedMember.displayName.includes('Kayıtsız')) {
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    updatedMember = await interaction.guild.members.fetch(targetId);
+                  }
                   
                   // Üst mesaj (quote formatında)
                   const topMessage = `> <@${updatedMember.id}> aramıza katıldı.`;
@@ -315,7 +322,7 @@ module.exports = {
                 } catch (delayedWelcomeError) {
                   console.error("Gecikmiş hoşgeldin mesajı gönderilemedi:", delayedWelcomeError);
                 }
-              }, 1500); // 1.5 saniye gecikme
+              }, 3000); // 3 saniye gecikme - mobil senkronizasyon için artırıldı
             }
           }
         } catch (logError) {
