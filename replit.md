@@ -159,7 +159,7 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 21, 2025. Removed duplicate large server logo from welcome message embed to prevent visual redundancy
 - June 21, 2025. Removed server icon from author section of welcome embed to eliminate all large logos
 - June 21, 2025. Removed all server icons from top command thumbnails and kayitkur footer to completely eliminate large logo displays
-- June 26, 2025. Enhanced welcome message synchronization for mobile platforms - increased delay from 1.5 to 3 seconds and added retry mechanism for name updates
+- June 26, 2025. Enhanced welcome message synchronization for mobile platforms - replaced time-based delays with user mention system for instant delivery and cross-platform compatibility
 
 ## User Preferences
 

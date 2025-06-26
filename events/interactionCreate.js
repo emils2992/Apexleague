@@ -266,43 +266,42 @@ module.exports = {
             }
           }
 
-          // Hoş geldin kanalına rol atama sonrası hoş geldin mesajı gönder
+          // Hoş geldin kanalına anında hoş geldin mesajı gönder
           if (guildSettings && guildSettings.welcomeChannel) {
             const welcomeChannel = interaction.guild.channels.cache.get(
               guildSettings.welcomeChannel,
             );
             if (welcomeChannel) {
+              // Hoşgeldin mesajını anında gönder (gecikme yok)
+              const topMessage = `> <@${targetId}> aramıza katıldı.`;
+
+              const mainEmbed = new MessageEmbed()
+                .setColor("#000000")
+                .setAuthor({
+                  name: `${interaction.guild.name} • Kayıt Yapıldı!`
+                })
+                .setThumbnail(
+                  targetMember.user.displayAvatarURL({
+                    dynamic: true,
+                    size: 128,
+                  }),
+                )
+                .setDescription(
+                  `<a:onay1:1385613791911219223> • ** <@${targetId}> aramıza** ${roleEmoji} **${roleName}** *rolüyle katıldı.*\n\n` +
+                    `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
+                    `> <@${interaction.user.id}>\n\n` +
+                    `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
+                    `> <@${targetId}>\n`,
+                )
+                .setFooter({
+                  text: "Apex Voucher Kayıt Sistemi",
+                  iconURL: interaction.client.user.displayAvatarURL({
+                    dynamic: true,
+                    size: 64,
+                  }),
+                });
+
               try {
-                // Üst mesaj (quote formatında) - etiket her zaman güncel ismi gösterir
-                const topMessage = `> <@${targetId}> aramıza katıldı.`;
-
-                // Ana embed (siyah renkte)
-                const mainEmbed = new MessageEmbed()
-                  .setColor("#000000") // Siyah renk
-                  .setAuthor({
-                    name: `${interaction.guild.name} • Kayıt Yapıldı!`
-                  }) // Sol üst sunucu ismi (logo olmadan)
-                  .setThumbnail(
-                    targetMember.user.displayAvatarURL({
-                      dynamic: true,
-                      size: 128,
-                    }),
-                  ) // Sağ taraf kullanıcı profili
-                  .setDescription(
-                    `<a:onay1:1385613791911219223> • ** <@${targetId}> aramıza** ${roleEmoji} **${roleName}** *rolüyle katıldı.*\n\n` +
-                      `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
-                      `> <@${interaction.user.id}>\n\n` +
-                      `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
-                      `> <@${targetId}>\n`,
-                  )
-                  .setFooter({
-                    text: "Apex Voucher Kayıt Sistemi",
-                    iconURL: interaction.client.user.displayAvatarURL({
-                      dynamic: true,
-                      size: 64,
-                    }),
-                  }); // Alt sol bot profili
-
                 await welcomeChannel.send({
                   content: topMessage,
                   embeds: [mainEmbed],
