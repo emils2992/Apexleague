@@ -80,11 +80,9 @@ module.exports = {
             roleColor = "#e74c3c"; // Red
             break;
           case "taraftar":
-            roleId = settings.taraftarRole;
-            roleName = "Taraftar";
-            roleEmoji = "<:taraftar:1385549312607387738>";
-            roleColor = "#9b59b6"; // Purple
-            break;
+            // Show team selection instead of directly assigning taraftar role
+            await showTeamSelection(interaction, targetMember, settings);
+            return;
           case "bayan":
             roleId = settings.bayanUyeRole;
             roleName = "Bayan Üye";
@@ -324,6 +322,12 @@ module.exports = {
     // Handle position selection interactions
     if (interaction.customId.startsWith("position_")) {
       await handlePositionSelection(interaction, client);
+      return;
+    }
+
+    // Handle team selection interactions
+    if (interaction.customId.startsWith("team_")) {
+      await handleTeamSelection(interaction, client);
       return;
     }
   },
@@ -632,5 +636,188 @@ async function sendRoleAssignmentLogs(interaction, targetMember, roleName, role,
     }
   } catch (logError) {
     console.error("Log mesajı gönderilemedi:", logError);
+  }
+}
+
+// Function to show team selection buttons
+async function showTeamSelection(interaction, targetMember, settings) {
+  const teams = [
+    { key: 'everton', name: 'Everton', emoji: '🔵' },
+    { key: 'arsenal', name: 'Arsenal', emoji: '🔴' },
+    { key: 'liverpool', name: 'Liverpool', emoji: '🔴' },
+    { key: 'city', name: 'Manchester City', emoji: '🔵' },
+    { key: 'realmadrid', name: 'Real Madrid', emoji: '⚪' },
+    { key: 'psg', name: 'PSG', emoji: '🔴' },
+    { key: 'barcelona', name: 'Barcelona', emoji: '🔴' },
+    { key: 'leverkusen', name: 'Bayer Leverkusen', emoji: '🔴' }
+  ];
+
+  // Create buttons for teams (max 4 per row, 2 rows = 8 teams)
+  const buttonRows = [];
+  const buttonsPerRow = 4;
+  
+  for (let i = 0; i < teams.length; i += buttonsPerRow) {
+    const rowTeams = teams.slice(i, i + buttonsPerRow);
+    const row = new MessageActionRow();
+    
+    for (const team of rowTeams) {
+      const button = new MessageButton()
+        .setCustomId(`team_${team.key}_${targetMember.id}`)
+        .setLabel(team.name)
+        .setEmoji(team.emoji)
+        .setStyle('SECONDARY');
+      
+      row.addComponents(button);
+    }
+    
+    buttonRows.push(row);
+  }
+
+  const teamEmbed = new MessageEmbed()
+    .setColor('#9b59b6')
+    .setTitle('<:taraftar:1385549312607387738> Taraftar Takım Seçimi')
+    .setDescription(`**${targetMember.displayName}** için desteklediği takımı seçin!`)
+    .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
+    .addFields(
+      { name: '🆔 Kullanıcı', value: `<@${targetMember.id}>`, inline: true },
+      { name: '📝 Kayıt Eden', value: `<@${interaction.user.id}>`, inline: true },
+      { name: '⏰ Kayıt Zamanı', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
+    )
+    .setFooter({ text: 'Apex Voucher • Taraftar Takım Seçimi' })
+    .setTimestamp();
+
+  await interaction.editReply({
+    embeds: [teamEmbed],
+    components: buttonRows
+  });
+}
+
+// Function to handle team selection
+async function handleTeamSelection(interaction, client) {
+  const parts = interaction.customId.split("_");
+  const teamKey = parts[1];
+  const targetId = parts[2];
+  
+  const guildId = interaction.guild.id;
+  const settings = await db.getGuildSettings(guildId);
+  
+  if (!settings) {
+    return interaction.reply({
+      content: "❓ Kayıt sistemi kurulmamış!",
+      ephemeral: true,
+    });
+  }
+
+  const targetMember = await interaction.guild.members.fetch(targetId).catch(() => null);
+  if (!targetMember) {
+    return interaction.reply({
+      content: "❌ Kullanıcı bulunamadı!",
+      ephemeral: true,
+    });
+  }
+
+  // Check permissions
+  if (
+    settings.yetkiliRole &&
+    !interaction.member.roles.cache.has(settings.yetkiliRole) &&
+    !interaction.member.permissions.has(8n)
+  ) {
+    return interaction.reply({
+      content: "🚫 Bu butonu kullanmak için yetkili olmalısınız!",
+      ephemeral: true,
+    });
+  }
+
+  await interaction.deferUpdate();
+
+  // Team data mapping
+  const teamData = {
+    'everton': { name: 'Everton', emoji: '🔵' },
+    'arsenal': { name: 'Arsenal', emoji: '🔴' },
+    'liverpool': { name: 'Liverpool', emoji: '🔴' },
+    'city': { name: 'Manchester City', emoji: '🔵' },
+    'realmadrid': { name: 'Real Madrid', emoji: '⚪' },
+    'psg': { name: 'PSG', emoji: '🔴' },
+    'barcelona': { name: 'Barcelona', emoji: '🔴' },
+    'leverkusen': { name: 'Bayer Leverkusen', emoji: '🔴' }
+  };
+
+  const team = teamData[teamKey];
+  if (!team) {
+    return interaction.editReply({
+      content: "❌ Geçersiz takım seçimi!",
+      components: []
+    });
+  }
+
+  // Get the main taraftar role
+  const taraftarRole = settings.taraftarRole ? interaction.guild.roles.cache.get(settings.taraftarRole) : null;
+  if (!taraftarRole) {
+    return interaction.editReply({
+      content: "❌ Taraftar rolü ayarlanmamış!",
+      components: []
+    });
+  }
+
+  try {
+    const rolePromises = [];
+    
+    // Add main taraftar role
+    rolePromises.push(
+      targetMember.roles.add(taraftarRole).catch((error) => {
+        console.error(`Taraftar rolü verme hatası: ${error}`);
+        throw error;
+      })
+    );
+
+    // Add üye role if configured
+    if (settings.uyeRole && settings.autoAssignUyeRole) {
+      const uyeRole = interaction.guild.roles.cache.get(settings.uyeRole);
+      if (uyeRole && !targetMember.roles.cache.has(uyeRole.id)) {
+        rolePromises.push(
+          targetMember.roles.add(uyeRole).catch((uyeRoleError) => {
+            console.error(`Üye rolü verme hatası: ${uyeRoleError}`);
+          })
+        );
+      }
+    }
+
+    await Promise.allSettled(rolePromises);
+
+    // Update database
+    db.updateRegistrationRole(guildId, targetId, taraftarRole.id, `${team.emoji} ${team.name} Taraftarı`);
+
+    // Create success embed
+    const successEmbed = new MessageEmbed()
+      .setColor('#9b59b6')
+      .setTitle(`${team.emoji} Taraftar Takım Ataması Başarılı!`)
+      .setDescription(
+        `**${targetMember.displayName}** kullanıcısı **${team.emoji} ${team.name}** taraftarı olarak kayıt edildi!`
+      )
+      .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
+      .addField(
+        "<:uye:1385550973040066651> Kullanıcı",
+        `<@${targetMember.id}>`,
+        true
+      )
+      .addField("⚽ Desteklediği Takım", `${team.emoji} ${team.name}`, true)
+      .addField("👮 İşlemi Yapan", `<@${interaction.user.id}>`, true)
+      .setFooter({ text: "Apex Voucher • Taraftar Takım Ataması" })
+      .setTimestamp();
+
+    await interaction.editReply({
+      embeds: [successEmbed],
+      components: []
+    });
+
+    // Send logs and welcome messages
+    await sendRoleAssignmentLogs(interaction, targetMember, `<:taraftar:1385549312607387738> ${team.emoji} ${team.name} Taraftarı`, taraftarRole, settings, '#9b59b6');
+
+  } catch (error) {
+    console.error("Team role assignment error:", error);
+    return interaction.editReply({
+      content: "❌ Takım rolü verme işlemi sırasında bir hata oluştu!",
+      components: []
+    });
   }
 }
