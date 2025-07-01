@@ -303,8 +303,8 @@ module.exports = {
                   embeds: [mainEmbed],
                 });
 
-                // 2 saniye sonra mesajı güncelle (nickname değişikliği için)
-                setTimeout(async () => {
+                // Mesajı sürekli güncelle (nickname değişikliği için)
+                const updateWelcomeMessage = async (attempt = 1) => {
                   try {
                     const updatedMember = await interaction.guild.members.fetch(targetId);
                     const updatedEmbed = new MessageEmbed()
@@ -337,10 +337,18 @@ module.exports = {
                       content: topMessage,
                       embeds: [updatedEmbed],
                     });
+
+                    // 5 denemeye kadar tekrar güncelle
+                    if (attempt < 5) {
+                      setTimeout(() => updateWelcomeMessage(attempt + 1), 2000);
+                    }
                   } catch (updateError) {
-                    console.error("Hoşgeldin mesajı güncellenemedi:", updateError);
+                    console.error(`Hoşgeldin mesajı güncellenemedi (deneme ${attempt}):`, updateError);
                   }
-                }, 2000);
+                };
+
+                // İlk güncellemeyi 2 saniye sonra başlat
+                setTimeout(() => updateWelcomeMessage(), 2000);
               } catch (welcomeError) {
                 console.error("Hoşgeldin mesajı gönderilemedi:", welcomeError);
               }
@@ -670,8 +678,8 @@ async function sendRoleAssignmentLogs(interaction, targetMember, roleName, role,
             embeds: [mainEmbed],
           });
 
-          // 2 saniye sonra mesajı güncelle (nickname değişikliği için)
-          setTimeout(async () => {
+          // Mesajı sürekli güncelle (nickname değişikliği için)
+          const updateWelcomeMessage = async (attempt = 1) => {
             try {
               const updatedMember = await interaction.guild.members.fetch(targetId);
               const updatedEmbed = new MessageEmbed()
@@ -704,10 +712,18 @@ async function sendRoleAssignmentLogs(interaction, targetMember, roleName, role,
                 content: topMessage,
                 embeds: [updatedEmbed],
               });
+
+              // 5 denemeye kadar tekrar güncelle
+              if (attempt < 5) {
+                setTimeout(() => updateWelcomeMessage(attempt + 1), 2000);
+              }
             } catch (updateError) {
-              console.error("Hoşgeldin mesajı güncellenemedi:", updateError);
+              console.error(`Hoşgeldin mesajı güncellenemedi (deneme ${attempt}):`, updateError);
             }
-          }, 2000);
+          };
+
+          // İlk güncellemeyi 2 saniye sonra başlat  
+          setTimeout(() => updateWelcomeMessage(), 2000);
         } catch (welcomeError) {
           console.error("Hoşgeldin mesajı gönderilemedi:", welcomeError);
         }
