@@ -115,7 +115,8 @@ module.exports = {
           label: 'Futbolcu',
           style: 'PRIMARY', // Mavi
           roleId: settings.futbolcuRole,
-          emoji: '<:futbolcu:1385547729215819906>'
+          emoji: '<:futbolcu:1385547729215819906>',
+          showPositions: true // Bu buton pozisyon seçimi açacak
         });
       }
       

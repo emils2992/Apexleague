@@ -58,16 +58,17 @@ module.exports = {
       `1️⃣ Kayıtsız Rolü
       2️⃣ Yetkili Rolü
       3️⃣ Futbolcu Rolü
-      4️⃣ Taraftar Rolü
-      5️⃣ Bayan Üye Rolü
-      6️⃣ Teknik Direktör Rolü
-      7️⃣ Başkan Rolü
-      8️⃣ Partner Rolü
-      9️⃣ Üye Rolü (Otomatik Atama)
-      🔟 Hoş Geldin Kanalı
-      1️⃣1️⃣ Giriş Log Kanalı
-      1️⃣2️⃣ Genel Log Kanalı
-      1️⃣3️⃣ Otomatik İsim Ayarı`)
+      4️⃣ Futbolcu Mevkileri (SNT, OF, SLK, SĞK, MOO, MO, MDO, SĞB, SLB, STP, KL)
+      5️⃣ Taraftar Rolü
+      6️⃣ Bayan Üye Rolü
+      7️⃣ Teknik Direktör Rolü
+      8️⃣ Başkan Rolü
+      9️⃣ Partner Rolü
+      🔟 Üye Rolü (Otomatik Atama)
+      1️⃣1️⃣ Hoş Geldin Kanalı
+      1️⃣2️⃣ Giriş Log Kanalı
+      1️⃣3️⃣ Genel Log Kanalı
+      1️⃣4️⃣ Otomatik İsim Ayarı`)
       .setFooter({ text: 'Futbol Kayıt Sistemi • Kurulum' })
       .setTimestamp();
     
@@ -182,8 +183,66 @@ module.exports = {
       return message.channel.send('⏱️ Zaman aşımı! Kurulum iptal edildi.');
     }
     
+    // Futbolcu Position Roles Setup
+    const positionRoles = {};
+    const positions = [
+      { key: 'snt', name: 'Santrafor', emoji: '⚽' },
+      { key: 'of', name: 'Ofansif Orta Saha', emoji: '🎯' },
+      { key: 'slk', name: 'Sol Kanat', emoji: '⬅️' },
+      { key: 'sgk', name: 'Sağ Kanat', emoji: '➡️' },
+      { key: 'moo', name: 'Merkez Orta Saha', emoji: '🎪' },
+      { key: 'mo', name: 'Merkez Orta', emoji: '🎯' },
+      { key: 'mdo', name: 'Merkez Defansif Orta Saha', emoji: '🛡️' },
+      { key: 'sgb', name: 'Sağ Bek', emoji: '🔙' },
+      { key: 'slb', name: 'Sol Bek', emoji: '🔙' },
+      { key: 'stp', name: 'Stoper', emoji: '🛡️' },
+      { key: 'kl', name: 'Kaleci', emoji: '🥅' }
+    ];
+    
+    await message.channel.send('4️⃣ **Futbolcu Mevkileri Kurulumu**\nHer mevki için rol ayarlayacağız. Her adımda "oluştur", rol etiketleme veya "geç" yazabilirsiniz.');
+    
+    for (const position of positions) {
+      const posMsg = await message.channel.send(`${position.emoji} **${position.name}** rolünü etiketleyin, "oluştur" yazarak yeni rol oluşturun veya "geç" yazın:`);
+      
+      try {
+        const collected = await message.channel.awaitMessages({
+          filter: m => m.author.id === message.author.id,
+          max: 1,
+          time: 30000,
+          errors: ['time']
+        });
+        
+        const response = collected.first();
+        
+        if (response.content.toLowerCase() === 'geç') {
+          await message.channel.send(`✅ ${position.name} rolü atlandı.`);
+          positionRoles[position.key] = null;
+        } else if (response.content.toLowerCase() === 'oluştur') {
+          const newRole = await message.guild.roles.create({
+            name: `${position.emoji} ${position.name}`,
+            color: 'BLUE',
+            reason: 'Futbolcu mevki rolü kurulumu'
+          });
+          positionRoles[position.key] = newRole.id;
+          await message.channel.send(`✅ '${position.emoji} ${position.name}' rolü oluşturuldu!`);
+        } else {
+          const mentionedRole = response.mentions.roles.first();
+          if (!mentionedRole) {
+            await message.channel.send('⚠️ Geçerli bir rol etiketlenmedi, bu mevki atlandı.');
+            positionRoles[position.key] = null;
+          } else {
+            positionRoles[position.key] = mentionedRole.id;
+            await message.channel.send(`✅ ${mentionedRole} rolü ${position.name} olarak ayarlandı!`);
+          }
+        }
+      } catch (error) {
+        await message.channel.send(`⏱️ ${position.name} için zaman aşımı! Bu mevki atlandı.`);
+        positionRoles[position.key] = null;
+      }
+    }
+    
     // Taraftar role
-    const taraftarMsg = await message.channel.send('4️⃣ Lütfen "Taraftar" rolünü etiketleyin, "oluştur" yazarak yeni bir rol oluşturun veya "geç" yazarak bu adımı atlayın:');
+    const taraftarMsg = await message.channel.send('5️⃣ Lütfen "Taraftar" rolünü etiketleyin, "oluştur" yazarak yeni bir rol oluşturun veya "geç" yazarak bu adımı atlayın:');
     let taraftarRole;
     
     try {
@@ -219,7 +278,7 @@ module.exports = {
     }
     
     // Bayan Üye role
-    const bayanMsg = await message.channel.send('5️⃣ Lütfen "Bayan Üye" rolünü etiketleyin, "oluştur" yazarak yeni bir rol oluşturun veya "geç" yazarak bu adımı atlayın:');
+    const bayanMsg = await message.channel.send('6️⃣ Lütfen "Bayan Üye" rolünü etiketleyin, "oluştur" yazarak yeni bir rol oluşturun veya "geç" yazarak bu adımı atlayın:');
     let bayanRole;
     
     try {
@@ -255,7 +314,7 @@ module.exports = {
     }
     
     // Similar process for other roles
-    const tdMsg = await message.channel.send('6️⃣ Lütfen "Teknik Direktör" rolünü etiketleyin, "oluştur" yazarak yeni bir rol oluşturun veya "geç" yazarak bu adımı atlayın:');
+    const tdMsg = await message.channel.send('7️⃣ Lütfen "Teknik Direktör" rolünü etiketleyin, "oluştur" yazarak yeni bir rol oluşturun veya "geç" yazarak bu adımı atlayın:');
     let tdRole;
     
     try {
@@ -291,7 +350,7 @@ module.exports = {
     }
     
     // Başkan role
-    const baskanMsg = await message.channel.send('7️⃣ Lütfen "Başkan" rolünü etiketleyin, "oluştur" yazarak yeni bir rol oluşturun veya "geç" yazarak bu adımı atlayın:');
+    const baskanMsg = await message.channel.send('8️⃣ Lütfen "Başkan" rolünü etiketleyin, "oluştur" yazarak yeni bir rol oluşturun veya "geç" yazarak bu adımı atlayın:');
     let baskanRole;
     
     try {
@@ -327,7 +386,7 @@ module.exports = {
     }
     
     // Partner role
-    const partnerMsg = await message.channel.send('8️⃣ Lütfen "Partner" rolünü etiketleyin, "oluştur" yazarak yeni bir rol oluşturun veya "geç" yazarak bu adımı atlayın:');
+    const partnerMsg = await message.channel.send('9️⃣ Lütfen "Partner" rolünü etiketleyin, "oluştur" yazarak yeni bir rol oluşturun veya "geç" yazarak bu adımı atlayın:');
     let partnerRole;
     
     try {
@@ -363,7 +422,7 @@ module.exports = {
     }
     
     // Ask for üye role
-    const uyeRoleMsg = await message.channel.send('9️⃣ Lütfen kayıt edilen kullanıcılara otomatik olarak atanacak "Üye" rolünü etiketleyin (veya "geç" yazın):');
+    const uyeRoleMsg = await message.channel.send('🔟 Lütfen kayıt edilen kullanıcılara otomatik olarak atanacak "Üye" rolünü etiketleyin (veya "geç" yazın):');
     let uyeRole = null;
     let autoAssignUyeRole = false;
     
@@ -527,6 +586,18 @@ module.exports = {
       kayitsizRole: kayitsizRole ? kayitsizRole.id : null,
       yetkiliRole: yetkiliRole ? yetkiliRole.id : null,
       futbolcuRole: futbolcuRole ? futbolcuRole.id : null,
+      // Position roles
+      sntRole: positionRoles.snt,
+      ofRole: positionRoles.of,
+      slkRole: positionRoles.slk,
+      sgkRole: positionRoles.sgk,
+      mooRole: positionRoles.moo,
+      moRole: positionRoles.mo,
+      mdoRole: positionRoles.mdo,
+      sgbRole: positionRoles.sgb,
+      slbRole: positionRoles.slb,
+      stpRole: positionRoles.stp,
+      klRole: positionRoles.kl,
       taraftarRole: taraftarRole ? taraftarRole.id : null,
       bayanUyeRole: bayanRole ? bayanRole.id : null, // Veritabanında bayanUyeRole olarak kaydediyoruz
       teknikDirektorRole: tdRole ? tdRole.id : null, // Veritabanında teknikDirektorRole olarak kaydediyoruz

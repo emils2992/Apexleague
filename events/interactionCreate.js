@@ -1,5 +1,5 @@
 const db = require("../utils/database");
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, MessageActionRow, MessageButton } = require("discord.js");
 
 module.exports = {
   name: "interactionCreate",
@@ -63,11 +63,9 @@ module.exports = {
         // Determine which role to assign with emojis and colors
         switch (roleType) {
           case "futbolcu":
-            roleId = settings.futbolcuRole;
-            roleName = "Futbolcu";
-            roleEmoji = "<:futbolcu:1385547729215819906>";
-            roleColor = "#3498db"; // Blue
-            break;
+            // Show position selection instead of directly assigning futbolcu role
+            await showPositionSelection(interaction, targetMember, settings);
+            return;
           case "teknikdirektor":
           case "tekdir":
             roleId = settings.teknikDirektorRole;
@@ -322,5 +320,317 @@ module.exports = {
         });
       }
     }
+
+    // Handle position selection interactions
+    if (interaction.customId.startsWith("position_")) {
+      await handlePositionSelection(interaction, client);
+      return;
+    }
   },
 };
+
+// Function to show position selection buttons
+async function showPositionSelection(interaction, targetMember, settings) {
+  const positions = [
+    { key: 'snt', name: 'Santrafor', emoji: '⚽', roleId: settings.sntRole },
+    { key: 'of', name: 'Ofansif Orta Saha', emoji: '🎯', roleId: settings.ofRole },
+    { key: 'slk', name: 'Sol Kanat', emoji: '⬅️', roleId: settings.slkRole },
+    { key: 'sgk', name: 'Sağ Kanat', emoji: '➡️', roleId: settings.sgkRole },
+    { key: 'moo', name: 'Merkez Orta Saha', emoji: '🎪', roleId: settings.mooRole },
+    { key: 'mo', name: 'Merkez Orta', emoji: '🎯', roleId: settings.moRole },
+    { key: 'mdo', name: 'Merkez Defansif Orta Saha', emoji: '🛡️', roleId: settings.mdoRole },
+    { key: 'sgb', name: 'Sağ Bek', emoji: '🔙', roleId: settings.sgbRole },
+    { key: 'slb', name: 'Sol Bek', emoji: '🔙', roleId: settings.slbRole },
+    { key: 'stp', name: 'Stoper', emoji: '🛡️', roleId: settings.stpRole },
+    { key: 'kl', name: 'Kaleci', emoji: '🥅', roleId: settings.klRole }
+  ];
+
+  // Filter only available positions (those that have roles set)
+  const availablePositions = positions.filter(pos => pos.roleId);
+
+  if (availablePositions.length === 0) {
+    await interaction.editReply({
+      content: '❌ Hiç futbolcu mevki rolü ayarlanmamış! Lütfen `.kayitkur` komutunu kullanarak mevki rollerini ayarlayın.',
+      components: []
+    });
+    return;
+  }
+
+  // Create buttons for positions (max 5 per row, max 3 rows = 15 positions)
+  const buttonRows = [];
+  const buttonsPerRow = 5;
+  
+  for (let i = 0; i < availablePositions.length; i += buttonsPerRow) {
+    const rowPositions = availablePositions.slice(i, i + buttonsPerRow);
+    const row = new MessageActionRow();
+    
+    for (const position of rowPositions) {
+      const button = new MessageButton()
+        .setCustomId(`position_${position.key}_${targetMember.id}`)
+        .setLabel(position.name)
+        .setEmoji(position.emoji)
+        .setStyle('SECONDARY');
+      
+      row.addComponents(button);
+    }
+    
+    buttonRows.push(row);
+    
+    // Max 3 rows (15 buttons total)
+    if (buttonRows.length >= 3) break;
+  }
+
+  const positionEmbed = new MessageEmbed()
+    .setColor('#3498db')
+    .setTitle('⚽ Futbolcu Mevki Seçimi')
+    .setDescription(`**${targetMember.displayName}** için bir mevki seçin!`)
+    .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
+    .addFields(
+      { name: '🆔 Kullanıcı', value: `<@${targetMember.id}>`, inline: true },
+      { name: '📝 Kayıt Eden', value: `<@${interaction.user.id}>`, inline: true },
+      { name: '⏰ Kayıt Zamanı', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
+    )
+    .setFooter({ text: 'Apex Voucher • Futbolcu Mevki Seçimi' })
+    .setTimestamp();
+
+  await interaction.editReply({
+    embeds: [positionEmbed],
+    components: buttonRows
+  });
+}
+
+// Function to handle position selection
+async function handlePositionSelection(interaction, client) {
+  const parts = interaction.customId.split("_");
+  const positionKey = parts[1];
+  const targetId = parts[2];
+  
+  const guildId = interaction.guild.id;
+  const settings = await db.getGuildSettings(guildId);
+  
+  if (!settings) {
+    return interaction.reply({
+      content: "❓ Kayıt sistemi kurulmamış!",
+      ephemeral: true,
+    });
+  }
+
+  const targetMember = await interaction.guild.members.fetch(targetId).catch(() => null);
+  if (!targetMember) {
+    return interaction.reply({
+      content: "❌ Kullanıcı bulunamadı!",
+      ephemeral: true,
+    });
+  }
+
+  // Check permissions
+  if (
+    settings.yetkiliRole &&
+    !interaction.member.roles.cache.has(settings.yetkiliRole) &&
+    !interaction.member.permissions.has(8n)
+  ) {
+    return interaction.reply({
+      content: "🚫 Bu butonu kullanmak için yetkili olmalısınız!",
+      ephemeral: true,
+    });
+  }
+
+  await interaction.deferUpdate();
+
+  // Position data mapping
+  const positionData = {
+    'snt': { name: 'Santrafor', emoji: '⚽', roleId: settings.sntRole },
+    'of': { name: 'Ofansif Orta Saha', emoji: '🎯', roleId: settings.ofRole },
+    'slk': { name: 'Sol Kanat', emoji: '⬅️', roleId: settings.slkRole },
+    'sgk': { name: 'Sağ Kanat', emoji: '➡️', roleId: settings.sgkRole },
+    'moo': { name: 'Merkez Orta Saha', emoji: '🎪', roleId: settings.mooRole },
+    'mo': { name: 'Merkez Orta', emoji: '🎯', roleId: settings.moRole },
+    'mdo': { name: 'Merkez Defansif Orta Saha', emoji: '🛡️', roleId: settings.mdoRole },
+    'sgb': { name: 'Sağ Bek', emoji: '🔙', roleId: settings.sgbRole },
+    'slb': { name: 'Sol Bek', emoji: '🔙', roleId: settings.slbRole },
+    'stp': { name: 'Stoper', emoji: '🛡️', roleId: settings.stpRole },
+    'kl': { name: 'Kaleci', emoji: '🥅', roleId: settings.klRole }
+  };
+
+  const position = positionData[positionKey];
+  if (!position || !position.roleId) {
+    return interaction.editReply({
+      content: `❓ ${positionKey.toUpperCase()} mevki rolü ayarlanmamış!`,
+      components: []
+    });
+  }
+
+  const positionRole = interaction.guild.roles.cache.get(position.roleId);
+  if (!positionRole) {
+    return interaction.editReply({
+      content: `❓ ${position.name} rolü bulunamadı!`,
+      components: []
+    });
+  }
+
+  // Also get the main futbolcu role
+  const futbolcuRole = settings.futbolcuRole ? interaction.guild.roles.cache.get(settings.futbolcuRole) : null;
+
+  try {
+    const rolePromises = [];
+    
+    // Add position role
+    rolePromises.push(
+      targetMember.roles.add(positionRole).catch((error) => {
+        console.error(`Mevki rolü verme hatası: ${error}`);
+        throw error;
+      })
+    );
+
+    // Add main futbolcu role if it exists
+    if (futbolcuRole && !targetMember.roles.cache.has(futbolcuRole.id)) {
+      rolePromises.push(
+        targetMember.roles.add(futbolcuRole).catch((error) => {
+          console.error(`Futbolcu rolü verme hatası: ${error}`);
+        })
+      );
+    }
+
+    // Add üye role if configured
+    if (settings.uyeRole && settings.autoAssignUyeRole) {
+      const uyeRole = interaction.guild.roles.cache.get(settings.uyeRole);
+      if (uyeRole && !targetMember.roles.cache.has(uyeRole.id)) {
+        rolePromises.push(
+          targetMember.roles.add(uyeRole).catch((uyeRoleError) => {
+            console.error(`Üye rolü verme hatası: ${uyeRoleError}`);
+          })
+        );
+      }
+    }
+
+    await Promise.allSettled(rolePromises);
+
+    // Update database
+    db.updateRegistrationRole(guildId, targetId, positionRole.id, `${position.name} (Futbolcu)`);
+
+    // Create success embed
+    const successEmbed = new MessageEmbed()
+      .setColor('#3498db')
+      .setTitle(`${position.emoji} Futbolcu Mevki Ataması Başarılı!`)
+      .setDescription(
+        `**${targetMember.displayName}** kullanıcısına **${position.emoji} ${position.name}** mevki rolü verildi!`
+      )
+      .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
+      .addField(
+        "<:uye:1385550973040066651> Kullanıcı",
+        `<@${targetMember.id}>`,
+        true
+      )
+      .addField("⚽ Verilen Mevki", `${position.emoji} <@&${positionRole.id}>`, true)
+      .addField("👮 İşlemi Yapan", `<@${interaction.user.id}>`, true)
+      .setFooter({ text: "Apex Voucher • Futbolcu Mevki Ataması" })
+      .setTimestamp();
+
+    await interaction.editReply({
+      embeds: [successEmbed],
+      components: []
+    });
+
+    // Send logs and welcome messages similar to other role assignments
+    await sendRoleAssignmentLogs(interaction, targetMember, `${position.emoji} ${position.name}`, positionRole, settings, '#3498db');
+
+  } catch (error) {
+    console.error("Position role assignment error:", error);
+    return interaction.editReply({
+      content: "❌ Mevki rolü verme işlemi sırasında bir hata oluştu!",
+      components: []
+    });
+  }
+}
+
+// Helper function for sending logs and welcome messages
+async function sendRoleAssignmentLogs(interaction, targetMember, roleName, role, settings, roleColor) {
+  const guildId = interaction.guild.id;
+  const targetId = targetMember.id;
+
+  try {
+    // Send DM to user
+    try {
+      const dmEmbed = new MessageEmbed()
+        .setColor(roleColor)
+        .setTitle("<a:hosgeldin:1385547269360713779> Rol Verildi!")
+        .setDescription(
+          `**${interaction.guild.name}** sunucusunda size **${roleName}** rolü verildi!`
+        )
+        .addField("💡 Bilgi", "Artık sunucuda daha fazla erişiminiz var!")
+        .setFooter({ text: "İyi eğlenceler!" });
+
+      await targetMember.send({ embeds: [dmEmbed] });
+    } catch (dmError) {
+      // DM fails silently
+    }
+
+    // Log channel message
+    if (settings.logChannel) {
+      const logChannel = interaction.guild.channels.cache.get(settings.logChannel);
+      if (logChannel) {
+        const logEmbed = new MessageEmbed()
+          .setTitle(`${roleName} Rol Ataması Yapıldı`)
+          .setColor(roleColor)
+          .setThumbnail(targetMember.user.displayAvatarURL({ dynamic: true }))
+          .setDescription(`**${targetMember.displayName}** kullanıcısına **${roleName}** rolü verildi.`)
+          .addField(
+            "<:uye:1385550973040066651> Kullanıcı",
+            `<@${targetMember.id}>`,
+            true
+          )
+          .addField("🛡️ Verilen Rol", `<@&${role.id}>`, true)
+          .addField("👮 İşlemi Yapan", `<@${interaction.user.id}>`, true)
+          .setFooter({ text: `⚽ Apex Voucher • Rol Atama` })
+          .setTimestamp();
+
+        await logChannel.send({ embeds: [logEmbed] });
+      }
+    }
+
+    // Welcome channel message
+    if (settings.welcomeChannel) {
+      const welcomeChannel = interaction.guild.channels.cache.get(settings.welcomeChannel);
+      if (welcomeChannel) {
+        const topMessage = `> <@${targetId}> aramıza katıldı.`;
+
+        const mainEmbed = new MessageEmbed()
+          .setColor("#000000")
+          .setAuthor({
+            name: `${interaction.guild.name} • Kayıt Yapıldı!`
+          })
+          .setThumbnail(
+            targetMember.user.displayAvatarURL({
+              dynamic: true,
+              size: 128,
+            })
+          )
+          .setDescription(
+            `<a:onay1:1385613791911219223> • ** <@${targetId}> aramıza** ${roleName} **mevkisiyle katıldı.*\n\n` +
+              `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
+              `> <@${interaction.user.id}>\n\n` +
+              `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
+              `> <@${targetId}>\n`
+          )
+          .setFooter({
+            text: "Apex Voucher Kayıt Sistemi",
+            iconURL: interaction.client.user.displayAvatarURL({
+              dynamic: true,
+              size: 64,
+            }),
+          });
+
+        try {
+          await welcomeChannel.send({
+            content: topMessage,
+            embeds: [mainEmbed],
+          });
+        } catch (welcomeError) {
+          console.error("Hoşgeldin mesajı gönderilemedi:", welcomeError);
+        }
+      }
+    }
+  } catch (logError) {
+    console.error("Log mesajı gönderilemedi:", logError);
+  }
+}

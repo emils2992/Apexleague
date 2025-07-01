@@ -160,6 +160,10 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - June 21, 2025. Removed server icon from author section of welcome embed to eliminate all large logos
 - June 21, 2025. Removed all server icons from top command thumbnails and kayitkur footer to completely eliminate large logo displays
 - June 26, 2025. Enhanced welcome message synchronization for mobile platforms - replaced time-based delays with user mention system for instant delivery and cross-platform compatibility
+- July 01, 2025. Implemented comprehensive football position system - added 11 position roles (SNT, OF, SLK, SĞK, MOO, MO, MDO, SĞB, SLB, STP, KL) to registration setup
+- July 01, 2025. Modified futbolcu registration flow - clicking "Futbolcu" button now shows position selection interface instead of direct role assignment
+- July 01, 2025. Enhanced setup system with position role configuration - each position can be created or assigned during kayitkur setup process
+- July 01, 2025. Integrated position roles into database schema and interaction handling for seamless role management
 
 ## User Preferences
 
