@@ -49,5 +49,22 @@
     "joinLogChannel": null,
     "logChannel": "1376132780181946381",
     "autoNickname": true
+  },
+  "1367535510460825680": {
+    "guildId": "1367535510460825680",
+    "kayitsizRole": "1378670824575209524",
+    "yetkiliRole": "1378670836227244173",
+    "futbolcuRole": "1378670846520066189",
+    "taraftarRole": "1378670857030729818",
+    "bayanUyeRole": null,
+    "teknikDirektorRole": "1378670900127465472",
+    "baskanRole": "1378670911045238815",
+    "partnerRole": "1378670921526808607",
+    "uyeRole": "1378670867457900544",
+    "autoAssignUyeRole": true,
+    "welcomeChannel": "1367535516412809218",
+    "joinLogChannel": "1378389996653772951",
+    "logChannel": "1369050176055939286",
+    "autoNickname": true
   }
 }
