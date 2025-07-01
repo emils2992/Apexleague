@@ -290,7 +290,7 @@ module.exports = {
                     `> <@${targetId}>\n`,
                 )
                 .setFooter({
-                  text: "Apex Voucher Kayıt Sistemi",
+                  text: `Apex Voucher • ${new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' })}`,
                   iconURL: interaction.client.user.displayAvatarURL({
                     dynamic: true,
                     size: 64,
@@ -617,7 +617,7 @@ async function sendRoleAssignmentLogs(interaction, targetMember, roleName, role,
               `> <@${targetId}>\n`
           )
           .setFooter({
-            text: "Apex Voucher Kayıt Sistemi",
+            text: `Apex Voucher • ${new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' })}`,
             iconURL: interaction.client.user.displayAvatarURL({
               dynamic: true,
               size: 64,

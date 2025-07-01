@@ -164,6 +164,7 @@ This is a Discord bot designed specifically for football (soccer) themed servers
 - July 01, 2025. Modified futbolcu registration flow - clicking "Futbolcu" button now shows position selection interface instead of direct role assignment
 - July 01, 2025. Enhanced setup system with position role configuration - each position can be created or assigned during kayitkur setup process
 - July 01, 2025. Integrated position roles into database schema and interaction handling for seamless role management
+- July 01, 2025. Updated welcome message embed footer to display dynamic timestamp with Turkish locale formatting instead of static "Apex Voucher Kayıt Sistemi" text
 
 ## User Preferences
 
