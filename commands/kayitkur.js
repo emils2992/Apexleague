@@ -242,7 +242,7 @@ module.exports = {
     }
     
     // Takım Taraftar rolleri
-    await message.channel.send('5️⃣ **Takım Taraftar Rolleri Kurulumu**\nHer takım için ayrı taraftar rolleri oluşturulacak. "oluştur" yazarak otomatik oluştur veya "geç" yazarak atla:');
+    await message.channel.send('5️⃣ **Takım Taraftar Rolleri Kurulumu**\nHer takım için mevcut rolleri seçeceğiz. "geç" yazarak bu adımı atlayabilirsiniz.');
     
     const teams = [
       { key: 'everton', name: 'Everton', emoji: '🔵', color: '#003f7f' },
@@ -258,46 +258,29 @@ module.exports = {
     let teamRoles = {};
     
     try {
-      const collected = await message.channel.awaitMessages({
+      const firstResponse = await message.channel.awaitMessages({
         filter: m => m.author.id === message.author.id,
         max: 1,
         time: 30000,
         errors: ['time']
       });
       
-      const response = collected.first();
+      const firstMsg = firstResponse.first();
       
-      if (response.content.toLowerCase() === 'geç') {
+      if (firstMsg.content.toLowerCase() === 'geç') {
         await message.channel.send('✅ Takım taraftar rolleri ayarlanmadı, bu adım atlandı.');
         teamRoles = {};
-      } else if (response.content.toLowerCase() === 'oluştur') {
-        await message.channel.send('⚡ Takım taraftar rolleri oluşturuluyor...');
-        
-        for (const team of teams) {
-          try {
-            const createdRole = await message.guild.roles.create({
-              name: `${team.emoji} ${team.name} Taraftarı`,
-              color: team.color,
-              reason: 'Takım taraftar rolleri kurulumu'
-            });
-            teamRoles[team.key] = createdRole.id;
-            await message.channel.send(`✅ '${team.emoji} ${team.name} Taraftarı' rolü oluşturuldu!`);
-          } catch (error) {
-            await message.channel.send(`❌ ${team.name} taraftar rolü oluşturulamadı: ${error.message}`);
-            teamRoles[team.key] = null;
-          }
-        }
       } else {
-        await message.channel.send('ℹ️ Takım rolleri manuel ayarlamak için her takımı sırayla soracağım...');
+        await message.channel.send('ℹ️ Her takım için rol seçimi yapacağız...');
         
         for (const team of teams) {
-          const teamMsg = await message.channel.send(`${team.emoji} **${team.name}** taraftar rolünü etiketleyin, "oluştur" yazın veya "geç" yazın:`);
+          const teamMsg = await message.channel.send(`${team.emoji} **${team.name}** taraftar rolünü etiketleyin veya "geç" yazın:`);
           
           try {
             const teamCollected = await message.channel.awaitMessages({
               filter: m => m.author.id === message.author.id,
               max: 1,
-              time: 15000,
+              time: 20000,
               errors: ['time']
             });
             
@@ -306,14 +289,6 @@ module.exports = {
             if (teamResponse.content.toLowerCase() === 'geç') {
               teamRoles[team.key] = null;
               await message.channel.send(`⏭️ ${team.name} taraftar rolü atlandı.`);
-            } else if (teamResponse.content.toLowerCase() === 'oluştur') {
-              const createdRole = await message.guild.roles.create({
-                name: `${team.emoji} ${team.name} Taraftarı`,
-                color: team.color,
-                reason: 'Takım taraftar rolleri kurulumu'
-              });
-              teamRoles[team.key] = createdRole.id;
-              await message.channel.send(`✅ '${team.emoji} ${team.name} Taraftarı' rolü oluşturuldu!`);
             } else {
               const mentionedRole = teamResponse.mentions.roles.first();
               if (mentionedRole) {
