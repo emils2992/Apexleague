@@ -59,7 +59,7 @@ module.exports = {
       2️⃣ Yetkili Rolü
       3️⃣ Futbolcu Rolü
       4️⃣ Futbolcu Mevkileri (SNT, OF, SLK, SĞK, MOO, MO, MDO, SĞB, SLB, STP, KL)
-      5️⃣ Taraftar Rolü
+      5️⃣ Takım Taraftar Rolleri (Everton, Arsenal, Liverpool vb.)
       6️⃣ Bayan Üye Rolü
       7️⃣ Teknik Direktör Rolü
       8️⃣ Başkan Rolü

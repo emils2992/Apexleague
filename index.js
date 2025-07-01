@@ -7,7 +7,8 @@ const { Client, Collection } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
-require('dotenv').config();
+// .env dosyası Replit'te gerekli değil, environment variables doğrudan kullanılır
+// require('dotenv').config();
 
 // ========== GLITCH WEB SERVER ==========
 // Glitch projelerinde, dışarıdan erişilebilir bir web sunucusu gereklidir
