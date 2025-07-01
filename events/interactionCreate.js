@@ -255,7 +255,7 @@ module.exports = {
                 )
                 .addField("🛡️ Verilen Rol", `${roleEmoji} <@&${role.id}>`, true)
                 .addField("👮 İşlemi Yapan", `<@${interaction.user.id}>`, true)
-                .setFooter({ text: `⚽ Apex Voucher • Rol Atama` })
+                .setFooter({ text: `⚽ Epic League Registration • Rol Atama` })
                 .setTimestamp();
 
               await logChannel.send({ embeds: [logEmbed] });
@@ -441,7 +441,7 @@ async function showPositionSelection(interaction, targetMember, settings) {
       { name: '📝 Kayıt Eden', value: `<@${interaction.user.id}>`, inline: true },
       { name: '⏰ Kayıt Zamanı', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
     )
-    .setFooter({ text: 'Apex Voucher • Futbolcu Mevki Seçimi' })
+    .setFooter({ text: 'Epic League Registration • Futbolcu Mevki Seçimi' })
     .setTimestamp();
 
   await interaction.editReply({
@@ -574,7 +574,7 @@ async function handlePositionSelection(interaction, client) {
       )
       .addField("⚽ Verilen Mevki", `${position.emoji} <@&${positionRole.id}>`, true)
       .addField("👮 İşlemi Yapan", `<@${interaction.user.id}>`, true)
-      .setFooter({ text: "Apex Voucher • Futbolcu Mevki Ataması" })
+      .setFooter({ text: "Epic League Registration • Futbolcu Mevki Ataması" })
       .setTimestamp();
 
     await interaction.editReply({
@@ -632,7 +632,7 @@ async function sendRoleAssignmentLogs(interaction, targetMember, roleName, role,
           )
           .addField("🛡️ Verilen Rol", `<@&${role.id}>`, true)
           .addField("👮 İşlemi Yapan", `<@${interaction.user.id}>`, true)
-          .setFooter({ text: `⚽ Apex Voucher • Rol Atama` })
+          .setFooter({ text: `⚽ Epic League Registration • Rol Atama` })
           .setTimestamp();
 
         await logChannel.send({ embeds: [logEmbed] });
@@ -664,7 +664,7 @@ async function sendRoleAssignmentLogs(interaction, targetMember, roleName, role,
               `> <@${targetId}>\n`
           )
           .setFooter({
-            text: `Apex Voucher • ${new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' })}`,
+            text: `Epic League Registration • ${new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' })}`,
             iconURL: interaction.client.user.displayAvatarURL({
               dynamic: true,
               size: 64,
@@ -778,7 +778,7 @@ async function showTeamSelection(interaction, targetMember, settings) {
       { name: '📝 Kayıt Eden', value: `<@${interaction.user.id}>`, inline: true },
       { name: '⏰ Kayıt Zamanı', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
     )
-    .setFooter({ text: 'Apex Voucher • Taraftar Takım Seçimi' })
+    .setFooter({ text: 'Epic League Registration • Taraftar Takım Seçimi' })
     .setTimestamp();
 
   await interaction.editReply({

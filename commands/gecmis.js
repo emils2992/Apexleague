@@ -68,7 +68,7 @@ module.exports = {
         .addField('📆 Hesap Oluşturulma', `<t:${Math.floor(target.user.createdTimestamp / 1000)}:F>\n(<t:${Math.floor(target.user.createdTimestamp / 1000)}:R>)`, true)
         .addField('🚪 Sunucuya Katılma', `<t:${Math.floor(target.joinedTimestamp / 1000)}:F>\n(<t:${Math.floor(target.joinedTimestamp / 1000)}:R>)`, true)
         .addField('📝 Şu Anki İsim', target.displayName, false)
-        .setFooter({ text: `⚽ Apex Voucher • Kullanıcı Geçmişi • ${formatTurkishDate(new Date())}` });
+        .setFooter({ text: `⚽ Epic League Registration • Kullanıcı Geçmişi • ${formatTurkishDate(new Date())}` });
 
       // Add current roles
       const roles = target.roles.cache

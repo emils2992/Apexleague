@@ -15,11 +15,11 @@ module.exports = {
     
     // Create a fancy embed for help
     const embed = new MessageEmbed()
-      .setTitle('⚽ Apex Voucher Yardım')
+      .setTitle('⚽ Epic League Registration Yardım')
       .setColor('#3498db')
       .setDescription('Futbol temalı kayıt sistemi. Tüm komutlar ve açıklamaları:')
       .setThumbnail(client.user.displayAvatarURL({ dynamic: true }))
-      .setFooter({ text: 'Apex Voucher • Yardım Menüsü' })
+      .setFooter({ text: 'Epic League Registration • Yardım Menüsü' })
       .setTimestamp();
     
     // Admin commands

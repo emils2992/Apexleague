@@ -130,7 +130,7 @@ module.exports = {
         .setTitle('⚽ Futbol Kayıt Sıralaması')
         .setColor('#f39c12')
 
-        .setFooter({ text: `Apex Voucher • Sayfa ${currentPage + 1}/${totalPages} • ${formatTurkishDate(new Date())}` })
+        .setFooter({ text: `Epic League Registration • Sayfa ${currentPage + 1}/${totalPages} • ${formatTurkishDate(new Date())}` })
       
       // Format the leaderboard with medals and role breakdown
       let leaderboard = '';
@@ -258,7 +258,7 @@ module.exports = {
       .setTitle('⚽ Futbol Kayıt Sıralaması')
       .setColor('#f39c12')
 
-      .setFooter({ text: `Apex Voucher • Sayfa ${newPage + 1}/${totalPages}` })
+      .setFooter({ text: `Epic League Registration • Sayfa ${newPage + 1}/${totalPages}` })
       .setTimestamp();
     
     // Format the leaderboard

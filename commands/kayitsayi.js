@@ -114,7 +114,7 @@ module.exports = {
         .setColor('#3498db')
         .setThumbnail(target.user.displayAvatarURL({ dynamic: true }))
         .setDescription(`**${target.user.tag}** kullanıcısının kayıt sayıları:`)
-        .setFooter({ text: `Apex Voucher • Kayıt Sayıları • ${formatTurkishDate(new Date())}` });
+        .setFooter({ text: `Epic League Registration • Kayıt Sayıları • ${formatTurkishDate(new Date())}` });
       
       let statsText = '';
       let totalCount = 0;

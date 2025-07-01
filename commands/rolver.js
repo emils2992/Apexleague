@@ -115,7 +115,7 @@ module.exports = {
               { name: '<:yetkili:1385565783307980852> Yetkili', value: `${message.author} (${message.author.tag})`, inline: true },
               { name: '<a:sure:1385555246314688543> Tarih', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
             )
-            .setFooter({ text: 'Apex Voucher • Rol Yönetimi' })
+            .setFooter({ text: 'Epic League Registration • Rol Yönetimi' })
             .setTimestamp();
 
           logChannel.send({ embeds: [logEmbed] }).catch(console.error);

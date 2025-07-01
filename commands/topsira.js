@@ -67,7 +67,7 @@ module.exports = {
         .setColor('#e74c3c')
         .setDescription('En çok kayıt yapan yetkililer:')
 
-        .setFooter({ text: `Apex Voucher • Top Sıralama • ${formatTurkishDate(new Date())}` });
+        .setFooter({ text: `Epic League Registration • Top Sıralama • ${formatTurkishDate(new Date())}` });
       
       // Sıralamayı ekle
       let description = '';

@@ -105,7 +105,7 @@ module.exports = {
           { name: '<:yetkili:1385565783307980852> İşlemi Yapan', value: `<@${message.author.id}>`, inline: true },
           { name: '<a:sure:1385555246314688543> İşlem Zamanı', value: `<t:${Math.floor(Date.now() / 1000)}:F>`, inline: true }
         )
-        .setFooter({ text: 'Apex Voucher • Kayıt Sıfırlama' })
+        .setFooter({ text: 'Epic League Registration • Kayıt Sıfırlama' })
         .setTimestamp();
       
       // Log to general log channel if set
@@ -145,7 +145,7 @@ module.exports = {
               .setTitle('<:kayitsiz:1385549087629250672> Kayıt Durumunuz Sıfırlandı')
               .setDescription(`**${message.guild.name}** sunucusundaki üyelik kaydınız sıfırlanmış bulunmaktadır.`)
               .addField('💬 Bilgi', 'Yeniden kayıt olmak için lütfen yetkililere başvurun.')
-              .setFooter({ text: 'Apex Voucher' })
+              .setFooter({ text: 'Epic League Registration' })
           ]
         });
       } catch (dmError) {
