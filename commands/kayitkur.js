@@ -241,9 +241,21 @@ module.exports = {
       }
     }
     
-    // Taraftar role
-    const taraftarMsg = await message.channel.send('5️⃣ Lütfen "Taraftar" rolünü etiketleyin, "oluştur" yazarak yeni bir rol oluşturun veya "geç" yazarak bu adımı atlayın:');
-    let taraftarRole;
+    // Takım Taraftar rolleri
+    await message.channel.send('5️⃣ **Takım Taraftar Rolleri Kurulumu**\nHer takım için ayrı taraftar rolleri oluşturulacak. "oluştur" yazarak otomatik oluştur veya "geç" yazarak atla:');
+    
+    const teams = [
+      { key: 'everton', name: 'Everton', emoji: '🔵', color: '#003f7f' },
+      { key: 'arsenal', name: 'Arsenal', emoji: '🔴', color: '#ef0107' },
+      { key: 'liverpool', name: 'Liverpool', emoji: '🔴', color: '#c8102e' },
+      { key: 'city', name: 'Manchester City', emoji: '🔵', color: '#6cabdd' },
+      { key: 'realmadrid', name: 'Real Madrid', emoji: '⚪', color: '#febe10' },
+      { key: 'psg', name: 'PSG', emoji: '🔴', color: '#004170' },
+      { key: 'barcelona', name: 'Barcelona', emoji: '🔴', color: '#a50044' },
+      { key: 'leverkusen', name: 'Bayer Leverkusen', emoji: '🔴', color: '#e32221' }
+    ];
+    
+    let teamRoles = {};
     
     try {
       const collected = await message.channel.awaitMessages({
@@ -256,25 +268,71 @@ module.exports = {
       const response = collected.first();
       
       if (response.content.toLowerCase() === 'geç') {
-        await message.channel.send('✅ Taraftar rolü ayarlanmadı, bu adım atlandı.');
-        taraftarRole = null;
+        await message.channel.send('✅ Takım taraftar rolleri ayarlanmadı, bu adım atlandı.');
+        teamRoles = {};
       } else if (response.content.toLowerCase() === 'oluştur') {
-        taraftarRole = await message.guild.roles.create({
-          name: '<:taraftar:1385549312607387738> Taraftar',
-          color: 'PURPLE',
-          reason: 'Kayıt sistemi kurulumu'
-        });
-        await message.channel.send(`✅ '<:taraftar:1385549312607387738> Taraftar' rolü oluşturuldu!`);
-      } else {
-        const mentionedRole = response.mentions.roles.first();
-        if (!mentionedRole) {
-          return message.channel.send('❌ Geçerli bir rol etiketlemediniz. Kurulum iptal edildi.');
+        await message.channel.send('⚡ Takım taraftar rolleri oluşturuluyor...');
+        
+        for (const team of teams) {
+          try {
+            const createdRole = await message.guild.roles.create({
+              name: `${team.emoji} ${team.name} Taraftarı`,
+              color: team.color,
+              reason: 'Takım taraftar rolleri kurulumu'
+            });
+            teamRoles[team.key] = createdRole.id;
+            await message.channel.send(`✅ '${team.emoji} ${team.name} Taraftarı' rolü oluşturuldu!`);
+          } catch (error) {
+            await message.channel.send(`❌ ${team.name} taraftar rolü oluşturulamadı: ${error.message}`);
+            teamRoles[team.key] = null;
+          }
         }
-        taraftarRole = mentionedRole;
-        await message.channel.send(`✅ ${taraftarRole} rolü seçildi!`);
+      } else {
+        await message.channel.send('ℹ️ Takım rolleri manuel ayarlamak için her takımı sırayla soracağım...');
+        
+        for (const team of teams) {
+          const teamMsg = await message.channel.send(`${team.emoji} **${team.name}** taraftar rolünü etiketleyin, "oluştur" yazın veya "geç" yazın:`);
+          
+          try {
+            const teamCollected = await message.channel.awaitMessages({
+              filter: m => m.author.id === message.author.id,
+              max: 1,
+              time: 15000,
+              errors: ['time']
+            });
+            
+            const teamResponse = teamCollected.first();
+            
+            if (teamResponse.content.toLowerCase() === 'geç') {
+              teamRoles[team.key] = null;
+              await message.channel.send(`⏭️ ${team.name} taraftar rolü atlandı.`);
+            } else if (teamResponse.content.toLowerCase() === 'oluştur') {
+              const createdRole = await message.guild.roles.create({
+                name: `${team.emoji} ${team.name} Taraftarı`,
+                color: team.color,
+                reason: 'Takım taraftar rolleri kurulumu'
+              });
+              teamRoles[team.key] = createdRole.id;
+              await message.channel.send(`✅ '${team.emoji} ${team.name} Taraftarı' rolü oluşturuldu!`);
+            } else {
+              const mentionedRole = teamResponse.mentions.roles.first();
+              if (mentionedRole) {
+                teamRoles[team.key] = mentionedRole.id;
+                await message.channel.send(`✅ ${mentionedRole} rolü ${team.name} taraftarı olarak ayarlandı!`);
+              } else {
+                teamRoles[team.key] = null;
+                await message.channel.send(`⚠️ ${team.name} için geçerli rol etiketlenmedi, atlandı.`);
+              }
+            }
+          } catch (error) {
+            teamRoles[team.key] = null;
+            await message.channel.send(`⏱️ ${team.name} için zaman aşımı! Atlandı.`);
+          }
+        }
       }
     } catch (error) {
-      return message.channel.send('⏱️ Zaman aşımı! Kurulum iptal edildi.');
+      await message.channel.send('⏱️ Zaman aşımı! Takım rolleri kurulumu atlandı.');
+      teamRoles = {};
     }
     
     // Bayan Üye role
@@ -598,7 +656,8 @@ module.exports = {
       slbRole: positionRoles.slb,
       stpRole: positionRoles.stp,
       klRole: positionRoles.kl,
-      taraftarRole: taraftarRole ? taraftarRole.id : null,
+      // Takım taraftar rolleri
+      teamRoles: teamRoles,
       bayanUyeRole: bayanRole ? bayanRole.id : null, // Veritabanında bayanUyeRole olarak kaydediyoruz
       teknikDirektorRole: tdRole ? tdRole.id : null, // Veritabanında teknikDirektorRole olarak kaydediyoruz
       baskanRole: baskanRole ? baskanRole.id : null,
@@ -621,7 +680,7 @@ module.exports = {
         .addField('<:kayitsiz:1385549087629250672> Kayıtsız Rolü', kayitsizRole ? `<@&${kayitsizRole.id}>` : '`Ayarlanmadı`', true)
         .addField('<:yetkili:1385565783307980852> Yetkili Rolü', yetkiliRole ? `<@&${yetkiliRole.id}>` : '`Ayarlanmadı`', true)
         .addField('<:futbolcu:1385547729215819906> Futbolcu Rolü', futbolcuRole ? `<@&${futbolcuRole.id}>` : '`Ayarlanmadı`', true)
-        .addField('<:taraftar:1385549312607387738> Taraftar Rolü', taraftarRole ? `<@&${taraftarRole.id}>` : '`Ayarlanmadı`', true)
+        .addField('⚽ Takım Taraftar Rolleri', Object.keys(teamRoles).length > 0 ? `${Object.keys(teamRoles).length} takım rolü ayarlandı` : '`Ayarlanmadı`', true)
         .addField('<:bayanuye:1385548584228884594> Bayan Üye Rolü', bayanRole ? `<@&${bayanRole.id}>` : '`Ayarlanmadı`', true)
         .addField('<:teknikdirektor:1385548384017846272> Teknik Direktör Rolü', tdRole ? `<@&${tdRole.id}>` : '`Ayarlanmadı`', true)
         .addField('<:baskan:1385548870523551816> Başkan Rolü', baskanRole ? `<@&${baskanRole.id}>` : '`Ayarlanmadı`', true)

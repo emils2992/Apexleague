@@ -845,11 +845,13 @@ async function handleTeamSelection(interaction, client) {
     });
   }
 
-  // Get the main taraftar role
-  const taraftarRole = settings.taraftarRole ? interaction.guild.roles.cache.get(settings.taraftarRole) : null;
-  if (!taraftarRole) {
+  // Get the specific team role
+  const teamRole = settings.teamRoles && settings.teamRoles[teamKey] ? 
+    interaction.guild.roles.cache.get(settings.teamRoles[teamKey]) : null;
+  
+  if (!teamRole) {
     return interaction.editReply({
-      content: "❌ Taraftar rolü ayarlanmamış!",
+      content: `❌ ${team.name} taraftar rolü ayarlanmamış!`,
       components: []
     });
   }
@@ -857,10 +859,10 @@ async function handleTeamSelection(interaction, client) {
   try {
     const rolePromises = [];
     
-    // Add main taraftar role
+    // Add specific team role
     rolePromises.push(
-      targetMember.roles.add(taraftarRole).catch((error) => {
-        console.error(`Taraftar rolü verme hatası: ${error}`);
+      targetMember.roles.add(teamRole).catch((error) => {
+        console.error(`${team.name} taraftar rolü verme hatası: ${error}`);
         throw error;
       })
     );
@@ -880,7 +882,7 @@ async function handleTeamSelection(interaction, client) {
     await Promise.allSettled(rolePromises);
 
     // Update database
-    db.updateRegistrationRole(guildId, targetId, taraftarRole.id, `${team.emoji} ${team.name} Taraftarı`);
+    db.updateRegistrationRole(guildId, targetId, teamRole.id, `${team.emoji} ${team.name} Taraftarı`);
 
     // Create success embed
     const successEmbed = new MessageEmbed()

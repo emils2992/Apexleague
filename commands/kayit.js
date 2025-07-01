@@ -140,13 +140,15 @@ module.exports = {
         });
       }
       
-      if (settings.taraftarRole) {
+      // Taraftar butonu - takım rolleri varsa göster
+      if (settings.teamRoles && Object.keys(settings.teamRoles).length > 0) {
         allRoleButtons.push({
           id: `role_taraftar_${target.id}`,
           label: 'Taraftar',
           style: 'SECONDARY', // Gri
-          roleId: settings.taraftarRole,
-          emoji: '<:taraftar:1385549312607387738>'
+          roleId: null, // Takım seçimi açacak
+          emoji: '<:taraftar:1385549312607387738>',
+          showTeams: true // Bu buton takım seçimi açacak
         });
       }
       

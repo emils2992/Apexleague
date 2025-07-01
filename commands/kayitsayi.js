@@ -82,9 +82,31 @@ module.exports = {
         { id: settings.teknikDirektorRole, name: 'Teknik Direktör' },
         { id: settings.baskanRole, name: 'Başkan' },
         { id: settings.partnerRole, name: 'Partner' },
-        { id: settings.taraftarRole, name: 'Taraftar' },
         { id: settings.bayanUyeRole, name: 'Bayan Üye' }
       ].filter(role => role.id && role.id !== settings.kayitsizRole && role.id !== settings.uyeRole);
+      
+      // Takım taraftar rollerini ekle
+      if (settings.teamRoles) {
+        const teams = [
+          { key: 'everton', name: 'Everton', emoji: '🔵' },
+          { key: 'arsenal', name: 'Arsenal', emoji: '🔴' },
+          { key: 'liverpool', name: 'Liverpool', emoji: '🔴' },
+          { key: 'city', name: 'Manchester City', emoji: '🔵' },
+          { key: 'realmadrid', name: 'Real Madrid', emoji: '⚪' },
+          { key: 'psg', name: 'PSG', emoji: '🔴' },
+          { key: 'barcelona', name: 'Barcelona', emoji: '🔴' },
+          { key: 'leverkusen', name: 'Bayer Leverkusen', emoji: '🔴' }
+        ];
+        
+        teams.forEach(team => {
+          if (settings.teamRoles[team.key]) {
+            setupRoles.push({ 
+              id: settings.teamRoles[team.key], 
+              name: `${team.emoji} ${team.name} Taraftarı` 
+            });
+          }
+        });
+      }
       
       // Embed oluştur
       const embed = new MessageEmbed()
