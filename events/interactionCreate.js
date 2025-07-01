@@ -262,13 +262,12 @@ module.exports = {
             }
           }
 
-          // Hoş geldin kanalına anında hoş geldin mesajı gönder
+          // Hoş geldin kanalına hoş geldin mesajı gönder
           if (guildSettings && guildSettings.welcomeChannel) {
             const welcomeChannel = interaction.guild.channels.cache.get(
               guildSettings.welcomeChannel,
             );
             if (welcomeChannel) {
-              // Hoşgeldin mesajını anında gönder (gecikme yok)
               const topMessage = `> <@${targetId}> aramıza katıldı.`;
 
               const mainEmbed = new MessageEmbed()
@@ -298,10 +297,50 @@ module.exports = {
                 });
 
               try {
-                await welcomeChannel.send({
+                // Hoşgeldin mesajını gönder
+                const welcomeMessage = await welcomeChannel.send({
                   content: topMessage,
                   embeds: [mainEmbed],
                 });
+
+                // 2 saniye sonra mesajı güncelle (nickname değişikliği için)
+                setTimeout(async () => {
+                  try {
+                    const updatedMember = await interaction.guild.members.fetch(targetId);
+                    const updatedEmbed = new MessageEmbed()
+                      .setColor("#000000")
+                      .setAuthor({
+                        name: `${interaction.guild.name} • Kayıt Yapıldı!`
+                      })
+                      .setThumbnail(
+                        updatedMember.user.displayAvatarURL({
+                          dynamic: true,
+                          size: 128,
+                        }),
+                      )
+                      .setDescription(
+                        `<a:onay1:1385613791911219223> • ** <@${targetId}> aramıza** ${roleEmoji} **${roleName}** *rolüyle katıldı.*\n\n` +
+                          `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
+                          `> <@${interaction.user.id}>\n\n` +
+                          `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
+                          `> <@${targetId}>\n`,
+                      )
+                      .setFooter({
+                        text: `Apex Voucher • ${new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' })}`,
+                        iconURL: interaction.client.user.displayAvatarURL({
+                          dynamic: true,
+                          size: 64,
+                        }),
+                      });
+
+                    await welcomeMessage.edit({
+                      content: topMessage,
+                      embeds: [updatedEmbed],
+                    });
+                  } catch (updateError) {
+                    console.error("Hoşgeldin mesajı güncellenemedi:", updateError);
+                  }
+                }, 2000);
               } catch (welcomeError) {
                 console.error("Hoşgeldin mesajı gönderilemedi:", welcomeError);
               }
@@ -625,10 +664,50 @@ async function sendRoleAssignmentLogs(interaction, targetMember, roleName, role,
           });
 
         try {
-          await welcomeChannel.send({
+          // Hoşgeldin mesajını gönder
+          const welcomeMessage = await welcomeChannel.send({
             content: topMessage,
             embeds: [mainEmbed],
           });
+
+          // 2 saniye sonra mesajı güncelle (nickname değişikliği için)
+          setTimeout(async () => {
+            try {
+              const updatedMember = await interaction.guild.members.fetch(targetId);
+              const updatedEmbed = new MessageEmbed()
+                .setColor("#000000")
+                .setAuthor({
+                  name: `${interaction.guild.name} • Kayıt Yapıldı!`
+                })
+                .setThumbnail(
+                  updatedMember.user.displayAvatarURL({
+                    dynamic: true,
+                    size: 128,
+                  })
+                )
+                .setDescription(
+                  `<a:onay1:1385613791911219223> • ** <@${targetId}> aramıza** ${roleName} **mevkisiyle katıldı.*\n\n` +
+                    `<a:yetkili_geliyor:1385614217884864656> **• Kaydı gerçekleştiren yetkili**\n` +
+                    `> <@${interaction.user.id}>\n\n` +
+                    `<a:kopek:1385614129514942495> **• Aramıza hoş geldin**\n` +
+                    `> <@${targetId}>\n`
+                )
+                .setFooter({
+                  text: `Apex Voucher • ${new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' })}`,
+                  iconURL: interaction.client.user.displayAvatarURL({
+                    dynamic: true,
+                    size: 64,
+                  }),
+                });
+
+              await welcomeMessage.edit({
+                content: topMessage,
+                embeds: [updatedEmbed],
+              });
+            } catch (updateError) {
+              console.error("Hoşgeldin mesajı güncellenemedi:", updateError);
+            }
+          }, 2000);
         } catch (welcomeError) {
           console.error("Hoşgeldin mesajı gönderilemedi:", welcomeError);
         }
